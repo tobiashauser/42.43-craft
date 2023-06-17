@@ -35,7 +35,7 @@ Issues = "https://github.com/unknown/draft/issues"
 Source = "https://github.com/unknown/draft"
 
 [project.scripts]
-draft = "draft.cli:draft"
+draft = "draft.cli:app"
 
 [tool.hatch.version]
 path = "src/draft/__about__.py"

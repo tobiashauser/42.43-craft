@@ -2,8 +2,16 @@
 import typer
 from rich import print
 
-draft = typer.Typer()
+# import the different subcommands
 
-@draft.command()
+app = typer.Typer()
+
+
+@app.command()
 def hi():
-    print("[red bold]Hello, world![/red bold]")
+    print("Hello, world!")
+
+
+@app.command()
+def bye():
+    print("Good Bye")
