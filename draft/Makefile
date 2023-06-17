@@ -1,6 +1,6 @@
 run:
-	hatch run draft --help
+	poetry shell
+	draft
 clean:
 	find . | grep -E "(__pycache__|\.pyc)" | xargs rm -rf
-reset: clean
-	hatch env prune
+
