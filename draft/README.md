@@ -17,17 +17,32 @@ This package uses [Poetry](https://python-poetry.org/) as its build tool
 ([Installation](https://python-poetry.org/docs/#installation)).
 There is also good documentation available in the docs of [Typer](https://typer.tiangolo.com/): 
 [Building a Package - Typer](https://typer.tiangolo.com/tutorial/package/) 
-(albeit a bit outdated).
+(albeit a bit outdated: Running the tool is different).
+
+#### Install poetry and pipx
+
+```
+brew install pipx
+pipx ensurepath
+
+pipx install poetry
+```
 
 ### Running the tool
 
-To locally execute `draft`, first run `poetry shell`. Draft is then available 
-to be run in the local environment and any changes to its source are immediatly
-applied. 
+The tool can be run in a local environment. 
 
-Exit the local environment with `exit` or `deactivate`.
-(See the [documentation](https://python-poetry.org/docs/basic-usage/#activating-the-virtual-environment)
-of poetry for more information.)
+> 🚨 Important: You must be in the directory `./draft/` starting at 
+> the root of the repository.
+
+```
+poetry install
+poetry shell
+draft
+```
+
+The first line resolves all necessary dependencies. They are somewhat persisted
+between instances of the local environment.
 
 ### Adding new dependencies
 
