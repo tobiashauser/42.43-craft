@@ -32,9 +32,6 @@ pipx install poetry
 
 The tool can be run in a local environment. 
 
-> 🚨 Important: You must be in the directory `./draft/` starting at 
-> the root of the repository.
-
 ```
 poetry install
 poetry shell
