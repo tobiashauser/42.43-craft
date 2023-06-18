@@ -11,6 +11,8 @@ draft = "draft.main:app"
 [tool.poetry.dependencies]
 python = "^3.11"
 typer = {extras = ["all"], version = "^0.9.0"}
+pathlib = "^1.0.1"
+rich = "^13.4.2"
 
 
 [build-system]
