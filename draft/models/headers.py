@@ -1,9 +1,6 @@
-import oyaml as yaml
 from pathlib import Path
-import re
-from rich import print
 import typer
-from typing import List, Dict, Set
+from typing import List
 
 from .helpers import fetch_github_directory
 from .template import Folder, Template

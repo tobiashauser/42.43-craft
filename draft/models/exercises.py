@@ -1,7 +1,6 @@
 from pathlib import Path
-from rich import print
 import typer
-from typing import List, Set, Dict
+from typing import Dict
 
 from .helpers import fetch_github_directory
 from .template import Folder, Template
@@ -29,19 +28,6 @@ class Exercises(Folder):
             except:
                 pass
         self.exercises = exercises
-
-#         file_names: Set[str] = {
-#             file.name for file in self.path.iterdir() if
-#             file.is_file() and (file.suffix == '.tex' or file.suffix == '.ly')
-#         }
-#
-#         exercises: List[Exercise] = []
-#         for name in file_names:
-#             try:
-#                 exercises.append(Exercise(self.path, name))
-#             except:
-#                 pass
-#         self.exercises = exercises
 
     def validate(self):
         # directory exists

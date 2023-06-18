@@ -1,10 +1,9 @@
 from pathlib import Path
 from rich import print
-from typer import Abort
 from typing import List, Dict
 
 from .exercises import Exercises, Exercise
-from .headers import Headers
+from .headers import Headers, Header
 from .preamble import Preamble
 
 

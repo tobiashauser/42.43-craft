@@ -1,5 +1,4 @@
 from pathlib import Path
-from rich import print
 import typer
 
 from .helpers import fetch_github_document

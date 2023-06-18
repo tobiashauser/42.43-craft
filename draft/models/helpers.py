@@ -37,7 +37,7 @@ def fetch_github_directory(owner: str, repo: str, path: str) -> Dict[str, str]:
         raise Abort()
 
 
-def fetch_github_document(owner, repo, path):
+def fetch_github_document(owner, repo, path) -> Tuple[str, str]:
     """
     Fetch a single file from GitHub.
 
@@ -51,7 +51,7 @@ def fetch_github_document(owner, repo, path):
         if 'content' in data:
             content = data['content']
             decoded_content = content.decode()  # Decode base64 content
-            return decoded_content
+            return (data['name'], decoded_content)
     elif response.status_code == 404:
         print("[red]Document not found.[/red]")
         raise Abort()
