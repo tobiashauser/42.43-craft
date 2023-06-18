@@ -6,4 +6,5 @@ app = typer.Typer()
 
 @app.command("new")
 def new():
-    Configuration()
+    config = Configuration()
+    print(config.headers.headers)

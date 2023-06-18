@@ -18,19 +18,23 @@ class Headers:
             if file.is_file() and file.suffix == '.tex':
                 try:
                     headers.append(Header(file))
-                except _:
+                except:
                     pass
         self.headers = headers
 
     def validate(self):
         # - directory exists
-        # - is not empty
-        if (not self.path.is_dir()) \
-                or any(self.path.iterdir()):
-            print("[red]TODO: Faulty headers directory.[/red]")
-            raise Abort()
+        if not self.path.is_dir():
+            self.path.mkdir(parents=True, exist_ok=True)
 
-    default: Dict[str, str] = {
+        # directory is not empty
+        if not any(self.path.iterdir()):
+            print("Creating default headers...")
+            for name, contents in self.defaults.items():
+                with (self.path / (name + '.tex')).open('w') as file:
+                    file.write(contents)
+
+    defaults: Dict[str, str] = {
         'exam': r"""
 \usepackage{scrlayer-scrpage}
 

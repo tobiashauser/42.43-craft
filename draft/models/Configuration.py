@@ -16,15 +16,16 @@ class Configuration:
 
     def __init__(self):
         # Path.home() / ".config/draft/"
-        self.basedir: Path = Path("config/draft/")
+        self.basedir: Path = Path("")
         self.templates: Path = self.basedir / "templates/"
         self.validate()
-        self.preamble: Preamble = Preamble(templates / "preamble.tex")
-        self.headers: Headers = Headers(templates / "headers/")
-        self.exercises: Exercises = Exercises(templates / "exercises/")
+        self.preamble: Preamble = Preamble(self.templates / "preamble.tex")
+        self.headers: Headers = Headers(self.templates / "headers/")
+        self.exercises: Exercises = Exercises(self.templates / "exercises/")
 
     def validate(self):
         if (not self.basedir.is_dir()) \
                 or (not self.templates.is_dir()):
-            print("[red]TODO: The configuration doesn't exist yet.[/red]")
-            raise Abort()
+            print("Creating configuration's directory at " +
+                  "[white bold]%s[/white bold]..." % self.basedir)
+            self.templates.mkdir(parents=True, exist_ok=True)

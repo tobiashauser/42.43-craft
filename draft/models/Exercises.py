@@ -1,7 +1,7 @@
 from pathlib import Path
 from rich import print
 from typer import Abort
-from typing import List, Set, Optional
+from typing import List, Set, Dict
 
 
 class Exercises:
@@ -19,20 +19,39 @@ class Exercises:
         }
 
         exercises: List[Exercise] = []
-        for name in file_names():
+        for name in file_names:
             try:
                 exercises.append(Exercise(self.path, name))
-            except _:
+            except:
                 pass
         self.exercises = exercises
 
     def validate(self):
-        # - directory exists
-        # - is not empty
-        if (not self.path.is_dir()) \
-                or any(self.path.iterdir()):
-            print("[red]TODO: Faulty headers directory.[/red]")
-            raise Abort()
+        # directory exists
+        if not self.path.is_dir():
+            self.path.mkdir(parents=True, exist_ok=True)
+
+        # directory is not empty
+        if not any(self.path.iterdir()):
+            for name, templates in self.defaults.items():
+                for extension, contents in templates.items():
+                    with (self.path / (name + extension)).open('w') as file:
+                        file.write(contents)
+
+    defaults: Dict[str, Dict[str, str]] = {
+        'intervals': {
+            '.tex': r"""
+\input{../preamble.tex}
+
+\begin{document}
+    This is an exercise about intervals.
+\end{document}
+""",
+            '.ly': r"""
+% This is a template to create an exercise for intervals.
+"""
+        }
+    }
 
 
 class Exercise:

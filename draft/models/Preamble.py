@@ -19,8 +19,9 @@ class Preamble:
         # - file is not empty
         if (not self.path.is_file()) \
                 or self.path.stat().st_size == 0:
-            print("[red]TODO: Faulty preamble.[/red]")
-            raise Abort()
+            print("Creating default preamble...")
+            with self.path.open('w') as file:
+                file.write(self.default)
 
     def load(self):
         """
@@ -31,5 +32,5 @@ class Preamble:
 
     # The default preamble
     default: str = r"""
-    \documentclass{scrreport}
-    """
+\documentclass{scrreport}
+"""
