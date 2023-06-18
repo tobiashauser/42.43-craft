@@ -30,7 +30,7 @@ pipx install poetry
 
 ### Running the tool
 
-The tool can be run in a local environment. 
+The tool itself can be run in a local environment. 
 
 ```
 poetry install
@@ -38,12 +38,12 @@ poetry shell
 draft
 ```
 
-The first line resolves all necessary dependencies. They are somewhat persisted
-between instances of the local environment.
+The first line resolves all necessary dependencies and installs the tool which
+is then somewhat persisted between instances of the local environment.
 
 ### Adding new dependencies
 
-New dependecies are added with
+New dependencies are added with
 
 ```
 poetry add "dependency_name"
