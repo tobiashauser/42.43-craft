@@ -1,27 +1,6 @@
 % Template for an exam.
 % ------------------------------------------------------------------------- %
 
-% A template can use placeholders that will be replaced during
-% the compilation. Placeholders have the form: <<IDENTIFIER>>.
-% They can be customized inside this file in a YAML-formatted preface.
-% 🚨 It cannot contain any colons.
-% PLACEHOLDERS ------------------------------------------------------------ %
-\iffalse
-prompts:
-- semantic-name:
-  type: input
-  message: Please enter the a semantic name for this document.
-- group:
-  message: Which group is this document for?
-\fi
-% ------------------------------------------------------------------------- %
-% Draft uses the python package PyInquirer to create the prompts.
-% See their documentation for more information.
-% The key `name` will be created by default from the key name. Make sure
-% this name matches the one used in document. If no `message` is provided
-% it will fall back to the name. The default type of the prompt is `input`.
-% The keys `filter` and `validate` cannot be used.
-
 % Draft will replace this line with its contents when compiling the document.
 \input{../preamble.tex}
 

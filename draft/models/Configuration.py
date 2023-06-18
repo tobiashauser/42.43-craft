@@ -1,6 +1,7 @@
 from pathlib import Path
 from rich import print
 from typer import Abort
+from typing import List
 
 from .exercises import Exercises
 from .headers import Headers
@@ -21,8 +22,8 @@ class Configuration:
         self.templates: Path = self.basedir / "templates/"
         self.validate()
         self.preamble: Preamble = Preamble(self.templates / "preamble.tex")
-        self.headers: Headers = Headers(self.templates / "headers/")
-        self.exercises: Exercises = Exercises(self.templates / "exercises/")
+        self.headers: List[Header] = Headers(self.templates / "headers/").headers
+        self.exercises: List[Exercise] = Exercises(self.templates / "exercises/").exercises
 
     def validate(self):
         if (not self.basedir.is_dir()) \

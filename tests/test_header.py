@@ -1,5 +1,5 @@
 import pytest
-from draft.models.Headers import Header
+from draft.models.headers import Header
 
 
 def test_extract_yaml():

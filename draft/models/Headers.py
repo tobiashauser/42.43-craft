@@ -52,6 +52,10 @@ class Header:
     A class representing one header file in the templates' directory.
     """
 
+    @property
+    def name(self) -> str:
+        return self.path.stem
+
     def __init__(self, path: Path):
         self.path = path
         self.validate()
