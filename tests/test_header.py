@@ -1,4 +1,6 @@
+from pathlib import Path
 import pytest
+
 from draft.models.headers import Header
 
 
@@ -11,6 +13,8 @@ def test_extract_yaml():
     are accumulated into one dictionary. Blocks at the top of the file
     take precedence over blocks further down. List values are accumulated.
     """
+    test_file = Path("test-extract-yaml.tex")
+    test_file.touch()
     input = r"""
 \iffalse
 a:
@@ -24,7 +28,9 @@ a:
     f: g
 \fi
 """
-    output = Header.extract_yaml(input)
+    test_file.write_text(input)
+
+    output = Header(test_file).yaml
     expectation = {'a': {'b': 'c'}, 'd': 'e'}
     assert output == expectation
 
@@ -42,9 +48,13 @@ a:
 a: d
 \fi
 """
-    output = Header.extract_yaml(input)
+    test_file.write_text(input)
+
+    output = Header(test_file).yaml
     expectation = {'a': ['b', 'c', 'd']}
     assert output == expectation
+
+    test_file.unlink()
 
 
 def test_extract_placeholders():
@@ -54,15 +64,21 @@ def test_extract_placeholders():
     Expected behaviour:
     Returns a set of the placeholders (no duplicates).
     """
+    test_file = Path("test-extract-placeholders.tex")
+    test_file.touch()
     input = r"""
 \ihead*{\textbf{<<semantic-name>>}\\(<<group>>)}
 \chead*{Name:_\rule{0.4\linewidth}{0.4pt}}
 \ohead*{\textbf{<<course>>}\\<<place>> • <<semester>>}
 \blob{<<group>>}
 """
-    output = Header.extract_placeholders(input)
+    test_file.write_text(input)
+
+    output = Header(test_file).placeholders
     expectation = ['course', 'group', 'place', 'semantic-name', 'semester']
     assert sorted(output) == expectation
+
+    test_file.unlink()
 
 
 def test_create_prompts():
@@ -74,6 +90,8 @@ def test_create_prompts():
     - Ignore any keys in dict but not in placeholders.
     - Create prompts for all items in placeholders.
     """
+    test_file = Path("test-create-prompts.tex")
+    test_file.touch()
     input = r"""
 \iffalse
 prompts:
@@ -85,10 +103,9 @@ prompts:
 \ihead*{\textbf{<<semantic-name>>}\\(<<group>>)}
 \blob{<<group>>}
 """
-    prompts = Header.create_prompts(
-        Header.extract_yaml(input)['prompts'],
-        Header.extract_placeholders(input)
-    )
+    test_file.write_text(input)
+
+    prompts = Header(test_file).prompts
     expectation = [
         {
             'type': 'input',
@@ -103,3 +120,5 @@ prompts:
         },
     ]
     assert prompts == expectation
+
+    test_file.unlink()

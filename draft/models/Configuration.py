@@ -1,9 +1,9 @@
 from pathlib import Path
 from rich import print
 from typer import Abort
-from typing import List
+from typing import List, Dict
 
-from .exercises import Exercises
+from .exercises import Exercises, Exercise
 from .headers import Headers
 from .preamble import Preamble
 
@@ -22,8 +22,10 @@ class Configuration:
         self.templates: Path = self.basedir / "templates/"
         self.validate()
         self.preamble: Preamble = Preamble(self.templates / "preamble.tex")
-        self.headers: List[Header] = Headers(self.templates / "headers/").headers
-        self.exercises: List[Exercise] = Exercises(self.templates / "exercises/").exercises
+        self.headers: List[Header] = \
+            Headers(self.templates / "headers/").headers
+        self.exercises: Dict[str, Dict[str, Exercise]] = \
+            Exercises(self.templates / "exercises/").exercises
 
     def validate(self):
         if (not self.basedir.is_dir()) \

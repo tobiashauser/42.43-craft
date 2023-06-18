@@ -1,7 +1,7 @@
 import requests
 from rich import print
 from typer import Abort
-from typing import Dict
+from typing import Dict, Tuple
 
 
 def fetch_github_directory(owner: str, repo: str, path: str) -> Dict[str, str]:
@@ -23,14 +23,38 @@ def fetch_github_directory(owner: str, repo: str, path: str) -> Dict[str, str]:
                     document_url = item['download_url']
                     document_response = requests.get(document_url)
                     if document_response.status_code == 200:
-                        documents[item['name']] = document_response.content.decode()
+                        documents[item['name']] = \
+                            document_response.content.decode()
                     else:
                         print("[red]Failed to fetch document: " +
                               f"[bold white]{document_url}[/bold white][/red]")
             return documents
     elif response.status_code == 404:
         print("[red]Directory not found.[/red]")
-        Abort()
+        raise Abort()
     else:
         print("[red]Failed to fetch directory.[/red]")
-        Abort()
+        raise Abort()
+
+
+def fetch_github_document(owner, repo, path):
+    """
+    Fetch a single file from GitHub.
+
+    Attribution to ChatGPT.
+    """
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        if 'content' in data:
+            content = data['content']
+            decoded_content = content.decode()  # Decode base64 content
+            return decoded_content
+    elif response.status_code == 404:
+        print("[red]Document not found.[/red]")
+        raise Abort()
+    else:
+        print("[red]Failed to fetch document.[/red]")
+        raise Abort()

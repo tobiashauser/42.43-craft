@@ -4,29 +4,44 @@ import typer
 from typing import List, Set, Dict
 
 from .helpers import fetch_github_directory
+from .template import Folder, Template
 
 
-class Exercises:
+class Exercises(Folder):
     """
     A class encapsulating the exercises directory in the configuration.
     """
 
+    @property
+    def path(self) -> Path:
+        return self._path
+
     def __init__(self, path: Path):
-        self.path = path
+        self._path = path
         self.validate()
 
-        file_names: Set[str] = {
-            file.name for file in self.path.iterdir() if
-            file.is_file() and (file.suffix == '.tex' or file.suffix == '.ly')
-        }
-
-        exercises: List[Exercise] = []
-        for name in file_names:
+        # { 'intervals': {'.ly': Exercise, '.tex': Exercise}}
+        exercises: Dict[str, Dict[str, Exercises]] = {}
+        for file in self.path.iterdir():
             try:
-                exercises.append(Exercise(self.path, name))
+                exercises.append(Exercises(file))
+                exercises[file.stem][file.suffix] = Exercises(file)
             except:
                 pass
         self.exercises = exercises
+
+#         file_names: Set[str] = {
+#             file.name for file in self.path.iterdir() if
+#             file.is_file() and (file.suffix == '.tex' or file.suffix == '.ly')
+#         }
+#
+#         exercises: List[Exercise] = []
+#         for name in file_names:
+#             try:
+#                 exercises.append(Exercise(self.path, name))
+#             except:
+#                 pass
+#         self.exercises = exercises
 
     def validate(self):
         # directory exists
@@ -49,35 +64,15 @@ class Exercises:
                     file.write(contents)
 
 
-class Exercise:
+class Exercise(Template):
     """
     A class representing one exercise file in the templates' directory.
     """
 
-    def __init__(self, directory: Path, name: str):
-        self.tex_path = directory / name + '.tex'
-        self.ly_path = directory / name + '.ly'
+    @property
+    def path(self) -> Path:
+        return self._path
+
+    def __init__(self, path: Path):
+        self._path = path
         self.validate()
-
-    def validate(self):
-        # - tex and ly templates exist
-        # - they are not empty
-        if (not self.tex_path.is_file()) \
-                or self.tex_path.stat().st_size == 0:
-            print("[red]TODO: Faulty tex exercise template.[/red]")
-            raise typer.Abort()
-
-        if (not self.ly_path.is_file()) \
-                or self.ly_path.stat().st_size == 0:
-            print("[red]TODO: Faulty tex exercise template.[/red]")
-            raise typer.Abort()
-
-    def load(self):
-        """
-        Load the contents of the templates from the disk.
-        """
-        with self.tex_path.open('r') as file:
-            self.tex_template = file.read()
-
-        with self.ly_path.open('r') as file:
-            self.ly_template = file.read()
