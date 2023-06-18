@@ -17,6 +17,7 @@ Inbox:
 			So, because draft depends on typing (^3.10.0.0), version solving failed.
 		- Gracefully fail if anything in the embedded YAML(s) is wrong
 		- ignore any placeholders commented line
+		- Downloading the header templates has to be confirmed twice...
 Archive:
 Search Definitions:
 	Top Priority @search(@priority = 5 and not @done)
