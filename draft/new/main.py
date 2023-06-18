@@ -1,13 +1,17 @@
 import typer
+from typing import Callable
 
 app = typer.Typer(no_args_is_help=True)
 
 
-@app.command("exam")
-def exam():
-    print("exam")
+def command(name: str) -> Callable[None, None]:
+    def subcommand():
+        print(name)
+
+    return subcommand
 
 
-@app.command("worksheet")
-def worksheet():
-    print("worksheet")
+commands = ["exam", "worksheet"]
+
+for c in commands:
+    app.command(name=c)(command(c))

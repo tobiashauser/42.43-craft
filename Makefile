@@ -2,8 +2,9 @@ run:
 	poetry shell
 	draft
 clean:
-	find . | grep -E "(__pycache__|\.pyc)" | xargs rm -rf
+	find . | grep -E "(__pycache__|\.pyc|.pytest_cache)" | xargs rm -rf
 reset: clean
 	rm -rf config/
-	# rm -rf templates/
+test:
+	poetry run pytest -v
 

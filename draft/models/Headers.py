@@ -1,7 +1,9 @@
+import oyaml as yaml
 from pathlib import Path
+import re
 from rich import print
 from typer import Abort
-from typing import List, Dict
+from typing import List, Dict, Set
 
 
 class Headers:
@@ -29,38 +31,8 @@ class Headers:
 
         # directory is not empty
         if not any(self.path.iterdir()):
-            print("Creating default headers...")
-            for name, contents in self.defaults.items():
-                with (self.path / (name + '.tex')).open('w') as file:
-                    file.write(contents)
-
-    defaults: Dict[str, str] = {
-        'exam': r"""
-\usepackage{scrlayer-scrpage}
-
-% EXAM
-% |-------------------------------------------------------------------------|
-% | **Klausur**               Name: _____                    Hörerziehung-2 |
-% | (Gruppe 1)                                        Stuttgart • SoSe 2023 |
-% |-------------------------------------------------------------------------|
-
-\ihead*{\textbf{<<semantic_name>>}\\(<<group>>)}
-\chead*{Name:_\rule{0.4\linewidth}{0.4pt}}
-\ohead*{\textbf{<<course>>}\\<<place>> • <<semester>>}
-""",
-        'worksheet': r"""
-\usepackage{scrlayer-scrpage}
-
-% WORKSHEET
-% |-------------------------------------------------------------------------|
-% | HE 2 • SoSe 2023           Beethoven: Ariet...           TH • Stuttgart |
-% |-------------------------------------------------------------------------|
-
-\ihead*{<<course>> • <<semester>>}
-\chead*{<<topic>>}
-\ohead*{<<author>> • <<place>>}
-""",
-    }
+            print("TODO: Ask to fetch header templates from GitHub.")
+            Abort()
 
 
 class Header:
@@ -71,6 +43,13 @@ class Header:
     def __init__(self, path: Path):
         self.path = path
         self.validate()
+
+        self.load()
+
+        self.prompts = Header.create_prompts(
+            Header.extract_yaml(self.contents).get('prompts', []),
+            Header.extract_placeholders(self.contents)
+        )
 
     def validate(self):
         # - is file
@@ -87,3 +66,72 @@ class Header:
 
         with self.path.open('r') as file:
             self.contents = file.read()
+
+    @staticmethod
+    def extract_yaml(contents: str):
+        """
+        Parses any YAML-formatted block comments and
+        returns one dictionary holding all values.
+        """
+        pattern = re.compile(r"(?s)\n\\iffalse\n(.*?)\\fi")
+        matches = pattern.findall(contents)
+
+        dict = {}
+        for match in matches:
+            try:
+                for key, value in yaml.safe_load(match).items():
+                    if key not in dict:
+                        dict[key] = value
+                    elif isinstance(dict[key], list):
+                        if isinstance(value, list):
+                            dict[key] = dict[key] + value
+                        else:
+                            dict[key] = dict[key] + [value]
+            except:
+                pass
+        return dict
+
+    @staticmethod
+    def create_prompts(dict: list, placeholders: Set[str]):
+        """
+        Create well structured prompts from YAML-dictionary
+        that inserts default values if necessary cleans up
+        the data.
+        """
+
+        prompts = []
+        for item in dict:
+            for name, values in item.items():
+                if name not in placeholders:
+                    continue
+                question = {}
+                # order: type, name, message, ...
+                if 'type' not in question:
+                    question['type'] = 'input'
+                question['name'] = name
+                if 'message' not in question:
+                    question['message'] = "Please provide the %s." % name
+                for key, value in values.items():
+                    question[key] = value
+
+                prompts.append(question)
+                placeholders.remove(name)
+
+        # create default prompts for any undeclared placeholders
+        for name in placeholders:
+            question = {}
+            question['type'] = 'input'
+            question['name'] = name
+            question['message'] = "Please provide the %s." % name
+            prompts.append(question)
+
+        return prompts
+
+    @staticmethod
+    def extract_placeholders(contents: str) -> Set[str]:
+        """
+         Extract any placeholders (<<IDENTIFIER>>) found in contents.
+        """
+        pattern = re.compile(r"<<([^\s.]+?)>>")
+        matches = pattern.findall(contents)
+        return set(matches)

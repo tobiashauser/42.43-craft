@@ -33,25 +33,8 @@ class Exercises:
 
         # directory is not empty
         if not any(self.path.iterdir()):
-            for name, templates in self.defaults.items():
-                for extension, contents in templates.items():
-                    with (self.path / (name + extension)).open('w') as file:
-                        file.write(contents)
-
-    defaults: Dict[str, Dict[str, str]] = {
-        'intervals': {
-            '.tex': r"""
-\input{../preamble.tex}
-
-\begin{document}
-    This is an exercise about intervals.
-\end{document}
-""",
-            '.ly': r"""
-% This is a template to create an exercise for intervals.
-"""
-        }
-    }
+            print("TODO: Ask to fetch exercise-templates from GitHug")
+            Abort()
 
 
 class Exercise:

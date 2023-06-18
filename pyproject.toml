@@ -14,6 +14,10 @@ typer = {extras = ["all"], version = "^0.9.0"}
 pathlib = "^1.0.1"
 rich = "^13.4.2"
 pyinquirer = "^1.0.3"
+oyaml = "^1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.2"
 
 [build-system]
 requires = ["poetry-core"]

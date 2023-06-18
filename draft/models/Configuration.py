@@ -16,7 +16,7 @@ class Configuration:
 
     def __init__(self):
         # Path.home() / ".config/draft/"
-        self.basedir: Path = Path("")
+        self.basedir: Path = Path("./config/")
         self.templates: Path = self.basedir / "templates/"
         self.validate()
         self.preamble: Preamble = Preamble(self.templates / "preamble.tex")
