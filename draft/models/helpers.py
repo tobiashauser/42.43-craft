@@ -1,3 +1,4 @@
+import base64
 import requests
 from rich import print
 from typer import Abort
@@ -49,9 +50,7 @@ def fetch_github_document(owner, repo, path) -> Tuple[str, str]:
     if response.status_code == 200:
         data = response.json()
         if 'content' in data:
-            content = data['content']
-            decoded_content = content.decode()  # Decode base64 content
-            return (data['name'], decoded_content)
+            return (data['name'], base64.b64decode(data['content']).decode())
     elif response.status_code == 404:
         print("[red]Document not found.[/red]")
         raise Abort()

@@ -34,5 +34,5 @@ class Preamble(Template):
                 '42.43-draft',
                 'templates/preamble.tex'
             )
-            with (self.path / name).open('w') as file:
+            with (self.path).open('w') as file:
                 file.write(contents)
