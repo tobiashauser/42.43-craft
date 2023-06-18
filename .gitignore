@@ -6,5 +6,6 @@ dist/
 
 # created by draft
 templates/
+!/draft/templates/
 config/
 
