@@ -1,6 +1,6 @@
 from pathlib import Path
 from rich import print
-from typer import Exit
+from typer import Abort
 from typing import List, Set, Optional
 
 
@@ -14,7 +14,7 @@ class Exercises:
         self.validate()
 
         file_names: Set[str] = {
-            file.name for file in self.path.iterdir() if \
+            file.name for file in self.path.iterdir() if
             file.is_file() and (file.suffix == '.tex' or file.suffix == '.ly')
         }
 
@@ -22,7 +22,7 @@ class Exercises:
         for name in file_names():
             try:
                 exercises.append(Exercise(self.path, name))
-            else:
+            except _:
                 pass
         self.exercises = exercises
 
@@ -32,7 +32,7 @@ class Exercises:
         if (not self.path.is_dir()) \
                 or any(self.path.iterdir()):
             print("[red]TODO: Faulty headers directory.[/red]")
-            raise Exit(1)
+            raise Abort()
 
 
 class Exercise:
@@ -51,12 +51,12 @@ class Exercise:
         if (not self.tex_path.is_file()) \
                 or self.tex_path.stat().st_size == 0:
             print("[red]TODO: Faulty tex exercise template.[/red]")
-            raise Exit(1)
+            raise Abort()
 
         if (not self.ly_path.is_file()) \
-            or self.ly_path.stat().st_size == 0:
-        print("[red]TODO: Faulty tex exercise template.[/red]")
-        raise Exit(1)
+                or self.ly_path.stat().st_size == 0:
+            print("[red]TODO: Faulty tex exercise template.[/red]")
+            raise Abort()
 
     def load(self):
         """
@@ -67,4 +67,3 @@ class Exercise:
 
         with self.ly_path.open('r') as file:
             self.ly_template = file.read()
-

@@ -1,6 +1,6 @@
 from pathlib import Path
 from rich import print
-from typer import Exit
+from typer import Abort
 from typing import List, Dict
 
 
@@ -18,7 +18,7 @@ class Headers:
             if file.is_file() and file.suffix == '.tex':
                 try:
                     headers.append(Header(file))
-                else:
+                except _:
                     pass
         self.headers = headers
 
@@ -28,8 +28,7 @@ class Headers:
         if (not self.path.is_dir()) \
                 or any(self.path.iterdir()):
             print("[red]TODO: Faulty headers directory.[/red]")
-            raise Exit(1)
-
+            raise Abort()
 
     default: Dict[str, str] = {
         'exam': r"""
@@ -75,7 +74,7 @@ class Header:
         if (not self.path.is_file()) \
                 or self.path.stat().st_size == 0:
             print("[red]TODO: Faulty header template.[/red]")
-            raise Exit(1)
+            raise Abort()
 
     def load(self):
         """
@@ -84,4 +83,3 @@ class Header:
 
         with self.path.open('r') as file:
             self.contents = file.read()
-

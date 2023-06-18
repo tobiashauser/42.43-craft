@@ -1,6 +1,6 @@
 from pathlib import Path
 from rich import print
-from typer import Exit
+from typer import Abort
 
 
 class Preamble:
@@ -20,7 +20,7 @@ class Preamble:
         if (not self.path.is_file()) \
                 or self.path.stat().st_size == 0:
             print("[red]TODO: Faulty preamble.[/red]")
-            raise Exit(1)
+            raise Abort()
 
     def load(self):
         """
