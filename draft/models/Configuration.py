@@ -1,9 +1,10 @@
 from pathlib import Path
 from rich import print
 from typer import Abort
-from .Exercises import Exercises
-from .Headers import Headers
-from .Preamble import Preamble
+
+from .exercises import Exercises
+from .headers import Headers
+from .preamble import Preamble
 
 
 class Configuration:
@@ -16,7 +17,7 @@ class Configuration:
 
     def __init__(self):
         # Path.home() / ".config/draft/"
-        self.basedir: Path = Path("./config/")
+        self.basedir: Path = Path("")
         self.templates: Path = self.basedir / "templates/"
         self.validate()
         self.preamble: Preamble = Preamble(self.templates / "preamble.tex")

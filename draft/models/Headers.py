@@ -2,8 +2,10 @@ import oyaml as yaml
 from pathlib import Path
 import re
 from rich import print
-from typer import Abort
+import typer
 from typing import List, Dict, Set
+
+from .helpers import fetch_github_directory
 
 
 class Headers:
@@ -31,8 +33,18 @@ class Headers:
 
         # directory is not empty
         if not any(self.path.iterdir()):
-            print("TODO: Ask to fetch header templates from GitHub.")
-            Abort()
+            typer.confirm(
+                "Do you want to fetch the header templates from GitHub?",
+                abort=True
+            )
+            documents = fetch_github_directory(
+                'tobiashauser',
+                '42.43-draft',
+                'templates/headers'
+            )
+            for name, contents in documents.items():
+                with (self.path / name).open('w') as file:
+                    file.write(contents)
 
 
 class Header:
@@ -57,7 +69,7 @@ class Header:
         if (not self.path.is_file()) \
                 or self.path.stat().st_size == 0:
             print("[red]TODO: Faulty header template.[/red]")
-            raise Abort()
+            raise typer.Abort()
 
     def load(self):
         """
