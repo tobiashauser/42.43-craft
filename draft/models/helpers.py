@@ -24,6 +24,8 @@ def fetch_github_directory(owner: str, repo: str, path: str) -> Dict[str, str]:
                     document_url = item['download_url']
                     document_response = requests.get(document_url)
                     if document_response.status_code == 200:
+                        print("Fetching [bold white]%s[/bold white]..."
+                              % item['name'])
                         documents[item['name']] = \
                             document_response.content.decode()
                     else:
