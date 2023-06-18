@@ -1,6 +1,7 @@
 import typer
 
-from .models.Configuration import Configuration
+from .models.configuration import Configuration
+from .models.helpers import fetch_github_directory
 from .new.main import app as new
 from .templates.main import app as templates
 

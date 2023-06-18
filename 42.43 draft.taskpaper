@@ -1,10 +1,12 @@
 Inbox:
 42.43 draft:
 	Features:
+		templates:
+			- Fetch/Update new templates from GitHub
 	Ideas:
 		- create the option to create a new template with `draft new` as well that falls back to `draft template -n`
-		- the templates should be hosted on GitHub
-		- 'prompts' is a better name for placeholders
+		- the templates should be hosted on GitHub @done
+		- 'prompts' is a better name for placeholders @done
 	Bugs:
 		- can't add `typing` as a dependency because of python version conflicts
 			The current project's Python requirement (>=3.11,<4.0) is not compatible with some of the required packages Python requirement:

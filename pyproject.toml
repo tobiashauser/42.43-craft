@@ -15,6 +15,7 @@ pathlib = "^1.0.1"
 rich = "^13.4.2"
 pyinquirer = "^1.0.3"
 oyaml = "^1.0"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"

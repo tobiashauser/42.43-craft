@@ -1,7 +1,9 @@
 from pathlib import Path
 from rich import print
-from typer import Abort
+import typer
 from typing import List, Set, Dict
+
+from .helpers import fetch_github_directory
 
 
 class Exercises:
@@ -33,8 +35,18 @@ class Exercises:
 
         # directory is not empty
         if not any(self.path.iterdir()):
-            print("TODO: Ask to fetch exercise-templates from GitHug")
-            Abort()
+            typer.confirm(
+                "Do you want to fetch the exercise templates from GitHub?",
+                abort=True
+            )
+            documents = fetch_github_directory(
+                'tobiashauser',
+                '42.43-draft',
+                'templates/exercises'
+            )
+            for name, contents in documents.items():
+                with (self.path / name).open('w') as file:
+                    file.write(contents)
 
 
 class Exercise:
@@ -53,12 +65,12 @@ class Exercise:
         if (not self.tex_path.is_file()) \
                 or self.tex_path.stat().st_size == 0:
             print("[red]TODO: Faulty tex exercise template.[/red]")
-            raise Abort()
+            raise typer.Abort()
 
         if (not self.ly_path.is_file()) \
                 or self.ly_path.stat().st_size == 0:
             print("[red]TODO: Faulty tex exercise template.[/red]")
-            raise Abort()
+            raise typer.Abort()
 
     def load(self):
         """
