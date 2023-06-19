@@ -33,11 +33,15 @@ class Configuration:
         self.basedir: Path = Path("")
         self.templates: Path = self.basedir / "templates/"
         self.validate()
+
         self.preamble: Preamble = Preamble(self.templates / "preamble.tex")
+
         self.headers: List[Header] = \
             Headers(self.templates / "headers/").headers
-        self.exercises: Dict[str, Dict[str, Exercise]] = \
-            Exercises(self.templates / "exercises/").exercises
+
+        exercises = Exercises(self.templates / "exercises/")
+        self.exercises: Dict[str, Dict[str, Exercise]] = exercises.exercises
+        self.exercises_prompt = exercises.prompts
 
     def validate(self):
         if (not self.basedir.is_dir()) \

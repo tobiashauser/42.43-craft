@@ -20,7 +20,8 @@ def subcommand(
 ) -> Callable[None, None]:
     def logic():
         document = Document(header, configuration)
-        document.prompt_user(document.header.prompts)
+        document.user_values
+        print(document.exercises)
 
     return logic
 
