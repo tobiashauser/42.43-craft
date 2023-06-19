@@ -20,7 +20,14 @@ def subcommand(
 ) -> Callable[None, None]:
     def logic():
         document = Document(header, configuration)
-        document.compile()
+        # print(document.user_values)
+        # print(document.header.prompts)
+        # print(document.configuration.user_values)
+        # print(document.user_values)
+        # print(document.user_values)
+        # document.compile()
+        print(document.exercises)
+
 
     return logic
 

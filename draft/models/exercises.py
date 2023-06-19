@@ -81,7 +81,7 @@ class ExercisesFolder(Folder):
 
     @property
     def prompt(self) -> Dict[str, Any]:
-        if self._prompts is None:
+        if self._prompt is None:
             self.__create_prompt__()
         return self._prompt
 
@@ -127,7 +127,7 @@ class ExercisesFolder(Folder):
             'type': 'checkbox',
             'message': 'Which exercises should be included?',
             'name': 'exercises',
-            'choices': [{'name': exercise.name} for exercise in self.exercises]
+            'choices': [{'name': exercise} for exercise in self.exercises.keys()]
         }
         self._prompt = [question]
 

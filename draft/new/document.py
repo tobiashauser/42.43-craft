@@ -27,8 +27,6 @@ class Document:
 
     @property
     def user_values(self):
-        if self._user_values is None:
-            self.__init_user_values__()
         return self._user_values
 
     @user_values.setter
@@ -43,9 +41,11 @@ class Document:
 
     def __init__(self, header: Header, configuration: Configuration):
         self._exercises = None
-        self._user_values = None
+        self._user_values = configuration.user_values
         self._configuration = configuration
         self._header = header
+
+        self.prompt_user(self.header.prompts)
 
     def compile(self):
         """
@@ -107,8 +107,9 @@ class Document:
 
     def prompt_user(self, prompts: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Prompt the user with the provided prompts only if they haven't
-        been declared in any configuration's file yet.
+        Prompt the user with the provided prompts if the values don't
+        exist in self.user_values.
+        Accumulates the answers in self.user_values
         """
         def exists(key: str) -> Callable[Dict[str, Any], bool]:
             def when(answers: Dict[str, Any]) -> bool:
@@ -125,8 +126,10 @@ class Document:
 
         result = {}
         answers = prompt(questions)
+
         for key, value in answers.items():
             result[key] = value
+            self.user_values[key] = value
         return result
 
     def __init_exercises__(self):
@@ -170,7 +173,7 @@ class Document:
                 for i in range(1, int(amount) + 1):
                     templates = self.configuration.exercises[exercise]
                     result.update({
-                        exercise + '-' + str(i): templates.copy()
+                        exercise + '-' + str(i): templates
                     })
         else:
             # Build the exercises return type if no multiples
@@ -180,10 +183,3 @@ class Document:
                 })
 
         self._exercises = result
-
-    def __init_user_values__(self):
-        """
-        Prompt for any needed user values and store total in
-        self.-user_values.
-        """
-        self._user_values = self.prompt_user(self.header.prompts)
