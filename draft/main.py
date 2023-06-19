@@ -9,11 +9,17 @@ from .new.main import app as new
 from .templates.main import app as templates
 
 app = typer.Typer(no_args_is_help=True)
-app.add_typer(new, name="new")
-app.add_typer(templates, name="templates")
+app.add_typer(new, name="new", help="Create a new document.")
+app.add_typer(templates, name="templates", help="Manage the templates.")
 
 
-@app.command("test")
+@app.command("test", help="Test the tool.")
 def always():
     c = Configuration()
-    print(c.preamble.yaml)
+    for header in c.headers:
+        print(header.path)
+        print(header.name)
+        print(header.yaml)
+        print(header.placeholders)
+        print(header.prompts)
+        print('--------')

@@ -3,6 +3,8 @@ Inbox:
 	Features:
 		templates:
 			- Fetch/Update new templates from GitHub
+		new:
+			- Extract_Yaml method on template should be generic on open/closing tag
 	Ideas:
 		- create the option to create a new template with `draft new` as well that falls back to `draft template -n`
 		- the templates should be hosted on GitHub @done

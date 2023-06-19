@@ -7,6 +7,11 @@ from ..models.headers import Header
 
 from .document import Document
 
+# bug fix
+import collections.abc
+collections.Mapping = collections.abc.Mapping
+from PyInquirer import prompt
+
 app = typer.Typer(no_args_is_help=True)
 
 
@@ -15,6 +20,8 @@ app = typer.Typer(no_args_is_help=True)
 def subcommand(header: Header) -> Callable[None, None]:
     def logic():
         document = Document(header)
+        answers = prompt(header.prompts)
+        print(answers)
 
     return logic
 
