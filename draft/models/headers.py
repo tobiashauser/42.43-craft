@@ -3,10 +3,26 @@ import typer
 from typing import List
 
 from .helpers import fetch_github_directory
-from .template import Folder, Template
+from .base_classes.folder import Folder
+from .base_classes.template import Template
 
 
-class Headers(Folder):
+class Header(Template):
+    """
+    A class representing one header file in the templates' directory.
+    """
+
+    @property
+    def path(self) -> Path:
+        return self._path
+
+    def __init__(self, path: Path):
+        super().__init__()
+        self._path = path
+        self.validate()
+
+
+class HeadersFolder(Folder):
     """
     A class encapsulating the headers directory in the configuration.
     """
@@ -15,18 +31,16 @@ class Headers(Folder):
     def path(self) -> Path:
         return self._path
 
+    @property
+    def headers(self) -> List[Header]:
+        if self._headers is None:
+            self.__init_headers__()
+        return self._headers
+
     def __init__(self, path: Path):
         self._path = path
+        self._headers = None
         self.validate()
-
-        headers: List[Header] = []
-        for file in self.path.iterdir():
-            if file.is_file() and file.suffix == '.tex':
-                try:
-                    headers.append(Header(file))
-                except:
-                    pass
-        self.headers = headers
 
     def validate(self):
         # - directory exists
@@ -48,16 +62,12 @@ class Headers(Folder):
                 with (self.path / name).open('w') as file:
                     file.write(contents)
 
-
-class Header(Template):
-    """
-    A class representing one header file in the templates' directory.
-    """
-
-    @property
-    def path(self) -> Path:
-        return self._path
-
-    def __init__(self, path: Path):
-        self._path = path
-        self.validate()
+    def __init_headers__(self):
+        headers: List[Header] = []
+        for file in self.path.iterdir():
+            if file.is_file() and file.suffix == '.tex':
+                try:
+                    headers.append(Header(file))
+                except:
+                    pass
+        self._headers = headers

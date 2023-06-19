@@ -17,13 +17,18 @@ class Document:
     A class representing the document created by draft.
     """
 
-    _exercises = None
-    _user_values = None
+    @property
+    def configuration(self) -> Configuration:
+        return self._configuration
+
+    @property
+    def header(self) -> Header:
+        return self._header
 
     @property
     def user_values(self):
         if self._user_values is None:
-            self.__prompt_for_user_values__()
+            self.__init_user_values__()
         return self._user_values
 
     @user_values.setter
@@ -33,12 +38,14 @@ class Document:
     @property
     def exercises(self):
         if self._exercises is None:
-            self.__prompt_for_exercises__()
+            self.__init_exercises__()
         return self._exercises
 
     def __init__(self, header: Header, configuration: Configuration):
-        self.configuration = configuration
-        self.header = header
+        self._exercises = None
+        self._user_values = None
+        self._configuration = configuration
+        self._header = header
 
     def compile(self):
         """
@@ -122,7 +129,7 @@ class Document:
             result[key] = value
         return result
 
-    def __prompt_for_exercises__(self):
+    def __init_exercises__(self):
         """
         Prompt the user to choose which exercises should be
         included in the document.
@@ -139,7 +146,7 @@ class Document:
         result: Dict[str, Any] = {}
 
         exercise_types = self.prompt_user(
-            self.configuration.exercises_prompt
+            self.configuration.exercises_folder.prompt
         )['exercises']
 
         # Manage multiple creation
@@ -174,7 +181,7 @@ class Document:
 
         self._exercises = result
 
-    def __prompt_for_user_values__(self):
+    def __init_user_values__(self):
         """
         Prompt for any needed user values and store total in
         self.-user_values.

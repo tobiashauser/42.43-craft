@@ -7,21 +7,6 @@ import typer
 from typing import Set, Dict, Any, List
 
 
-class Folder(ABC):
-    """
-    An abstraction over a directory on the disk.
-    """
-
-    @property
-    @abstractmethod
-    def path(self) -> Path:
-        pass
-
-    @abstractmethod
-    def validate(self):
-        pass
-
-
 class Template(ABC):
     """
     An abstract base class representing a template file on the
@@ -36,11 +21,6 @@ class Template(ABC):
     @abstractmethod
     def path(self) -> Path:
         pass
-
-    _yaml = None
-    _placeholders = None
-    _prompts = None
-    _contents = None
 
     @property
     def yaml(self) -> Dict[str, Any]:
@@ -69,6 +49,12 @@ class Template(ABC):
     @property
     def name(self) -> str:
         return self.path.stem
+
+    def __init__(self):
+        self._yaml = None
+        self._placeholders = None
+        self._prompts = None
+        self._contents = None
 
     def validate(self):
         # - is file
@@ -137,7 +123,7 @@ class Template(ABC):
                 # order: type, name, message, ...
                 if 'type' not in question:
                     question['type'] = 'input'
-                question['name'] = name
+                    question['name'] = name
                 if 'message' not in question:
                     question['message'] = "Please provide the %s." % name
                 for key, value in values.items():

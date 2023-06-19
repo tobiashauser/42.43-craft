@@ -2,7 +2,7 @@ from pathlib import Path
 import typer
 
 from .helpers import fetch_github_document
-from .template import Template
+from .base_classes.template import Template
 
 
 class Preamble(Template):
@@ -17,6 +17,7 @@ class Preamble(Template):
         return self._path
 
     def __init__(self, path: Path):
+        super().__init__()
         self._path = path
         self.validate()
 

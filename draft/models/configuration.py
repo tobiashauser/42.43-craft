@@ -3,8 +3,8 @@ from pathlib import Path
 from rich import print
 from typing import List, Dict, Any
 
-from .exercises import Exercises, Exercise
-from .headers import Headers, Header
+from .exercises import ExercisesFolder, Exercise
+from .headers import HeadersFolder, Header
 from .preamble import Preamble
 
 
@@ -16,44 +16,85 @@ class Configuration:
     configuration upon initialization.
     """
 
-    _user_values = None
-
     @property
     def user_values(self) -> Dict[str, Any]:
+        """
+        Dictionary representing all provided settings and values
+        in `draftrc` and `.draftrc` files from cwd to root.
+        """
         if self._user_values is None:
             self.__fetch_user_values__()
         return self._user_values
 
-    @user_values.setter
-    def user_values(self, newValue: Dict[str, Any]):
-        self._user_values = newValue
+    # @user_values.setter
+    # def user_values(self, newValue: Dict[str, Any]):
+    #     self._user_values = newValue
+
+    @property
+    def preamble(self) -> Preamble:
+        return self._preamble
+
+    @property
+    def path(self) -> Path:
+        return self._path
+
+    @property
+    def templates_path(self) -> Path:
+        return self._templates_path
+
+    @property
+    def headers_path(self) -> Path:
+        return self.templates_path / "headers/"
+
+    @property
+    def exercises_path(self) -> Path:
+        return self.templates_path / "exercises/"
+
+    @property
+    def preamble_path(self) -> Path:
+        return self.templates_path / "preamble.tex"
+
+    @property
+    def headers_folder(self) -> HeadersFolder:
+        return self._headers_folder
+
+    @property
+    def headers(self) -> List[Header]:
+        return self.headers_folder.headers
+
+    @property
+    def exercises_folder(self) -> ExercisesFolder:
+        return self._exercises_folder
+
+    @property
+    def exercises(self) -> Dict[str, Exercise]:
+        return self.exercises_folder.exercises
 
     def __init__(self):
+        # Initialize the underlying storage
+        self._user_values = None
+
         # Path.home() / ".config/draft/"
-        self.basedir: Path = Path("")
-        self.templates: Path = self.basedir / "templates/"
+        self._path: Path = Path("")
+        self._templates_path: Path = self.path / "templates/"
         self.validate()
 
-        self.preamble: Preamble = Preamble(self.templates / "preamble.tex")
+        self._preamble: Preamble = Preamble(self.preamble_path)
 
-        self.headers: List[Header] = \
-            Headers(self.templates / "headers/").headers
-
-        exercises = Exercises(self.templates / "exercises/")
-        self.exercises: Dict[str, Dict[str, Exercise]] = exercises.exercises
-        self.exercises_prompt = exercises.prompts
+        self._exercises_folder = ExercisesFolder(self.exercises_path)
+        self._headers_folder = HeadersFolder(self.headers_path)
 
     def validate(self):
-        if (not self.basedir.is_dir()) \
-                or (not self.templates.is_dir()):
+        if (not self.path.is_dir()) \
+                or (not self.templates_path.is_dir()):
             print("Creating configuration's directory at " +
-                  "[white bold]%s[/white bold]..." % self.basedir)
+                  "[white bold]%s[/white bold]..." % self.path)
             self.templates.mkdir(parents=True, exist_ok=True)
 
     def __fetch_user_values__(self):
         """
         Accumulate all 'draftrc' and '.draftrc' YAML-files from the current
-        working directory to the root directory in a dictionary.
+        working directory up to the root directory in a dictionary.
         """
         user_values: Dict[str, Any] = {}
         allowed_file_names = ['draftrc', '.draftrc']
