@@ -1,8 +1,12 @@
+from copy import deepcopy
 from pathlib import Path
+import re
 from typing import Dict, Any, Optional, Callable, List
 
 from ..models.configuration import Configuration
 from ..models.headers import Header
+from ..models.preamble import Preamble
+from ..models.base_classes.template import Template
 
 # bug fix
 import collections.abc
@@ -12,7 +16,7 @@ from PyInquirer import prompt
 from prompt_toolkit.validation import Validator, ValidationError
 
 
-class Document:
+class Document(Template):
     """
     A class representing the document created by draft.
     """
@@ -22,11 +26,15 @@ class Document:
         return self._configuration
 
     @property
+    def preamble(self) -> Preamble:
+        return self.configuration.preamble
+
+    @property
     def header(self) -> Header:
         return self._header
 
     @property
-    def user_values(self):
+    def user_values(self) -> Dict[str, Any]:
         return self._user_values
 
     @user_values.setter
@@ -34,13 +42,21 @@ class Document:
         self._user_values = newValue
 
     @property
-    def exercises(self):
+    def exercises(self) -> Dict[str, Any]:
         if self._exercises is None:
             self.__init_exercises__()
         return self._exercises
 
+    @property
+    def path(self) -> Path:
+        if self._path is None:
+            self.__init_path__()
+        return self._path
+
     def __init__(self, header: Header, configuration: Configuration):
+        super().__init__()
         self._exercises = None
+        self._path = None
         self._user_values = configuration.user_values
         self._configuration = configuration
         self._header = header
@@ -63,47 +79,38 @@ class Document:
           in the directory
         - Close the document body
         """
-        class DocumentNameValidator(Validator):
-            @staticmethod
-            def __validate__(text: str) -> Optional[ValidationError]:
-                if not len(text) != 0:
-                    return (False, ValidationError(
-                        message='The name of the file cannot be empty.',
-                        cursor_position=len(text)
-                    ))
-                path = Path(
-                    text
-                    if text.endswith('.tex')
-                    else text + '.tex'
-                )
-                if path.exists():
-                    return (False, ValidationError(
-                        message='A document with this name already exists.',
-                        cursor_position=len(text)
-                    ))
+        self.write(self.preamble.contents)
+        self.write(self.header.template)
+        self.write(r"\\begin{document}")
 
-            def validate(self, document):
-                error = DocumentNameValidator.__validate__(document.text)
-                if error is not None:
-                    raise error
+        for name, value in self.exercises.items():
+            print(name, value)
 
-        error = DocumentNameValidator.__validate__(self.header.name)
-        document_name_prompt = [{
-            'type': 'input',
-            'message': 'What should the document be called?',
-            'default': self.header.name,
-            'validate': DocumentNameValidator,
-            'name': 'output',
-        }]
-        document_name = (
-            self.prompt_user(document_name_prompt)  # can return {}
-            if error is None
-            else prompt(document_name_prompt)  # {'output': 'exam}
-        ).get(
-            'output',
-            self.configuration.user_values.get('output', '')
-            # last default is never reached
-        )
+        self.write(r"\\end{document}")
+
+        self.fill_placeholders()
+
+
+
+    def write(self, contents: str):
+        """
+        Writes contents to self.path
+        """
+        with self.path.open('w') as file:
+            file.write(contents)
+
+    def fill_placeholders(self):
+        """
+        Fill in all the place holders in the compiled document.
+        Asking for any additional ones.
+        """
+        self.prompt_user(self.prompts)
+        contents = self.contents
+        for placeholder in self.placeholders:
+            pattern = re.compile("<<%s>>" % placeholder)
+            contents = re.sub(pattern, self.user_values[placeholder], contents)
+        self.write(contents)
+
 
     def prompt_user(self, prompts: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
@@ -173,7 +180,7 @@ class Document:
                 for i in range(1, int(amount) + 1):
                     templates = self.configuration.exercises[exercise]
                     result.update({
-                        exercise + '-' + str(i): templates
+                        exercise + '-' + str(i): deepcopy(templates)
                     })
         else:
             # Build the exercises return type if no multiples
@@ -183,3 +190,55 @@ class Document:
                 })
 
         self._exercises = result
+
+    def __init_path__(self):
+        """
+        Intialize the path for the document.
+        This means asking for the name of the document.
+        """
+        class DocumentNameValidator(Validator):
+            @staticmethod
+            def __validate__(text: str) -> Optional[ValidationError]:
+                if not len(text) != 0:
+                    return ValidationError(
+                        message='The name of the file cannot be empty.',
+                        cursor_position=len(text)
+                    )
+                path = Path(
+                    text
+                    if text.endswith('.tex')
+                    else text + '.tex'
+                )
+                if path.exists():
+                    return ValidationError(
+                        message='A document with this name already exists.',
+                        cursor_position=len(text)
+                    )
+
+            def validate(self, document):
+                error = DocumentNameValidator.__validate__(document.text)
+                if error is not None:
+                    raise error
+
+        error = DocumentNameValidator.__validate__(self.header.name)
+        document_name_prompt = [{
+            'type': 'input',
+            'message': 'What should the document be called?',
+            'default': self.header.name,
+            'validate': DocumentNameValidator,
+            'name': 'output',
+        }]
+        document_name = (
+            self.prompt_user(document_name_prompt)  # can return {}
+            if error is None
+            else prompt(document_name_prompt)  # {'output': 'exam}
+        ).get(
+            'output',
+            self.configuration.user_values.get('output', '')
+            # last default is never reached
+        )
+        self._path = Path.cwd() / (
+            document_name
+            if document_name.endswith('.tex')
+            else document_name + '.tex'
+        )

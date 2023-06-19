@@ -5,4 +5,4 @@ course: HE 2
 semantic-name: Klausur
 group: Gruppe 2
 # multiples: False
-output: exam
+output: test-document

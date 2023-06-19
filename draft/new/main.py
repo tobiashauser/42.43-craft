@@ -26,7 +26,7 @@ def subcommand(
         # print(document.user_values)
         # print(document.user_values)
         # document.compile()
-        print(document.exercises)
+        document.compile()
 
 
     return logic

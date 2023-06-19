@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import typer
 from typing import List
 
@@ -16,10 +17,37 @@ class Header(Template):
     def path(self) -> Path:
         return self._path
 
+    @property
+    def template(self) -> str:
+        if self._template is None:
+            self.__init_template__()
+        return self._template
+
     def __init__(self, path: Path):
         super().__init__()
         self._path = path
+        self._template = None
         self.validate()
+
+    def __init_template__(self):
+        r"""
+        The contents stripped of everything only there to compile on its own:
+        - \input{../preamble.tex}
+        - document-environment
+        """
+        template = self.contents
+
+        # remove `\input{../preamble.tex}`
+        template = re.sub(r"\\input{../preamble.tex}", "", template)
+
+        # remove document
+        template = re.sub(
+            r"(?s)\\begin{document}\n(.*?)\\end{document}",
+            "",
+            template
+        )
+        self._template = template
+
 
 
 class HeadersFolder(Folder):

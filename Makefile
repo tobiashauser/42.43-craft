@@ -3,6 +3,7 @@ run:
 	draft
 clean:
 	find . | grep -E "(__pycache__|\.pyc|.pytest_cache)" | xargs rm -rf
+	rm -rf test-document*.tex
 reset: clean
 	rm -rf config/
 test:
