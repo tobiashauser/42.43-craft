@@ -3,6 +3,7 @@ import oyaml as yaml
 import re
 from rich import print
 from pathlib import Path
+import typer
 from typing import Set, Dict, Any, List
 
 
@@ -51,7 +52,7 @@ class Template(ABC):
     def placeholders(self) -> Set[str]:
         if self._placeholders is None:
             self.__extract_placeholders__()
-            return self._placeholders
+        return self._placeholders
 
     @property
     def prompts(self) -> Dict[str, Any]:
@@ -125,7 +126,7 @@ class Template(ABC):
         the data.
         """
         dict = self.yaml.get('prompts', [])
-        placeholders = self.placeholders
+        placeholders = self.placeholders.copy()
 
         prompts = []
         for item in dict:
@@ -145,12 +146,12 @@ class Template(ABC):
                 prompts.append(question)
                 placeholders.remove(name)
 
-                # create default prompts for any undeclared placeholders
-                for name in placeholders:
-                    question = {}
-                    question['type'] = 'input'
-                    question['name'] = name
-                    question['message'] = "Please provide the %s." % name
-                    prompts.append(question)
+        # create default prompts for any undeclared placeholders
+        for name in placeholders:
+            question = {}
+            question['type'] = 'input'
+            question['name'] = name
+            question['message'] = "Please provide the %s." % name
+            prompts.append(question)
 
         self._prompts = prompts
