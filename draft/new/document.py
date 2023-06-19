@@ -79,8 +79,10 @@ class Document(Template):
           in the directory
         - Close the document body
         """
-        self.write(self.preamble.contents)
-        self.write(self.header.template)
+        preamble = ""
+        preamble += self.preamble.contents
+        preamble += self.header.template
+
         self.write(r"\\begin{document}")
 
         for name, value in self.exercises.items():
