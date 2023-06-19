@@ -6,5 +6,6 @@ clean:
 reset: clean
 	rm -rf config/
 test:
+	# Should be called from the base-directory of the project.
 	poetry run pytest -v
 

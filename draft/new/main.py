@@ -7,30 +7,29 @@ from ..models.headers import Header
 
 from .document import Document
 
-# bug fix
-import collections.abc
-collections.Mapping = collections.abc.Mapping
-from PyInquirer import prompt
 
 app = typer.Typer(no_args_is_help=True)
+configuration = Configuration()
 
 
 # Dynamically create a subcommand for each header in 'templates/header/' #
 # ---------------------------------------------------------------------- #
-def subcommand(header: Header) -> Callable[None, None]:
+def subcommand(
+    header: Header,
+    configuration: Configuration
+) -> Callable[None, None]:
     def logic():
-        document = Document(header)
-        answers = prompt(header.prompts)
-        print(answers)
+        document = Document(header, configuration)
+        document.prompt_user(document.header.prompts)
 
     return logic
 
 
-for header in Configuration().headers:
+for header in configuration.headers:
     app.command(
         name=header.name,
         help="Create a new %s." % header.name
-    )(subcommand(header))
+    )(subcommand(header, configuration))
 
 
 # draft new template #
