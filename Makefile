@@ -4,10 +4,14 @@ CHECKSTYLE = flake8
 TEST = pytest
 PYTHON_FILES = $(shell find . -name "*.py")
 
+draft:
+	$(POETRY) shell
+	$(POETRY) install
 compile:
 	$(PYTHON) -m py_compile $(PYTHON_FILES)
 test:
 	$(PYTHON) -m doctest $(PYTHON_FILES)
+	$(POETRY) run $(TEST)
 checkstyle:
 	$(CHECKSTYLE) $(PYTHON_FILES)
 clean:
