@@ -1,10 +1,5 @@
 # macOS
 .DS_Store
 
-__pycache__/
-.pytest_cache/
-dist/
-
-# created by draft
-config/
-
+# Python
+__pychache__/
