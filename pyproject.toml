@@ -12,6 +12,7 @@ draft = "draft.app:app"
 [tool.poetry.dependencies]
 python = "^3.11"
 typer = "^0.9.0"
+pathlib = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"
