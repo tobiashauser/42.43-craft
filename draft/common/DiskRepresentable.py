@@ -6,6 +6,9 @@ from typing import Protocol
 class DiskRepresentable(Protocol):
     """
     A protocol representing a file or folder on the disk.
+
+    Conforming types:
+
     """
 
     _path: Path
@@ -22,5 +25,8 @@ class DiskRepresentable(Protocol):
         Override this endpoint in tests to load the data from
         a folder in this directory or to instantiate the type
         with mock data.
+
+        Usually, implementations would want to call `self.load()`
+        as the last action in their initializer.
         """
         raise NotImplementedError

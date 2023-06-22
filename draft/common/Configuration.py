@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from draft.common.DiskRepresentable import DiskRepresentable
+from draft.common.Folder import Folder
 
 
-class Configuration(DiskRepresentable):
+class Configuration(Folder):
     """
     A class representing the configuration's folder at '~/.config/draft/'.
 
@@ -11,15 +11,15 @@ class Configuration(DiskRepresentable):
 
     ```
     ~/.config/draft/
-    └── templates
-        ├── exercises
-        ├── headers
-        └── preamble.tex
+    ├── exercises
+    ├── headers
+    └── preamble.tex
     ```
     """
 
     def __init__(self):
         self._path = Path.home() / ".config/draft/"
+        self.load()
 
     def load(self):
         raise NotImplementedError
