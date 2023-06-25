@@ -11,9 +11,7 @@ class File(ABC, DiskRepresentable):
     - Template (ABC)
 
     Subclasses should remember to call `super().__init__()`
-    if they implement their own initializer, as well as
-    `super().load()` when implementing their own loading
-    method.
+    if they implement their own initializer.
     """
 
     _contents: str
