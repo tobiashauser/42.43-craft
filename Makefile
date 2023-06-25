@@ -17,3 +17,4 @@ checkstyle:
 clean:
 	find . -name "*.pyc" | xargs rm -f
 	find . -name "__pycache__" | xargs rm -rf
+	find . -name "*.aux" -o -name "*.fdb_latexmk" -o -name "*.fls" -o -name "*.log" -o -name "*synctex.gz" | xargs rm -f

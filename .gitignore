@@ -4,3 +4,11 @@
 # Python
 __pycache__/
 .pytest_cache/
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.pdf

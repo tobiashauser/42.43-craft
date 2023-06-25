@@ -10,6 +10,10 @@ DiskRepresentable (Protocol)
 │   └── Configuration
 └── File (ABC)
     └── Template (ABC)
+        └── TexTemplate (ABC)
+            ├── Preamble
+            └── Header
+
 
 ├──
 │   ├──
@@ -17,4 +21,5 @@ DiskRepresentable (Protocol)
 └──
     ├──
     └──
+│   
 ```

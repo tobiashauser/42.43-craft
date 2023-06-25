@@ -7,7 +7,7 @@ class File(ABC, DiskRepresentable):
     """
     Abstract class representing a file on the disk.
 
-    Conforming types:
+    Subclasses:
     - Template (ABC)
 
     Subclasses should remember to call `super().__init__()`

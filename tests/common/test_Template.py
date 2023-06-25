@@ -75,9 +75,13 @@ def test_prompts():
             "name": "course",  # was customized in YAML -> should be ignored
             "type": "input",
             "message": "Please provide the 'course'.",
+            "validate": lambda v: len(v) != 0,  # functions are not equatable...
         },
     ]
-
-    assert sorted(input.prompts, key=lambda d: d["name"]) == sorted(
-        expectation, key=lambda d: d["name"]
-    )
+    prompts = sorted(input.prompts, key=lambda d: d["name"])
+    assert len(prompts) == 2
+    assert prompts[0] == expectation[0]
+    assert prompts[1]["name"] == "course"
+    assert prompts[1]["type"] == "input"
+    assert prompts[1]["message"] == "Please provide the 'course'."
+    assert "validate" in prompts[1]

@@ -15,9 +15,7 @@ class Template(File, ABC):
     on the disk.
 
     Conforming types are:
-    - Preamble
-    - Header
-    - ExerciseTemplate
+    - TexTemplate (ABC)
 
     Subclasses should remember to call `super().__init__()`
     if they implement their own initializer.
@@ -60,7 +58,7 @@ class Template(File, ABC):
         yaml_suffix: str,
     ):
         """
-        Take care to pass unescaped string literals for
+        Take care to pass properly escaped string literals for
         `placeholder_prefix`, `placeholder_suffix`, `yaml_prefix`,
         `yaml_suffix` to the initialiser:
 
