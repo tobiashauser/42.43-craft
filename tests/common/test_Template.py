@@ -5,7 +5,7 @@ from draft.common.Template import Template
 
 contents = r"""
 This is a template for a <<course>>. It is
-written by <<author>>. 
+written by <<author>>.
 
 \iffalse
 course:
@@ -70,7 +70,9 @@ def test_yaml():
 
 
 def test_prompts():
-    input = TemplateImplementation(configuration=Configuration(allow_eval=True))
+    input = TemplateImplementation(
+        configuration=Configuration(allow_eval=True, year=2023)
+    )
     expectation = [
         {
             "name": "author",
@@ -86,21 +88,41 @@ def test_prompts():
     ]
     prompts = sorted(input.prompts, key=lambda d: d["name"])
     assert len(prompts) == 2
-    assert prompts[0] == expectation[0]
+
+    assert prompts[0]["name"] == "author"
+    assert prompts[0]["type"] == "input"
+    assert prompts[0]["message"] == "Please provide the 'author'."
+    assert "validate" not in prompts[0]
+    assert "when" in prompts[0]
+    assert len(prompts[0]) == 4
+
     assert prompts[1]["name"] == "course"
     assert prompts[1]["type"] == "input"
     assert prompts[1]["message"] == "Please provide the 'course'."
     assert "validate" in prompts[1]
     assert "when" in prompts[1]
+    assert len(prompts[1]) == 5
 
 
 def test_prompts_allow_eval_configuration():
     t = TemplateImplementation(configuration=Configuration(allow_eval=False))
     prompts = sorted(t.prompts, key=lambda d: d["name"])
     assert "validate" not in prompts[1]
-    assert "when" not in prompts[1]
+    assert "when" in prompts[1]
 
     t = TemplateImplementation(configuration=Configuration(allow_eval=True))
     prompts = sorted(t.prompts, key=lambda d: d["name"])
     assert "validate" in prompts[1]
     assert "when" in prompts[1]
+
+
+def test_reference_semantics_of_configuration():
+    c = Configuration()
+    t1 = TemplateImplementation(configuration=c)
+    t2 = TemplateImplementation(configuration=c)
+
+    assert t1.configuration == t2.configuration
+
+    t1.configuration["A"] = 1
+    assert t2.configuration["A"] == 1
+    assert t1.configuration == t2.configuration

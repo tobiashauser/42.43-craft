@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import List
 
 import oyaml as yaml
 
@@ -13,6 +13,14 @@ class Configuration(dict):
     - `allow_eval`: If true, the user can specify lambdas to
         customize how prompts behave. This is opt in because
         it opens up security issues.
+    - `draft-exercises`: Holds a list of exercises to be
+        included in the compiled document.
+        (also "Special placeholders")
+
+    Special placeholders:
+    - `<<draft-exercises>>`: This placeholder gets replaced by
+        the exericses. It should only appear in a header.
+        It can also be set in a `draftrc` configuration file.
     """
 
     @property

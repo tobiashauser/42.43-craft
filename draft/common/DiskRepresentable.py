@@ -8,7 +8,8 @@ class DiskRepresentable(Protocol):
     A protocol representing a file or folder on the disk.
 
     Conforming types:
-
+    - Folder (ABC)
+    - File (ABC)
     """
 
     _path: Path

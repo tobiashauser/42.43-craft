@@ -1,7 +1,7 @@
 import re
 from abc import ABC
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, Callable, Dict, List, Set
 
 import oyaml as yaml
 
@@ -71,6 +71,10 @@ class Template(File, ABC):
         ```
         yaml_prefix=r"\\iffalse",
         ```
+
+        Always pass a reference to a global configuration
+        in the initializer. The prompts rely on having
+        the newest version of the configuration.
         """
         super().__init__(path=path)
         self._configuration = configuration
@@ -121,26 +125,29 @@ class Template(File, ABC):
                 dict = combine_dictionaries(dict, yaml.safe_load(match))
             except:
                 pass
-            """
-            TODO: This setup silently fails any block comments that are not valid yaml.
-            This is necessary to allow any kind of block comment in the templates.
-            Maybe a warning should be printed?
-            """
 
         self._yaml = dict
 
     def __init_prompts__(self):
         """
         Create prompts for PyInquirer from the placeholders
-        in the file.
+        in the file if a value doesn't yet exist in the
+        configuration.
 
         They can be customized in any YAML-block.
         """
+
+        def exists(key: str) -> Callable[..., bool]:
+            return lambda: key not in self.configuration
 
         prompts: List[Dict[str, Any]] = []
 
         for placeholder in self.placeholders:
             question: Dict[str, Any] = {}
+
+            # ignore `<<draft-exercises>>`
+            if placeholder == "draft-exercises":
+                continue
 
             # set the minimum default values
             question["name"] = placeholder
@@ -158,9 +165,13 @@ class Template(File, ABC):
                             question[key] = eval(value)
                     elif key == "when":
                         if self.configuration.get("allow_eval", False):
-                            question[key] = eval(value)
+                            question[key] = eval(value) and exists(question["name"])
                     else:
                         question[key] = value
+
+            # Insert when condition
+            if "when" not in question:
+                question["when"] = exists(question["name"])
 
             prompts.append(question)
 

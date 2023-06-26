@@ -5,6 +5,10 @@ from draft.common.Header import Header as LiveHeader
 
 contents = r"""
 \documentclass{scrreport}
+
+\begin{document}
+Hello, world!
+\end{document}
 """
 
 
@@ -15,7 +19,7 @@ class Header(LiveHeader):
 
 def test_live_loading():
     path = Path("tests/common/test_live_loading.tex")
-    contents = r"""
+    _contents = r"""
 \documentclass{scrreport}
 \input{../preamble.tex}
 
@@ -24,9 +28,9 @@ Hello, world!
 \end{document}
 """
     with path.open("w") as file:
-        file.write(contents)
+        file.write(_contents)
     input = LiveHeader(configuration=Configuration(), path=path)
-    assert input.contents == "\\documentclass{scrreport}"
+    assert input.contents == contents.strip()
     path.unlink()
 
 

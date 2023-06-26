@@ -32,3 +32,18 @@ def test_instantiation():
     c = Configuration(A=1, B=2)
     assert c["A"] == 1
     assert c["B"] == 2
+
+
+def test_reference_semantics():
+    c = Configuration(A=1, B=2)
+    assert len(c) == 2
+
+    copy = c
+    copy["A"] = 3
+
+    assert c["A"] == 3
+
+    copy["C"] = 4
+
+    assert len(c) == 3
+    assert c["C"] == 4

@@ -34,3 +34,28 @@ Hello, world!
 
     input = t.remove_include_preamble(input)
     assert input == "\\documentclass{scrreport}"
+
+
+def test_deletion_with_trailing_new_line():
+    t = TexTemplateImplementation()
+    input = r"""
+before
+
+\input{../../preamble.tex}
+
+after
+"""
+    input = t.remove_include_preamble(input)
+    assert input == "before\n\n\nafter"
+
+    input = r"""
+before
+
+\begin{document}
+Hello, world!
+\end{document}
+
+after
+"""
+    input = t.remove_document_body(input)
+    assert input == "before\n\n\nafter"

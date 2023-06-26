@@ -44,11 +44,11 @@ class TexTemplate(Template, ABC):
     def remove_document_body(contents: str) -> str:
         # Remove the document environment
         pattern = re.compile(
-            "(?s)%s(.*?)%s" % (r"\\begin{document}", r"\\end{document}")
+            "(?s)%s(.*?)%s" % (r"\\begin{document}", r"\\end{document}(\n)?")
         )
         return re.sub(pattern, "", contents).strip()
 
     @staticmethod
     def remove_include_preamble(contents: str) -> str:
-        pattern = re.compile(r"\\input{(.*?)preamble(.tex)?}")
+        pattern = re.compile(r"\\input{(.*?)preamble(.tex)?}(\n)?")
         return re.sub(pattern, "", contents).strip()
