@@ -1,17 +1,20 @@
 from pathlib import Path
 
+from draft.common.Configuration import Configuration
 from draft.common.TexTemplate import TexTemplate
 
 
 class TexTemplateImplementation(TexTemplate):
-    def __init__(self, path: Path = Path()):
-        super().__init__(path=path)
+    def __init__(
+        self, configuration: Configuration = Configuration(), path: Path = Path()
+    ):
+        super().__init__(configuration=configuration, path=path)
 
     def load(self):
         self._contents = ""
 
 
-def test_remove_document_body():
+def test_remove_parts_of_contents():
     t = TexTemplateImplementation()
     input = r"""
 \documentclass{scrreport}

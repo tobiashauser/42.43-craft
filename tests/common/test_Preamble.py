@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from draft.common.Configuration import Configuration
 from draft.common.Preamble import Preamble as LivePreamble
 
 contents = r"""
@@ -23,13 +24,13 @@ Hello, world!
 """
     with path.open("w") as file:
         file.write(contents)
-    input = LivePreamble(path=path)
+    input = LivePreamble(configuration=Configuration(), path=path)
     assert input.contents == "\\documentclass{scrreport}"
     path.unlink()
 
 
 def test_inherited_properties():
-    input = Preamble(path=Path())
+    input = Preamble(configuration=Configuration(), path=Path())
     assert input.path == Path()
     assert input.contents == contents
     assert input.placeholders == set()

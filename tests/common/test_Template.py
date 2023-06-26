@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from draft.common.Configuration import Configuration
 from draft.common.Template import Template
 
 contents = r"""
@@ -11,6 +12,7 @@ course:
     name: blob
     type: input
     validate: "lambda v: len(v) != 0"
+    when: "lambda d: 'name' not in d"
 \fi
 
 What if a placeholder is customized but not as a dictionary?
@@ -25,9 +27,11 @@ author: E.A.P.
 class TemplateImplementation(Template):
     def __init__(
         self,
+        configuration: Configuration = Configuration(),
         path: Path = Path(),
     ):
         super().__init__(
+            configuration=configuration,
             path=path,
             placeholder_prefix=r"<<",
             placeholder_suffix=r">>",
@@ -42,6 +46,7 @@ class TemplateImplementation(Template):
 def test_instantiation():
     input = TemplateImplementation()
     assert input.contents == contents
+    assert input.configuration == Configuration()
 
 
 def test_handlebars():
@@ -56,6 +61,7 @@ def test_yaml():
             "name": "blob",
             "type": "input",
             "validate": "lambda v: len(v) != 0",
+            "when": "lambda d: 'name' not in d",
         },
         "author": "E.A.P.",
     }
@@ -64,7 +70,7 @@ def test_yaml():
 
 
 def test_prompts():
-    input = TemplateImplementation()
+    input = TemplateImplementation(configuration=Configuration(allow_eval=True))
     expectation = [
         {
             "name": "author",
@@ -85,3 +91,16 @@ def test_prompts():
     assert prompts[1]["type"] == "input"
     assert prompts[1]["message"] == "Please provide the 'course'."
     assert "validate" in prompts[1]
+    assert "when" in prompts[1]
+
+
+def test_prompts_allow_eval_configuration():
+    t = TemplateImplementation(configuration=Configuration(allow_eval=False))
+    prompts = sorted(t.prompts, key=lambda d: d["name"])
+    assert "validate" not in prompts[1]
+    assert "when" not in prompts[1]
+
+    t = TemplateImplementation(configuration=Configuration(allow_eval=True))
+    prompts = sorted(t.prompts, key=lambda d: d["name"])
+    assert "validate" in prompts[1]
+    assert "when" in prompts[1]

@@ -2,6 +2,7 @@ import re
 from abc import ABC
 from pathlib import Path
 
+from draft.common.Configuration import Configuration
 from draft.common.Template import Template
 
 
@@ -22,8 +23,9 @@ class TexTemplate(Template, ABC):
     the preamble.
     """
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, configuration: Configuration):
         super().__init__(
+            configuration=configuration,
             path=path,
             placeholder_prefix=r"<<",
             placeholder_suffix=r">>",

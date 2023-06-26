@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from draft.common.Configuration import Configuration
 from draft.common.Header import Header as LiveHeader
 
 contents = r"""
@@ -24,13 +25,13 @@ Hello, world!
 """
     with path.open("w") as file:
         file.write(contents)
-    input = LiveHeader(path=path)
+    input = LiveHeader(configuration=Configuration(), path=path)
     assert input.contents == "\\documentclass{scrreport}"
     path.unlink()
 
 
 def test_inherited_properties():
-    input = Header(path=Path())
+    input = Header(configuration=Configuration(), path=Path())
     assert input.path == Path()
     assert input.contents == contents
     assert input.placeholders == set()

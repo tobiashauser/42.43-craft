@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Set
 
 import oyaml as yaml
 
+from draft.common.Configuration import Configuration
 from draft.common.File import File
 from draft.common.helpers import combine_dictionaries
 
@@ -20,6 +21,10 @@ class Template(File, ABC):
     Subclasses should remember to call `super().__init__()`
     if they implement their own initializer.
     """
+
+    @property
+    def configuration(self) -> Configuration:
+        return self._configuration
 
     @property
     def placeholder_prefix(self) -> str:
@@ -51,6 +56,7 @@ class Template(File, ABC):
 
     def __init__(
         self,
+        configuration: Configuration,
         path: Path,
         placeholder_prefix: str,
         placeholder_suffix: str,
@@ -67,6 +73,7 @@ class Template(File, ABC):
         ```
         """
         super().__init__(path=path)
+        self._configuration = configuration
 
         # Placeholders
         self._placeholder_prefix: str = placeholder_prefix
@@ -147,8 +154,11 @@ class Template(File, ABC):
                     if key == "name":
                         continue
                     elif key == "validate":
-                        # TODO: this is a security risk that should be controlled by a global setting
-                        question[key] = eval(value)
+                        if self.configuration.get("allow_eval", False):
+                            question[key] = eval(value)
+                    elif key == "when":
+                        if self.configuration.get("allow_eval", False):
+                            question[key] = eval(value)
                     else:
                         question[key] = value
 
