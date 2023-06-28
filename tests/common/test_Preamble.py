@@ -25,7 +25,12 @@ Hello, world!
     with path.open("w") as file:
         file.write(contents)
     input = LivePreamble(configuration=Configuration(), path=path)
-    assert input.contents == "\\documentclass{scrreport}"
+    assert (
+        input.contents
+        == """
+\documentclass{scrreport}
+"""
+    )
     path.unlink()
 
 

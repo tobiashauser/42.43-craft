@@ -196,12 +196,14 @@ class Template(File, ABC):
         """
 
         # Remove single line comments
-        pattern = re.compile("(?s)%s(.*?)(\n)?" % (self.single_line_comment_prefix))
+        # pattern = re.compile("(^\n)?%s(.*)(\n)?" % (self.single_line_comment_prefix))
+        pattern = re.compile("\v*%s(?:.*)\v*" % (self.single_line_comment_prefix))
         self._contents = re.sub(pattern, "", self.contents)
 
         # Remove block comments
         pattern = re.compile(
-            "(?s)%s(.*?)%s(\n)?(\n)?"
+            # "(?s)(\n)?%s(.*?)%s(\n)?"
+            "(?s)\v*%s(?:.*?)%s\v*"
             % (self.block_comment_prefix, self.block_comment_suffix)
         )
         self._contents = re.sub(pattern, "", self.contents)

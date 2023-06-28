@@ -15,6 +15,8 @@ course:
     when: "lambda d: 'name' not in d"
 \fi
 
+% This is a comment.
+
 What if a placeholder is customized but not as a dictionary?
 It doesn't do anything.
 
@@ -35,7 +37,7 @@ class TemplateImplementation(Template):
             path=path,
             placeholder_prefix=r"<<",
             placeholder_suffix=r">>",
-            single_line_comment_prefix=r"%",
+            single_line_comment_prefix=r"\%",
             block_comment_prefix=r"\\iffalse",
             block_comment_suffix=r"\\fi",
         )
@@ -139,6 +141,5 @@ written by <<author>>.
 
 What if a placeholder is customized but not as a dictionary?
 It doesn't do anything.
-
 """
     )

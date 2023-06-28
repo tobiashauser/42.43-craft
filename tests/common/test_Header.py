@@ -30,7 +30,7 @@ Hello, world!
     with path.open("w") as file:
         file.write(_contents)
     input = LiveHeader(configuration=Configuration(), path=path)
-    assert input.contents == contents.strip()
+    assert input.contents == contents
     path.unlink()
 
 

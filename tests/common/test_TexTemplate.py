@@ -34,8 +34,6 @@ Hello, world!
 
 \\input{preamble}
 \\input{../../preamble.tex}
-
-
 """
     )
 
@@ -44,11 +42,6 @@ Hello, world!
         input
         == """
 \\documentclass{scrreport}
-
-
-
-
-
 """
     )
 
@@ -68,8 +61,6 @@ after
         == """
 before
 
-
-
 after
 """
     )
@@ -88,8 +79,6 @@ after
         input
         == """
 before
-
-
 
 after
 """
