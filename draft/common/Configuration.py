@@ -16,6 +16,8 @@ class Configuration(dict):
     - `draft-exercises`: Holds a list of exercises to be
         included in the compiled document.
         (also "Special placeholders")
+    - `remove_comments`: If true, comments from the templates
+        will be removed when compiling the document.
 
     Special placeholders:
     - `<<draft-exercises>>`: This placeholder gets replaced by

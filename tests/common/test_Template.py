@@ -35,8 +35,9 @@ class TemplateImplementation(Template):
             path=path,
             placeholder_prefix=r"<<",
             placeholder_suffix=r">>",
-            yaml_prefix=r"\\iffalse",
-            yaml_suffix=r"\\fi",
+            single_line_comment_prefix=r"%",
+            block_comment_prefix=r"\\iffalse",
+            block_comment_suffix=r"\\fi",
         )
 
     def load(self):
@@ -126,3 +127,18 @@ def test_reference_semantics_of_configuration():
     t1.configuration["A"] = 1
     assert t2.configuration["A"] == 1
     assert t1.configuration == t2.configuration
+
+
+def test_remove_comments():
+    t = TemplateImplementation(Configuration(remove_comments=True))
+    assert (
+        t.contents
+        == """
+This is a template for a <<course>>. It is
+written by <<author>>.
+
+What if a placeholder is customized but not as a dictionary?
+It doesn't do anything.
+
+"""
+    )

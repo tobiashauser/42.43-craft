@@ -13,6 +13,7 @@ DiskRepresentable (Protocol)
     └── Template (ABC)
         └── TexTemplate (ABC)
             ├── Preamble
+            ├── Exercise
             └── Header
 
 

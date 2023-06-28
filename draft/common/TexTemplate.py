@@ -29,8 +29,9 @@ class TexTemplate(Template, ABC):
             path=path,
             placeholder_prefix=r"<<",
             placeholder_suffix=r">>",
-            yaml_prefix=r"\\iffalse",
-            yaml_suffix=r"\\fi",
+            block_comment_prefix=r"\\iffalse",
+            block_comment_suffix=r"\\fi",
+            single_line_comment_prefix=r"%",
         )
 
     def load(self):
@@ -44,11 +45,11 @@ class TexTemplate(Template, ABC):
     def remove_document_body(contents: str) -> str:
         # Remove the document environment
         pattern = re.compile(
-            "(?s)%s(.*?)%s" % (r"\\begin{document}", r"\\end{document}(\n)?")
+            "(?s)%s(.*?)%s" % (r"\\begin{document}", r"\\end{document}")
         )
-        return re.sub(pattern, "", contents).strip()
+        return re.sub(pattern, "", contents)
 
     @staticmethod
     def remove_include_preamble(contents: str) -> str:
-        pattern = re.compile(r"\\input{(.*?)preamble(.tex)?}(\n)?")
-        return re.sub(pattern, "", contents).strip()
+        pattern = re.compile(r"\\input{(.*?)preamble(.tex)?}")
+        return re.sub(pattern, "", contents)

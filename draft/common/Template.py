@@ -43,16 +43,20 @@ class Template(File, ABC):
         return self._prompts
 
     @property
-    def yaml_prefix(self) -> str:
-        return self._yaml_prefix
+    def block_comment_prefix(self) -> str:
+        return self._block_comment_prefix
 
     @property
-    def yaml_suffix(self) -> str:
-        return self._yaml_suffix
+    def block_comment_suffix(self) -> str:
+        return self._block_comment_suffix
 
     @property
     def yaml(self) -> Dict[str, Any]:
         return self._yaml
+
+    @property
+    def single_line_comment_prefix(self) -> str:
+        return self._single_line_comment_prefix
 
     def __init__(
         self,
@@ -60,8 +64,9 @@ class Template(File, ABC):
         path: Path,
         placeholder_prefix: str,
         placeholder_suffix: str,
-        yaml_prefix: str,
-        yaml_suffix: str,
+        single_line_comment_prefix: str,
+        block_comment_prefix: str,
+        block_comment_suffix: str,
     ):
         """
         Take care to pass properly escaped string literals for
@@ -85,9 +90,14 @@ class Template(File, ABC):
         self.__init_placeholders__()
 
         # YAML
-        self._yaml_prefix = yaml_prefix
-        self._yaml_suffix = yaml_suffix
+        self._block_comment_prefix = block_comment_prefix
+        self._block_comment_suffix = block_comment_suffix
         self.__init_yaml__()
+
+        # Single Line comments
+        self._single_line_comment_prefix = single_line_comment_prefix
+        if configuration.get("remove_comments", False):
+            self.remove_comments()
 
         # Prompts
         self.__init_prompts__()
@@ -114,7 +124,9 @@ class Template(File, ABC):
         """
 
         # Extract all the block comments
-        pattern = re.compile("(?s)\n%s(.*?)%s" % (self.yaml_prefix, self.yaml_suffix))
+        pattern = re.compile(
+            "(?s)\n%s(.*?)%s" % (self.block_comment_prefix, self.block_comment_suffix)
+        )
         matches = pattern.findall(self.contents)
 
         dict: Dict[str, Any] = {}
@@ -176,3 +188,20 @@ class Template(File, ABC):
             prompts.append(question)
 
         self._prompts = prompts
+
+    def remove_comments(self):
+        """
+        Remove single line comments and block
+        contents from the string.
+        """
+
+        # Remove single line comments
+        pattern = re.compile("(?s)%s(.*?)(\n)?" % (self.single_line_comment_prefix))
+        self._contents = re.sub(pattern, "", self.contents)
+
+        # Remove block comments
+        pattern = re.compile(
+            "(?s)%s(.*?)%s(\n)?(\n)?"
+            % (self.block_comment_prefix, self.block_comment_suffix)
+        )
+        self._contents = re.sub(pattern, "", self.contents)

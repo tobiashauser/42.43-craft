@@ -29,11 +29,28 @@ Hello, world!
     input = t.remove_document_body(input)
     assert (
         input
-        == "\\documentclass{scrreport}\n\n\\input{preamble}\n\\input{../../preamble.tex}"
+        == """
+\\documentclass{scrreport}
+
+\\input{preamble}
+\\input{../../preamble.tex}
+
+
+"""
     )
 
     input = t.remove_include_preamble(input)
-    assert input == "\\documentclass{scrreport}"
+    assert (
+        input
+        == """
+\\documentclass{scrreport}
+
+
+
+
+
+"""
+    )
 
 
 def test_deletion_with_trailing_new_line():
@@ -46,7 +63,16 @@ before
 after
 """
     input = t.remove_include_preamble(input)
-    assert input == "before\n\n\nafter"
+    assert (
+        input
+        == """
+before
+
+
+
+after
+"""
+    )
 
     input = r"""
 before
@@ -58,4 +84,13 @@ Hello, world!
 after
 """
     input = t.remove_document_body(input)
-    assert input == "before\n\n\nafter"
+    assert (
+        input
+        == """
+before
+
+
+
+after
+"""
+    )
