@@ -1,3 +1,4 @@
+import re
 from abc import ABC
 
 from draft.common.DiskRepresentable import DiskRepresentable
@@ -27,3 +28,40 @@ class File(ABC, DiskRepresentable):
     def load(self):
         with self.path.open("r") as file:
             self._contents = file.read()
+
+    def remove_lines(self, prefix: str):
+        """
+        General case:
+        ```text
+        Paragraph before... ──┐
+                              |
+        % This is a comment ──┤
+                              │
+                              │ this will be deleted
+                              │
+        Paragraph after...  ──┤
+        ```
+
+        Special case:
+        ```text
+        Paragraph one ...   ──┐
+        % this is the end   ──┤
+                              │ this will be deleted
+                              │ and replaced with a
+                              │ newline.
+        Paragraph after...  ──┤
+        ```
+        """
+        # Handle `test_single_line_and_contents_condensed_leading` and
+        # `test_multiple_lines_and_contents_condensed_leading` first
+        pattern = re.compile(
+            "(?<=\\w\n)(?:^%s.*\n)+(?:^\n)+(?=\\w)" % prefix, re.MULTILINE
+        )
+        self._contents = re.sub(pattern, "\n", self.contents)
+
+        # Hanlde all other cases
+        pattern = re.compile("^%s.*\n*" % prefix, re.MULTILINE)
+        self._contents = re.sub(pattern, "", self.contents)
+
+    def remove_blocks(self, prefix: str, suffix: str):
+        pass

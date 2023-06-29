@@ -10,6 +10,6 @@ class FileImplementation(File):
 
 
 def test_instantiation():
-    input = FileImplementation(path=Path())
+    input = FileImplementation(Path())
     assert input.path == Path()
     assert input.contents == "Hello, world!"

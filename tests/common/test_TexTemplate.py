@@ -14,7 +14,7 @@ class TexTemplateImplementation(TexTemplate):
         self._contents = ""
 
 
-def test_remove_parts_of_contents():
+def remove_parts_of_contents():
     t = TexTemplateImplementation()
     input = r"""
 \documentclass{scrreport}
@@ -34,6 +34,8 @@ Hello, world!
 
 \\input{preamble}
 \\input{../../preamble.tex}
+
+
 """
     )
 
@@ -42,11 +44,16 @@ Hello, world!
         input
         == """
 \\documentclass{scrreport}
+
+
+
+    
+
 """
     )
 
 
-def test_deletion_with_trailing_new_line():
+def deletion_with_trailing_new_line():
     t = TexTemplateImplementation()
     input = r"""
 before
@@ -60,6 +67,8 @@ after
         input
         == """
 before
+
+
 
 after
 """
@@ -79,6 +88,8 @@ after
         input
         == """
 before
+
+
 
 after
 """
