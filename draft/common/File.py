@@ -31,6 +31,9 @@ class File(ABC, DiskRepresentable):
 
     def remove_lines(self, prefix: str):
         """
+        Removes all lines starting with the given
+        prefix from the contents of the file.
+
         General case:
         ```text
         Paragraph before... ──┐
@@ -64,4 +67,39 @@ class File(ABC, DiskRepresentable):
         self._contents = re.sub(pattern, "", self.contents)
 
     def remove_blocks(self, prefix: str, suffix: str):
-        pass
+        r"""
+        Removes all blocks enclosed by the given
+        prefix and suffix from the contents of the file.
+
+        General case:
+        ```text
+        Paragraph before... ──┐
+                              |
+        \iffalse            ──┤
+        This is a comment     │
+        \fi                   │ this will be deleted
+                              │
+                              │
+        Paragraph after...  ──┤
+        ```
+
+        Special case:
+        ```text
+        Paragraph one ...   ──┐
+        \iffalse            ──┤
+        This is a comment     │ this will be deleted
+        \fi                   │ and replaced with a
+                              │ newline.
+        Paragraph after...  ──┤
+        ```
+        """
+        # Special case
+        pattern = re.compile(
+            "(?s)(?<=\\w\n)(%s(?:.*?)%s\n)+^\n+?(?=\\w)" % (prefix, suffix),
+            re.MULTILINE,
+        )
+        self._contents = re.sub(pattern, "\n", self.contents)
+
+        # General case
+        pattern = re.compile("(?s)^%s(.*?)%s\n*" % (prefix, suffix), re.MULTILINE)
+        self._contents = re.sub(pattern, "", self.contents)
