@@ -196,18 +196,18 @@ world
 
 def test_multiple_lines_and_contents_condensed():
     input = r"""
-hello
+hello-
 \iffalse
 Hello, world!
 \fi
 \iffalse
 Hello, world!
 \fi
-world
+-world
 """
     expectation = r"""
-hello
-world
+hello-
+-world
 """
 
     f = FileImplementation(input)
@@ -247,12 +247,12 @@ Hello, world!
 
 
 
-world
+-world
 """
     expectation = r"""
 hello
 
-world
+-world
 """
 
     f = FileImplementation(input)
@@ -269,14 +269,14 @@ hello
 \iffalse
 Hello, world!
 \fi
-world
+-world
 """
     expectation = r"""
 hello
 
 
 
-world
+-world
 """
 
     f = FileImplementation(input)

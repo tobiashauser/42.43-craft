@@ -16,6 +16,5 @@ class Header(TexTemplate):
         Remove the input statement of the preamble from the contents.
         """
         with self.path.open("r") as file:
-            contents = file.read()
-
-        self._contents = Header.remove_include_preamble(contents)
+            self._contents = file.read()
+        self.remove_include_preamble()

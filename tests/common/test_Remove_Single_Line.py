@@ -145,12 +145,12 @@ world
 
 def test_single_line_and_contents_condensed():
     input = r"""
-hello
+hello-
 % one
 world
 """
     expectation = r"""
-hello
+hello-
 world
 """
 
@@ -164,11 +164,11 @@ def test_multiple_lines_and_contents_condensed():
 hello
 % one
 % two
-world
+-world
 """
     expectation = r"""
 hello
-world
+-world
 """
 
     f = FileImplementation(input)

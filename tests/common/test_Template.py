@@ -131,15 +131,16 @@ def test_reference_semantics_of_configuration():
     assert t1.configuration == t2.configuration
 
 
-# def test_remove_comments():
-#     t = TemplateImplementation(Configuration(remove_comments=True))
-#     assert (
-#         t.contents
-#         == """
-# This is a template for a <<course>>. It is
-# written by <<author>>.
+def test_remove_comments():
+    t = TemplateImplementation(Configuration(remove_comments=True))
+    assert (
+        t.contents
+        == """
+This is a template for a <<course>>. It is
+written by <<author>>.
 
-# What if a placeholder is customized but not as a dictionary?
-# It doesn't do anything.
-# """
-#     )
+What if a placeholder is customized but not as a dictionary?
+It doesn't do anything.
+
+"""
+    )

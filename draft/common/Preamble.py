@@ -17,5 +17,5 @@ class Preamble(TexTemplate):
         Remove the document environment.
         """
         with self.path.open("r") as file:
-            contents = file.read()
-        self._contents = Preamble.remove_document_body(contents)
+            self._contents = file.read()
+        self.remove_document_body()

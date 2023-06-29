@@ -193,18 +193,9 @@ class Template(File, ABC):
     def remove_comments(self):
         """
         Remove single line comments and block
-        contents from the string.
+        comments from the string.
         """
-
-        # Remove single line comments
-        # pattern = re.compile("(^\n)?%s(.*)(\n)?" % (self.single_line_comment_prefix))
-        pattern = re.compile("\v*%s(?:.*)\v*" % (self.single_line_comment_prefix))
-        self._contents = re.sub(pattern, "", self.contents)
-
-        # Remove block comments
-        pattern = re.compile(
-            # "(?s)(\n)?%s(.*?)%s(\n)?"
-            "(?s)\v*%s(?:.*?)%s\v*"
-            % (self.block_comment_prefix, self.block_comment_suffix)
+        self.remove_lines(prefix=self.single_line_comment_prefix)
+        self.remove_blocks(
+            prefix=self.block_comment_prefix, suffix=self.block_comment_suffix
         )
-        self._contents = re.sub(pattern, "", self.contents)

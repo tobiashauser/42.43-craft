@@ -17,21 +17,21 @@ class Header(LiveHeader):
         self._contents = contents
 
 
-# def test_live_loading():
-#     path = Path("tests/common/test_live_loading.tex")
-#     _contents = r"""
-# \documentclass{scrreport}
-# \input{../preamble.tex}
+def test_live_loading():
+    path = Path("tests/common/test_live_loading.tex")
+    _contents = r"""
+\documentclass{scrreport}
+\input{../preamble.tex}
 
-# \begin{document}
-# Hello, world!
-# \end{document}
-# """
-#     with path.open("w") as file:
-#         file.write(_contents)
-#     input = LiveHeader(configuration=Configuration(), path=path)
-#     assert input.contents == contents
-#     path.unlink()
+\begin{document}
+Hello, world!
+\end{document}
+"""
+    with path.open("w") as file:
+        file.write(_contents)
+    input = LiveHeader(configuration=Configuration(), path=path)
+    assert input.contents == contents
+    path.unlink()
 
 
 def test_inherited_properties():

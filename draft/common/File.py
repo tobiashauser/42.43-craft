@@ -58,11 +58,11 @@ class File(ABC, DiskRepresentable):
         # Handle `test_single_line_and_contents_condensed_leading` and
         # `test_multiple_lines_and_contents_condensed_leading` first
         pattern = re.compile(
-            "(?<=\\w\n)(?:^%s.*\n)+(?:^\n)+(?=\\w)" % prefix, re.MULTILINE
+            "(?<=.\n)(?:^%s.*?\n?)+(?:^\n)+(?=.)" % prefix, re.MULTILINE
         )
         self._contents = re.sub(pattern, "\n", self.contents)
 
-        # Hanlde all other cases
+        # General cases
         pattern = re.compile("^%s.*\n*" % prefix, re.MULTILINE)
         self._contents = re.sub(pattern, "", self.contents)
 

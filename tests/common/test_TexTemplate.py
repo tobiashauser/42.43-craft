@@ -5,17 +5,15 @@ from draft.common.TexTemplate import TexTemplate
 
 
 class TexTemplateImplementation(TexTemplate):
-    def __init__(
-        self, configuration: Configuration = Configuration(), path: Path = Path()
-    ):
-        super().__init__(configuration=configuration, path=path)
+    def __init__(self, contents: str):
+        self._contents = contents
+        super().__init__(configuration=Configuration(), path=Path())
 
     def load(self):
-        self._contents = ""
+        pass
 
 
-def remove_parts_of_contents():
-    t = TexTemplateImplementation()
+def test_remove_document_body():
     input = r"""
 \documentclass{scrreport}
 
@@ -26,71 +24,44 @@ def remove_parts_of_contents():
 Hello, world!
 \end{document}
 """
-    input = t.remove_document_body(input)
+
+    t = TexTemplateImplementation(input)
+    t.remove_document_body()
+
     assert (
-        input
-        == """
-\\documentclass{scrreport}
+        t.contents
+        == r"""
+\documentclass{scrreport}
 
-\\input{preamble}
-\\input{../../preamble.tex}
-
-
-"""
-    )
-
-    input = t.remove_include_preamble(input)
-    assert (
-        input
-        == """
-\\documentclass{scrreport}
-
-
-
-    
-
-"""
-    )
-
-
-def deletion_with_trailing_new_line():
-    t = TexTemplateImplementation()
-    input = r"""
-before
-
+\input{preamble}
 \input{../../preamble.tex}
 
-after
-"""
-    input = t.remove_include_preamble(input)
-    assert (
-        input
-        == """
-before
-
-
-
-after
 """
     )
 
+
+def test_remove_include_preamble():
     input = r"""
-before
+\documentclass{scrreport}
+
+\input{preamble}
+\input{../../preamble.tex}
 
 \begin{document}
 Hello, world!
 \end{document}
-
-after
 """
-    input = t.remove_document_body(input)
+
+    t = TexTemplateImplementation(input)
+    t.remove_include_preamble()
+
     assert (
-        input
-        == """
-before
+        t.contents
+        == r"""
+\documentclass{scrreport}
 
-
-
-after
+\begin{document}
+Hello, world!
+\end{document}
 """
     )

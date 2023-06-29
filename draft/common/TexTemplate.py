@@ -41,19 +41,8 @@ class TexTemplate(Template, ABC):
         """
         raise NotImplementedError
 
-    @staticmethod
-    def remove_document_body(contents: str) -> str:
-        # Remove the document environment
-        pattern = re.compile(
-            # "(?s)(\n)?%s(.*?)%s(?:\n)?" % (r"\\begin{document}", r"\\end{document}")
-            "(?s)\v*%s(.*?)%s\v*"
-            % (r"\\begin{document}", r"\\end{document}")
-        )
-        return re.sub(pattern, "", contents)
+    def remove_document_body(self):
+        super().remove_blocks(prefix=r"\\begin{document}", suffix=r"\\end{document}")
 
-    @staticmethod
-    def remove_include_preamble(contents: str) -> str:
-        # pattern = re.compile(r"(?:^\n)?\\input{(?:.*?)preamble(?:\.tex)?}\n?(?:^\n)?")
-        # pattern = re.compile(r"(?:^\n)*\\input{(?:.*?)preamble(?:\.tex)?}\n?(?:^\n)*")
-        pattern = re.compile(r"\v*\\input{(?:.*?)preamble(?:\.tex)?}\v*")
-        return re.sub(pattern, "", contents)
+    def remove_include_preamble(self):
+        super().remove_lines(prefix=r"\\input{(?:.*?)preamble(?:\.tex)?}")
