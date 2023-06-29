@@ -217,7 +217,7 @@ hello-
 
 def test_single_line_and_contents_condensed_leading():
     input = r"""
-hello
+hello-
 \iffalse
 Hello, world!
 \fi
@@ -225,7 +225,7 @@ Hello, world!
 world
 """
     expectation = r"""
-hello
+hello-
 
 world
 """
