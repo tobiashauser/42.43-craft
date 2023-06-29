@@ -12,4 +12,9 @@ __pycache__/
 *.log
 *.synctex.gz
 *.pdf
-*.synctex(busy(
+*.synctex(busy)
+
+# Test files
+draftrc
+tests/draftrc
+tests/common/test_live_loading.tex

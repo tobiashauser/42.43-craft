@@ -2,6 +2,7 @@ from pathlib import Path
 
 from draft.common.Configuration import Configuration
 from draft.common.Preamble import Preamble as LivePreamble
+from tests.common.test_Configuration import Configuration
 
 contents = r"""
 \documentclass{scrreport}
@@ -9,6 +10,13 @@ contents = r"""
 
 
 class Preamble(LivePreamble):
+    def __init__(
+        self,
+        path: Path = Path("jane.tex"),
+        configuration: Configuration = Configuration(),
+    ):
+        super().__init__(path, configuration)
+
     def load(self):
         self._contents = contents
 
@@ -24,7 +32,7 @@ Hello, world!
 """
     with path.open("w") as file:
         file.write(contents)
-    input = LivePreamble(configuration=Configuration(), path=path)
+    input = LivePreamble(path=path, configuration=Configuration())
     assert (
         input.contents
         == r"""
@@ -36,7 +44,7 @@ Hello, world!
 
 
 def test_inherited_properties():
-    input = Preamble(configuration=Configuration(), path=Path())
+    input = Preamble()
     assert input.path == Path()
     assert input.contents == contents
     assert input.placeholders == set()

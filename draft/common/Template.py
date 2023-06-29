@@ -1,5 +1,4 @@
 import re
-from abc import ABC
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Set
 
@@ -10,7 +9,7 @@ from draft.common.File import File
 from draft.common.helpers import combine_dictionaries
 
 
-class Template(File, ABC):
+class Template(File):
     """
     A abstract class representing a template, that is, a file
     on the disk.
@@ -58,23 +57,14 @@ class Template(File, ABC):
     def single_line_comment_prefix(self) -> str:
         return self._single_line_comment_prefix
 
-    def __init__(
-        self,
-        configuration: Configuration,
-        path: Path,
-        placeholder_prefix: str,
-        placeholder_suffix: str,
-        single_line_comment_prefix: str,
-        block_comment_prefix: str,
-        block_comment_suffix: str,
-    ):
+    def __init__(self, configuration: Configuration, path: Path):
         """
         Take care to pass properly escaped string literals for
-        `placeholder_prefix`, `placeholder_suffix`, `yaml_prefix`,
-        `yaml_suffix` to the initialiser:
+        `placeholder_prefix`, `placeholder_suffix`, `block_comment_prefix`,
+        `block_comment_suffix` to the initialiser:
 
         ```
-        yaml_prefix=r"\\iffalse",
+        block_comment_prefix = r"\\iffalse",
         ```
 
         Always pass a reference to a global configuration
@@ -84,18 +74,27 @@ class Template(File, ABC):
         super().__init__(path=path)
         self._configuration = configuration
 
-        # Placeholders
-        self._placeholder_prefix: str = placeholder_prefix
-        self._placeholder_suffix: str = placeholder_suffix
+        # get tokens from the configuration
+        try:
+            tokens = self.configuration["tokens"][self.extension]
+
+            # YAML
+            self._block_comment_prefix = tokens["block_comment_prefix"]
+            self._block_comment_suffix = tokens["block_comment_suffix"]
+
+            # Placeholders
+            self._placeholder_prefix: str = tokens["placeholder_prefix"]
+            self._placeholder_suffix: str = tokens["placeholder_suffix"]
+
+            # Single Line comments
+            self._single_line_comment_prefix = tokens["single_line_comment_prefix"]
+        except:
+            raise Exception("Couldn't find tokens for %s." % self.extension)
+            # TODO: Prompt for the tokens and add them to the configuration
+
+        self.__init_yaml__()
         self.__init_placeholders__()
 
-        # YAML
-        self._block_comment_prefix = block_comment_prefix
-        self._block_comment_suffix = block_comment_suffix
-        self.__init_yaml__()
-
-        # Single Line comments
-        self._single_line_comment_prefix = single_line_comment_prefix
         if configuration.get("remove_comments", False):
             self.remove_comments()
 

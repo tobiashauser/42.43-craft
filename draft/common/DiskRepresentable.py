@@ -21,7 +21,7 @@ class DiskRepresentable(Protocol):
     @abstractmethod
     def load(self):
         """
-        Loads the data from the disk.
+        Loads data from the disk.
 
         Override this endpoint in tests to load the data from
         a folder in this directory or to instantiate the type

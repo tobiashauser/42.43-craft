@@ -1,7 +1,8 @@
 from pathlib import Path
 
-from draft.common.Configuration import Configuration
+from draft.common.helpers import combine_dictionaries
 from draft.common.Template import Template
+from tests.common.test_Configuration import Configuration
 
 contents = r"""
 This is a template for a <<course>>. It is
@@ -30,26 +31,23 @@ class TemplateImplementation(Template):
     def __init__(
         self,
         configuration: Configuration = Configuration(),
-        path: Path = Path(),
+        path: Path = Path("jane.tex"),
     ):
-        super().__init__(
-            configuration=configuration,
-            path=path,
-            placeholder_prefix=r"<<",
-            placeholder_suffix=r">>",
-            single_line_comment_prefix=r"\%",
-            block_comment_prefix=r"\\iffalse",
-            block_comment_suffix=r"\\fi",
-        )
+        super().__init__(configuration=configuration, path=path)
 
     def load(self):
         self._contents = contents
 
 
 def test_instantiation():
-    input = TemplateImplementation()
-    assert input.contents == contents
-    assert input.configuration == Configuration()
+    t = TemplateImplementation()
+    assert t.contents == contents
+    assert t.configuration == Configuration()
+    assert t.placeholder_prefix == "<<"
+    assert t.placeholder_suffix == ">>"
+    assert t.single_line_comment_prefix == r"\%"
+    assert t.block_comment_prefix == r"\\iffalse"
+    assert t.block_comment_suffix == r"\\fi"
 
 
 def test_handlebars():

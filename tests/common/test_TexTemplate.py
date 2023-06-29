@@ -1,16 +1,48 @@
 from pathlib import Path
 
-from draft.common.Configuration import Configuration
 from draft.common.TexTemplate import TexTemplate
+from tests.common.test_Configuration import Configuration
+
+contents = r"""
+\documentclass{scrreport}
+
+\newcommand{title}{}
+
+\begin{document}
+Hello, world!
+\end{document}
+"""
 
 
 class TexTemplateImplementation(TexTemplate):
     def __init__(self, contents: str):
         self._contents = contents
-        super().__init__(configuration=Configuration(), path=Path())
+        super().__init__(
+            configuration=Configuration(),
+            path=Path(),
+        )
 
     def load(self):
         pass
+
+
+def test_return_document_body():
+    t = TexTemplateImplementation(contents)
+    assert t.body == "Hello, world!\n"
+
+
+def test_return_declarations():
+    t = TexTemplateImplementation(contents)
+    assert (
+        t.declarations
+        == r"""
+\documentclass{scrreport}
+
+\newcommand{title}{}
+
+"""
+    )
+    assert t.contents == contents
 
 
 def test_remove_document_body():

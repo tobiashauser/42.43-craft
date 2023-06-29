@@ -1,5 +1,6 @@
 import re
 from abc import ABC
+from pathlib import Path
 
 from draft.common.DiskRepresentable import DiskRepresentable
 
@@ -20,6 +21,10 @@ class File(ABC, DiskRepresentable):
     @property
     def contents(self) -> str:
         return self._contents
+
+    @property
+    def extension(self) -> str:
+        return self.path.suffix
 
     def __init__(self, path):
         self._path = path
@@ -51,7 +56,7 @@ class File(ABC, DiskRepresentable):
         % this is the end   ──┤
                               │ this will be deleted
                               │ and replaced with a
-                              │ newline.
+                              │ newline
         Paragraph after...  ──┤
         ```
         """
@@ -89,7 +94,7 @@ class File(ABC, DiskRepresentable):
         \iffalse            ──┤
         This is a comment     │ this will be deleted
         \fi                   │ and replaced with a
-                              │ newline.
+                              │ newline
         Paragraph after...  ──┤
         ```
         """

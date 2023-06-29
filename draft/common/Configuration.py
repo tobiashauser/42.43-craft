@@ -11,8 +11,8 @@ class Configuration(dict):
 
     Special keys:
     - `allow_eval`: If true, the user can specify lambdas to
-        customize how prompts behave. This is opt in because
-        it opens up security issues.
+        customize how prompts behave. This is opt-in because
+        it introduces quite big security risks.
     - `draft-exercises`: Holds a list of exercises to be
         included in the compiled document.
         (also "Special placeholders")
@@ -22,8 +22,12 @@ class Configuration(dict):
     Special placeholders:
     - `<<draft-exercises>>`: This placeholder gets replaced by
         the exericses. It should only appear in a header.
-        It can also be set in a `draftrc` configuration file.
+        It can also be set in a `draftrc` configuration file. TODO
     """
+
+    @property
+    def main(self) -> Path:
+        return self._main
 
     @property
     def root(self) -> Path:
@@ -34,8 +38,14 @@ class Configuration(dict):
         return self._cwd
 
     def __init__(
-        self, root: Path = Path.home(), cwd: Path = Path.cwd(), *args, **kwargs
+        self,
+        main: Path = Path.home() / ".config/draft/draftrc",
+        root: Path = Path.home(),
+        cwd: Path = Path.cwd(),
+        *args,
+        **kwargs
     ):
+        self._main = main
         self._root = root
         self._cwd = cwd
         self.update(*args, **kwargs)
@@ -53,6 +63,13 @@ class Configuration(dict):
         accumulate their values. Files closer to
         the current working directory take
         precedence.
+
+        Additionally there is one configuration file
+        at `~/.config/draft/draftrc` which stores
+        gets read last. It stores global configuration
+        such as prefixes for single-line-comments for
+        a specific file extension. Make sure to escape
+        them correctly.
         """
         files: List[str] = ["draftrc", ".draftrc"]
         directory: Path = self.cwd
@@ -76,3 +93,12 @@ class Configuration(dict):
 
             # Move up to the parent directory
             directory = directory.parent
+
+        # read file at `~/.config/draft/draftrc`
+        try:
+            data = yaml.safe_load(self.main.open())
+            for key, value in data.items():
+                if key not in self:
+                    self[key] = value
+        except:
+            pass

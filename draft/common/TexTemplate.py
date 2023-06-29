@@ -14,6 +14,7 @@ class TexTemplate(Template, ABC):
     Subclasses are:
     - Preamble
     - Header
+    - Exercise
 
     This class ssets default prefixes and suffixes
     for a tex document.
@@ -23,16 +24,31 @@ class TexTemplate(Template, ABC):
     the preamble.
     """
 
+    @property
+    def body(self) -> str:
+        """Return the document body of the template."""
+        pattern = re.compile(r"\\begin{document}\n(.*?)\\end{document}", re.DOTALL)
+        match = re.search(pattern, self.contents)
+        if match:
+            return match.group(1)
+        else:
+            return ""
+
+    @property
+    def declarations(self) -> str:
+        """
+        Return the declarations in the template.
+
+        Those are the contents without the document body.
+        """
+        cache = self.contents
+        self.remove_document_body()
+        result = self.contents
+        self._contents = cache
+        return result
+
     def __init__(self, path: Path, configuration: Configuration):
-        super().__init__(
-            configuration=configuration,
-            path=path,
-            placeholder_prefix=r"<<",
-            placeholder_suffix=r">>",
-            block_comment_prefix=r"\\iffalse",
-            block_comment_suffix=r"\\fi",
-            single_line_comment_prefix=r"%",
-        )
+        super().__init__(configuration=configuration, path=path)
 
     def load(self):
         """

@@ -2,6 +2,7 @@ from pathlib import Path
 
 from draft.common.Configuration import Configuration
 from draft.common.Header import Header as LiveHeader
+from tests.common.test_Configuration import Configuration
 
 contents = r"""
 \documentclass{scrreport}
@@ -13,6 +14,13 @@ Hello, world!
 
 
 class Header(LiveHeader):
+    def __init__(
+        self,
+        path: Path = Path("jane.tex"),
+        configuration: Configuration = Configuration(),
+    ):
+        super().__init__(path, configuration)
+
     def load(self):
         self._contents = contents
 
@@ -29,13 +37,13 @@ Hello, world!
 """
     with path.open("w") as file:
         file.write(_contents)
-    input = LiveHeader(configuration=Configuration(), path=path)
+    input = LiveHeader(path=path, configuration=Configuration())
     assert input.contents == contents
     path.unlink()
 
 
 def test_inherited_properties():
-    input = Header(configuration=Configuration(), path=Path())
+    input = Header()
     assert input.path == Path()
     assert input.contents == contents
     assert input.placeholders == set()
