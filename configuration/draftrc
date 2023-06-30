@@ -1,0 +1,7 @@
+tokens:
+  .tex:
+    placeholder_prefix: "<<"
+    placeholder_suffix: ">>"
+    single_line_comment_prefix: "%"
+    block_comment_prefix: "\\iffalse"
+    block_comment_suffix: "\\fi"
