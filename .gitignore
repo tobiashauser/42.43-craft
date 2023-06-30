@@ -15,7 +15,7 @@ __pycache__/
 *.synctex(busy)
 
 # Test files
-!configuration/draftc
+!configuration/draftrc
 draftrc
 tests/draftrc
 tests/common/test_live_loading.tex
