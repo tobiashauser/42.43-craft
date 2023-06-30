@@ -44,7 +44,7 @@ Hello, world!
 
 def test_inherited_properties():
     input = Header()
-    assert input.path == Path()
+    assert input.path == Path("jane.tex")
     assert input.contents == contents
     assert input.placeholders == set()
     assert input.prompts == []

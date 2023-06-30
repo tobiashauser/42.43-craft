@@ -19,7 +19,7 @@ class TexTemplateImplementation(TexTemplate):
         self._contents = contents
         super().__init__(
             configuration=Configuration(),
-            path=Path(),
+            path=Path("jane.tex"),
         )
 
     def load(self):

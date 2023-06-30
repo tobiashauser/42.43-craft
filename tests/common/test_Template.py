@@ -45,7 +45,7 @@ def test_instantiation():
     assert t.configuration == Configuration()
     assert t.placeholder_prefix == "<<"
     assert t.placeholder_suffix == ">>"
-    assert t.single_line_comment_prefix == r"\%"
+    assert t.single_line_comment_prefix == r"%"
     assert t.block_comment_prefix == r"\\iffalse"
     assert t.block_comment_suffix == r"\\fi"
 
