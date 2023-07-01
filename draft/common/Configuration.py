@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List
 
-import oyaml as yaml
+import yaml
 
 
 class Configuration(dict):
@@ -18,6 +18,8 @@ class Configuration(dict):
         (also "Special placeholders")
     - `remove_comments`: If true, comments from the templates
         will be removed when compiling the document.
+    - `supplements`: Specify a list of supplemental templates
+        in an exercise template. Specify as a relative path.
 
     Special placeholders:
     - `<<draft-exercises>>`: This placeholder gets replaced by

@@ -26,6 +26,10 @@ class File(ABC, DiskRepresentable):
     def extension(self) -> str:
         return self.path.suffix
 
+    @property
+    def parent(self) -> Path:
+        return self.path.parent
+
     def __init__(self, path):
         self._path = path
         self.load()

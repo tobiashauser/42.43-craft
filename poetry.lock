@@ -37,20 +37,6 @@ files = [
 ]
 
 [[package]]
-name = "oyaml"
-version = "1.0"
-description = "Ordered YAML: drop-in replacement for PyYAML which preserves dict ordering"
-optional = false
-python-versions = "*"
-files = [
-    {file = "oyaml-1.0-py2.py3-none-any.whl", hash = "sha256:3a378747b7fb2425533d1ce41962d6921cda075d46bb480a158d45242d156323"},
-    {file = "oyaml-1.0.tar.gz", hash = "sha256:ed8fc096811f4763e1907dce29c35895d6d5936c4d0400fe843a91133d4744ed"},
-]
-
-[package.dependencies]
-pyyaml = "*"
-
-[[package]]
 name = "packaging"
 version = "23.1"
 description = "Core utilities for Python packages"
@@ -355,4 +341,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "23e06fc3001f5c708a6f9d785d1f7c5cac9f8d25293e1c5befade4d6f5879b65"
+content-hash = "8b3215844f6c1cf9775b8ac81075c3430492563a009d2ec9a46fdb5011bb1f30"

@@ -10,6 +10,9 @@ class FileImplementation(File):
 
 
 def test_instantiation():
-    input = FileImplementation(Path())
-    assert input.path == Path()
-    assert input.contents == "Hello, world!"
+    f = FileImplementation(Path("mock.file"))
+    assert f.path == Path("mock.file")
+    assert f.contents == "Hello, world!"
+    assert f.name == "mock"
+    assert f.extension == ".file"
+    assert f.parent == Path(".")

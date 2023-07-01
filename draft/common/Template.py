@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Set
 
-import oyaml as yaml
+import yaml
 
 from draft.common.Configuration import Configuration
 from draft.common.File import File
@@ -16,6 +16,7 @@ class Template(File):
 
     Conforming types are:
     - TexTemplate (ABC)
+    - PDFTemplate  # TODO
 
     Subclasses should remember to call `super().__init__()`
     if they implement their own initializer.
@@ -59,17 +60,9 @@ class Template(File):
 
     def __init__(self, configuration: Configuration, path: Path):
         """
-        Take care to pass properly escaped string literals for
-        `placeholder_prefix`, `placeholder_suffix`, `block_comment_prefix`,
-        `block_comment_suffix` to the initialiser:
-
-        ```
-        block_comment_prefix = r"\\iffalse",
-        ```
-
         Always pass a reference to a global configuration
         in the initializer. The prompts rely on having
-        the newest version of the configuration.
+        the newest version of the configuration available.
         """
         super().__init__(path=path)
         self._configuration = configuration

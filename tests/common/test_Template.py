@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from draft.common.Configuration import Configuration as LiveConfiguration
 from draft.common.helpers import combine_dictionaries
 from draft.common.Template import Template
 from tests.common.test_Configuration import Configuration
@@ -50,7 +51,7 @@ def test_instantiation():
     assert t.block_comment_suffix == r"\\fi"
 
 
-def test_handlebars():
+def test_placeholders():
     input = TemplateImplementation()
     assert input.placeholders == set(["course", "author"])
 
@@ -142,3 +143,23 @@ It doesn't do anything.
 
 """
     )
+
+
+def test_tokens_not_present():
+    test_config = Path("tests/test_config.yaml")
+    test_file = Path("tests/test_tokens_not_present.tex")
+
+    with test_config.open("w") as file:
+        file.write("")
+
+    with test_file.open("w") as file:
+        file.write(contents)
+
+    live_config = LiveConfiguration(test_config, Path(), Path())
+    try:
+        t = Template(live_config, test_file)
+    except Exception:
+        pass
+
+    test_config.unlink()
+    test_file.unlink()

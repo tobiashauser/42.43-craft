@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 
 def combine_dictionaries(
@@ -16,3 +16,10 @@ def combine_dictionaries(
             elif isinstance(value, dict) and isinstance(dict1[key], dict):
                 result[key] = combine_dictionaries(dict1[key], value)
     return result
+
+
+def create_list(input: Any | List[Any]) -> List[Any]:
+    if isinstance(input, list):
+        return input
+    else:
+        return [input]

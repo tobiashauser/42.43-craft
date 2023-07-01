@@ -18,6 +18,10 @@ class DiskRepresentable(Protocol):
     def path(self) -> Path:
         return self._path
 
+    @property
+    def name(self) -> str:
+        return self.path.stem
+
     @abstractmethod
     def load(self):
         """

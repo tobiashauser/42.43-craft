@@ -1,3 +1,5 @@
+# Declare the tokens per document type #
+# ------------------------------------ #
 tokens:
   .tex:
     placeholder_prefix: "<<"

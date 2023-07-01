@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict
 
-import oyaml as yaml
+import yaml
 
 from draft.common.Configuration import Configuration as LiveConfiguration
 from draft.common.helpers import combine_dictionaries

@@ -13,8 +13,8 @@ draft = "draft.app:app"
 python = "^3.11"
 typer = "^0.9.0"
 pathlib = "^1.0.1"
-oyaml = "^1.0"
 pyinquirer = "^1.0.3"
+pyyaml = "^6.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"
