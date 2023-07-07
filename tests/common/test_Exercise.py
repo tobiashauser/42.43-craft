@@ -37,6 +37,7 @@ def test_instantiation():
     assert e.name == tex.stem
     assert e.extension == tex.suffix
     assert e.parent == test_folder
-    assert e.supplements == [ly]
+    assert len(e.supplements) == 1
+    assert e.supplements[0].path == ly
 
     teardown_test_folder()
