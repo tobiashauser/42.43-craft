@@ -72,15 +72,15 @@ class Template(File):
             tokens = self.configuration["tokens"][self.extension]
 
             # YAML
-            self._block_comment_prefix = tokens["block_comment_prefix"]
-            self._block_comment_suffix = tokens["block_comment_suffix"]
+            self._block_comment_prefix: str = tokens["block_comment_prefix"]
+            self._block_comment_suffix: str = tokens["block_comment_suffix"]
 
             # Placeholders
             self._placeholder_prefix: str = tokens["placeholder_prefix"]
             self._placeholder_suffix: str = tokens["placeholder_suffix"]
 
             # Single Line comments
-            self._single_line_comment_prefix = tokens["single_line_comment_prefix"]
+            self._single_line_comment_prefix: str = tokens["single_line_comment_prefix"]
         except:
             raise Exception("Couldn't find tokens for %s." % self.extension)
             # TODO: Prompt for the tokens and add them to the configuration

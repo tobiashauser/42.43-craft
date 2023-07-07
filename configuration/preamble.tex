@@ -1,9 +1,23 @@
 \documentclass{scrreport}
 
-% The document body will not be compiled into the 
-% generated document.
+\newcounter{exerciseCounter}
+\newcommand{\exercise}[2]{%
+  \stepcounter{exerciseCounter}
+  \vspace{1em}%
+  \noindent%
+  \textbf{{\Large Aufgabe\hspace{1mm}\arabic{exerciseCounter}:\hspace{1mm}#1}\hfill{\normalsize/#2}}%
+  \vspace{1em}
+}
+
+% The document body will not be compiled into the generated document.
 \begin{document}
 
 This is just to show how the documentclass will look.
+
+You can also test any declarations in here.
+
+\exercise{Intervalle}{6}
+
+This is the exercise
 
 \end{document}
