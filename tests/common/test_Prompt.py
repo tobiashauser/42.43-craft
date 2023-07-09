@@ -1,4 +1,9 @@
-from draft.common.Prompt import List, PromptType
+import collections.abc
+
+from draft.common.Prompt import Expand, List
+
+collections.Mapping = collections.abc.Mapping  # type: ignore
+from PyInquirer import Separator
 
 
 def test_list():
@@ -56,3 +61,29 @@ def test_list():
         "when": when,
         "filter": filter,
     }
+
+
+def test_Expand():
+    c1 = Expand.Choice("blob", "b", "blob")
+    s = Separator()
+    e = Expand(name="test", choices=[c1, s], default="b")
+    assert e == {
+        "name": "test",
+        "message": "Please provide a value for 'test'.",
+        "type": "expand",
+        "choices": [c1, s],
+        "default": "b",
+    }
+
+    # default is invalid
+    e = Expand(name="test", choices=[c1, s], default="x")
+    assert e == {
+        "name": "test",
+        "message": "Please provide a value for 'test'.",
+        "type": "expand",
+        "choices": [c1, s],
+    }
+
+    # is dict["key"] = None entered? Yes, it is
+    c1 = Expand.Choice(name="blob", key="b")  # value is None
+    assert c1 == {"key": "b", "name": "blob"}
