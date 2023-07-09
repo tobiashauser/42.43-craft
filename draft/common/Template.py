@@ -85,11 +85,11 @@ class Template(File):
             raise Exception("Couldn't find tokens for %s." % self.extension)
             # TODO: Prompt for the tokens and add them to the configuration
 
-        self.__init_yaml__()
-        self.__init_placeholders__()
-
         if configuration.get("remove_comments", False):
             self.remove_comments()
+
+        self.__init_yaml__()
+        self.__init_placeholders__()
 
         # Prompts
         self.__init_prompts__()

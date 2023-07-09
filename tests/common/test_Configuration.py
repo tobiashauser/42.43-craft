@@ -16,12 +16,12 @@ class Configuration(LiveConfiguration):
 
     def __init__(self, *args, **kwargs):
         super().__init__(
-            Path("configuration/draftrc"), Path(), Path("tests"), *args, **kwargs
+            Path("config.draft/draftrc"), Path(), Path("tests"), *args, **kwargs
         )
 
 
 def test_live_loading():
-    configuration = yaml.safe_load(Path("configuration/draftrc").open())
+    configuration = yaml.safe_load(Path("config.draft/draftrc").open())
     root = Path("draftrc")
     cwd = Path("tests/draftrc")
 
@@ -32,13 +32,14 @@ def test_live_loading():
         file.write("A: 3\nC: 4")
 
     c = LiveConfiguration(
-        main=Path("configuration/draftrc"), root=Path(), cwd=Path("tests")
+        main=Path("config.draft/draftrc"), root=Path(), cwd=Path("tests")
     )
     expectation: Dict[str, Any] = combine_dictionaries(
         configuration, {"A": 3, "B": 2, "C": 4}
     )
 
     assert c == expectation
+    assert c.preamble == Path("config.draft/preambles/default.tex")
 
     root.unlink()
     cwd.unlink()

@@ -20,6 +20,7 @@ class Configuration(dict):
         will be removed when compiling the document.
     - `supplements`: Specify a list of supplemental templates
         in an exercise template. Specify as a relative path.
+    - `preamble`: Declare which preamble should be used ("default").
 
     Special placeholders:
     - `<<draft-exercises>>`: This placeholder gets replaced by
@@ -39,6 +40,10 @@ class Configuration(dict):
     def cwd(self) -> Path:
         return self._cwd
 
+    @property
+    def preamble(self) -> Path:
+        return self._preamble
+
     def __init__(
         self,
         main: Path = Path.home() / ".config/draft/draftrc",
@@ -50,8 +55,13 @@ class Configuration(dict):
         self._main = main
         self._root = root
         self._cwd = cwd
+
         self.update(*args, **kwargs)
         self.load()
+
+        self._preamble = Path(
+            main.parent / "preambles" / self.get("preamble", "default.tex")
+        )
 
     def load(self):
         """

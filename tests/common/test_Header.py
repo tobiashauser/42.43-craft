@@ -29,7 +29,7 @@ def test_live_loading():
     path = Path("tests/common/test_live_loading.tex")
     _contents = r"""
 \documentclass{scrreport}
-\input{../preamble.tex}
+\input{../preambles/preamble.tex}
 
 \begin{document}
 Hello, world!

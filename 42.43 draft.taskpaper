@@ -1,6 +1,7 @@
 Inbox:
 42.43 draft:
 	Feature Requests:
+		- Make class Folder use the types File and Folder for its subfiles and subfolders.
 	Ideas:
 	Bugs:
 		- The Header templates do not compile on their own because they import the document body from the preamble.

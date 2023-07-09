@@ -76,8 +76,8 @@ def test_remove_include_preamble():
     input = r"""
 \documentclass{scrreport}
 
-\input{preamble}
-\input{../../preamble.tex}
+\input{../preambles/preamble}
+\input{../preambles/default.tex}
 
 \begin{document}
 Hello, world!

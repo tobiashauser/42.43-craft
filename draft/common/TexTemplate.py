@@ -61,4 +61,4 @@ class TexTemplate(Template, ABC):
         super().remove_blocks(prefix=r"\\begin{document}", suffix=r"\\end{document}")
 
     def remove_include_preamble(self):
-        super().remove_lines(prefix=r"\\input{(?:.*?)preamble(?:\.tex)?}")
+        super().remove_lines(prefix=r"\\input{(?:.*?)/preambles/(?:.*?)}")
