@@ -163,3 +163,16 @@ def test_tokens_not_present():
 
     test_config.unlink()
     test_file.unlink()
+
+
+def test_set_placeholders():
+    t = TemplateImplementation()
+    t.set_placeholders()
+
+    assert t.contents == contents
+    assert t.placeholders == {"author", "course"}
+
+    t._configuration = Configuration(author="TH")
+    t.set_placeholders()
+    assert not t.contents == contents
+    assert t.placeholders == {"course"}

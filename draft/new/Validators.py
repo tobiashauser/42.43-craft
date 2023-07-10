@@ -23,3 +23,20 @@ class DocumentNameValidator(Validator):
         error = DocumentNameValidator.__validate__(document.text)
         if error is not None:
             raise error
+
+
+class ExerciseCountValidator(Validator):
+    def validate(self, document):
+        # TODO: Fix input: 0 being caught in except
+        try:
+            count = int(document.text)
+            if count < 1:
+                raise ValidationError(
+                    message="Count should be at least 1!",
+                    cursor_position=len(document.text),
+                )
+        except:
+            raise ValidationError(
+                message="Please input a number!",
+                cursor_position=len(document.text),
+            )

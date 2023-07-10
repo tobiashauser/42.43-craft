@@ -3,12 +3,18 @@
 \iffalse
 supplements:
   - intervals.ly
+unique-placeholders:
+  - interval-count
 \fi
 
-\input{../preamble.tex}
+\input{../preambles/default.tex}
 
 \begin{document}
 
 \exercise{Intervalle}{<<points>>}
+
+This exercise has <<interval-count>> intervals.
+
+\lilypondfile{<<supplements/intervals.ly>>}
 
 \end{document}

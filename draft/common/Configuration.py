@@ -44,6 +44,14 @@ class Configuration(dict):
     def preamble(self) -> Path:
         return self._preamble
 
+    @property
+    def headers(self) -> Path:
+        return self._headers
+
+    @property
+    def exercises(self) -> Path:
+        return self._exercises
+
     def __init__(
         self,
         main: Path,  # = Path.home() / ".config/draft/draftrc",
@@ -62,6 +70,8 @@ class Configuration(dict):
         self._preamble = Path(
             main.parent / "preambles" / self.get("preamble", "default.tex")
         )
+        self._headers = Path(main.parent) / "headers/"
+        self._exercises = Path(main.parent) / "exercises/"
 
     def load(self):
         """

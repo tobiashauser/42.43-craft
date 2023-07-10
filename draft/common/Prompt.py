@@ -1,9 +1,9 @@
 import collections.abc
 from abc import ABC
 from enum import Enum
-from typing import Any, Callable, Dict
-from typing import List as ListType
-from typing import Tuple
+
+# from typing import List as ListType
+from typing import Any, Callable, Dict, Tuple
 
 collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import Separator, Validator
@@ -54,7 +54,7 @@ class List(Prompt):
     def __init__(
         self,
         name: str,
-        choices: ListType[str | Separator],
+        choices: list[str | Separator],
         message: str | None = None,
         when: Callable[[Answers], bool] | bool = True,
         default: int | str | Callable[[Answers], str | int] | None = None,
@@ -92,7 +92,7 @@ class RawList(Prompt):
     def __init__(
         self,
         name: str,
-        choices: ListType[str | Separator],
+        choices: list[str | Separator],
         message: str | None = None,
         when: Callable[[Answers], bool] | bool = True,
         default: int | Callable[[Answers], int] | None = None,
@@ -140,7 +140,7 @@ class Expand(Prompt):
     def __init__(
         self,
         name: str,
-        choices: ListType[Choice | Separator],
+        choices: list[Choice | Separator],
         message: str | None = None,
         default: str | int | Callable[[Answers], str | int] | None = None,
         when: Callable[[Answers], bool] | bool = True,
@@ -205,12 +205,12 @@ class Checkbox(Prompt):
     def __init__(
         self,
         name: str,
-        choices: ListType[Choice | Separator],
+        choices: list[Choice | Separator],
         message: str | None = None,
         qmark: str | None = None,
         when: Callable[[Answers], bool] | bool = True,
         filter: Callable[[str], str] | None = None,
-        validate: Callable[[Answers], bool | str] | Validator | None = None,
+        validate: Callable[[str], bool | str] | Validator | None = None,
     ):
         super().__init__(Prompt.Type.checkbox, name, message, when)
         self["choices"] = choices
@@ -259,7 +259,7 @@ class Input(Prompt):
         default: str | Callable[[Answers], str] | None = None,
         filter: Callable[[str], str] | None = None,
         when: Callable[[Dict[str, Any]], bool] | bool = True,
-        validate: Callable[[Answers], bool | str] | Validator | None = None,
+        validate: Callable[[str], bool | str] | Validator | None = None,
     ):
         super().__init__(Prompt.Type.input, name, message, when)
 
@@ -286,7 +286,7 @@ class Password(Prompt):
         default: str | Callable[[Answers], str] | None = None,
         filter: Callable[[str], str] | None = None,
         when: Callable[[Dict[str, Any]], bool] | bool = True,
-        validate: Callable[[Answers], bool | str] | Validator | None = None,
+        validate: Callable[[str], bool | str] | Validator | None = None,
     ):
         super().__init__(Prompt.Type.password, name, message, when)
 
@@ -340,7 +340,7 @@ class Editor(Prompt):
             ext: str | None = None,
             save: bool | None = None,
             filename: str | None = None,
-            env: ListType[str] | None = None,
+            env: list[str] | None = None,
         ):
             if editor is not None:
                 self["editor"] = editor
@@ -360,7 +360,7 @@ class Editor(Prompt):
         default: str | Callable[[Answers], str] | None = None,
         filter: Callable[[str], str] | None = None,
         when: Callable[[Dict[str, Any]], bool] | bool = True,
-        validate: Callable[[Answers], bool | str] | Validator | None = None,
+        validate: Callable[[str], bool | str] | Validator | None = None,
         eargs: Eargs | None = None,
     ):
         super().__init__(Prompt.Type.editor, name, message, when)

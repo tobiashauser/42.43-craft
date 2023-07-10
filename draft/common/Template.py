@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Set
+from typing import Any, Dict, List, Set
 
 import yaml
 from rich import print
@@ -102,7 +102,7 @@ class Template(File):
         contents of the template.
         """
         pattern = re.compile(
-            r"%s([^\s.]+?)%s" % (self.placeholder_prefix, self.placeholder_suffix)
+            r"%s([^\s]+?)%s" % (self.placeholder_prefix, self.placeholder_suffix)
         )
         matches = pattern.findall(self.contents)
         self._placeholders = set(matches)
@@ -155,7 +155,9 @@ class Template(File):
         # TODO: Rewrite to use 'typed' prompts
         for placeholder in self.placeholders:
             # ignore `<<draft-exercises>>`
-            if placeholder == "draft-exercises":
+            if placeholder == "draft-exercises" or placeholder.startswith(
+                "supplements/"
+            ):
                 continue
 
             question: Prompt = Prompt(
@@ -180,7 +182,6 @@ class Template(File):
 
             # Insert when condition
             if "when" not in question:
-                # question["when"] = lambda _: exists(question["name"])
                 question["when"] = lambda _: question["name"] not in self.configuration
 
             prompts.append(question)
@@ -196,3 +197,21 @@ class Template(File):
         self.remove_blocks(
             prefix=self.block_comment_prefix, suffix=self.block_comment_suffix
         )
+
+    def set_placeholders(self):
+        """
+        Replaces the placeholders with their values in the configuration.
+        """
+
+        for placeholder in self._placeholders:
+            if placeholder in self.configuration:
+                pattern = re.compile(
+                    r"%s%s%s"
+                    % (self.placeholder_prefix, placeholder, self.placeholder_suffix)
+                )
+
+                self._contents = re.sub(
+                    pattern, self.configuration[placeholder], self.contents
+                )
+
+        self.__init_placeholders__()

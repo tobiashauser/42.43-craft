@@ -1,1 +1,10 @@
 document-name: test.tex
+planet: Pluto
+course: HE 2
+semantic-name: Klausur
+semester: SoSe 2023
+place: Stuttgart
+group: Gruppe 2
+draft-exercises: 
+  intervals: 2
+multiple-exercises: True
