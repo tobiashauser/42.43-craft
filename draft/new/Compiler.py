@@ -1,6 +1,9 @@
 # bug fix
 import collections.abc
 
+from draft.common.Prompt import Input
+from draft.common.Prompter import Prompter
+
 collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import prompt
 from rich import print
@@ -36,11 +39,16 @@ class Compiler:
     def document(self, newValue: str):
         self._document = newValue
 
+    @property
+    def prompter(self) -> Prompter:
+        return self._prompter
+
     def __init__(self, configuration: Configuration, header: Header):
         self._configuration = configuration
         self._preamble = Preamble(self.configuration.preamble, self.configuration)
         self._header = header
         self._document = ""
+        self._prompter = Prompter(configuration)
 
     def compile(self):
         """
@@ -51,16 +59,17 @@ class Compiler:
            `self.document`.
         """
         # Ask for the name of the compiled document.
-        question = [
-            {
-                "type": "input",
-                "name": "document-name",
-                "message": "What should the compiled document be called?",
-                "default": self.header.name,
-                "when": lambda a: "document-name" not in self.configuration,
-                "validate": DocumentNameValidator,
-            }
-        ]
-        document_name = prompt(question)
-        print(document_name)
-        print(self.configuration)
+        question = Input(
+            name="document-name",
+            message="What should the compiled document be called?",
+            when=lambda a: "document-name" not in self.configuration,
+            default=self.header.name,
+            validate=DocumentNameValidator,
+        )
+        self.prompter.ask(question)
+
+        # Process the preamble
+        print(self.preamble.prompts)
+        prompt(self.preamble.prompts)
+        # self.prompter.ask(self.preamble.prompts)
+        # print(self.configuration)

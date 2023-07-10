@@ -7,6 +7,7 @@ import yaml
 from draft.common.Configuration import Configuration
 from draft.common.File import File
 from draft.common.helpers import combine_dictionaries
+from draft.common.Prompt import Prompt
 
 
 class Template(File):
@@ -39,7 +40,7 @@ class Template(File):
         return self._placeholders
 
     @property
-    def prompts(self) -> List[Dict[str, Any]]:
+    def prompts(self) -> List[Prompt]:
         return self._prompts
 
     @property
@@ -145,19 +146,18 @@ class Template(File):
         def exists(key: str) -> Callable[..., bool]:
             return lambda: key not in self.configuration
 
-        prompts: List[Dict[str, Any]] = []
+        prompts: List[Prompt] = []
 
+        # TODO: Rewrite to use 'typed' prompts
         for placeholder in self.placeholders:
-            question: Dict[str, Any] = {}
-
             # ignore `<<draft-exercises>>`
             if placeholder == "draft-exercises":
                 continue
 
-            # set the minimum default values
-            question["name"] = placeholder
-            question["type"] = "input"
-            question["message"] = "Please provide the '%s'." % placeholder
+            question: Prompt = Prompt(
+                name=placeholder,
+                type=Prompt.Type.input,
+            )
 
             # customize if this placeholder was customized
             if isinstance(self.yaml.get(placeholder, {}), dict):
@@ -170,13 +170,15 @@ class Template(File):
                             question[key] = eval(value)
                     elif key == "when":
                         if self.configuration.get("allow_eval", False):
-                            question[key] = eval(value) and exists(question["name"])
+                            question[key] = lambda _: eval(value) and exists(
+                                question["name"]
+                            )
                     else:
                         question[key] = value
 
             # Insert when condition
             if "when" not in question:
-                question["when"] = exists(question["name"])
+                question["when"] = lambda _: exists(question["name"])
 
             prompts.append(question)
 

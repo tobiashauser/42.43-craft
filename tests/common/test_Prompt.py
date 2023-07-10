@@ -50,7 +50,11 @@ def test_list():
     when = lambda answers: True
     filter = lambda value: "hello"
     p = List(
-        name="test", choices=["one", "two"], default=callable, when=when, filter=filter
+        name="test",
+        choices=["one", "two"],
+        default=callable,
+        when=when,
+        filter=filter,
     )
     assert p == {
         "name": "test",
