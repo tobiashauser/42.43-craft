@@ -13,7 +13,7 @@ def test_list():
         "name": "test",
         "choices": ["one", "two"],
         "default": "two",
-        "message": "Please provide a value for 'test'.",
+        "message": "Please provide the 'test'.",
         "type": "list",
     }
 
@@ -32,7 +32,7 @@ def test_list():
     assert p == {
         "name": "test",
         "choices": ["one", "two"],
-        "message": "Please provide a value for 'test'.",
+        "message": "Please provide the 'test'.",
         "type": "list",
     }
 
@@ -41,7 +41,7 @@ def test_list():
     assert p == {
         "name": "test",
         "choices": ["one", "two"],
-        "message": "Please provide a value for 'test'.",
+        "message": "Please provide the 'test'.",
         "type": "list",
     }
 
@@ -60,7 +60,7 @@ def test_list():
         "name": "test",
         "choices": ["one", "two"],
         "default": callable,
-        "message": "Please provide a value for 'test'.",
+        "message": "Please provide the 'test'.",
         "type": "list",
         "when": when,
         "filter": filter,
@@ -73,7 +73,7 @@ def test_Expand():
     e = Expand(name="test", choices=[c1, s], default="b")
     assert e == {
         "name": "test",
-        "message": "Please provide a value for 'test'.",
+        "message": "Please provide the 'test'.",
         "type": "expand",
         "choices": [c1, s],
         "default": "b",
@@ -83,7 +83,7 @@ def test_Expand():
     e = Expand(name="test", choices=[c1, s], default="x")
     assert e == {
         "name": "test",
-        "message": "Please provide a value for 'test'.",
+        "message": "Please provide the 'test'.",
         "type": "expand",
         "choices": [c1, s],
     }

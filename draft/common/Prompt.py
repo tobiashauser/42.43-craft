@@ -34,9 +34,7 @@ class Prompt(dict, ABC):
         self["type"] = type.name
         self["name"] = name
         self["message"] = (
-            message
-            if message is not None
-            else "Please provide a value for '%s'." % name
+            message if message is not None else "Please provide the '%s'." % name
         )
         if isinstance(when, bool) and not when:
             self["when"] = when
