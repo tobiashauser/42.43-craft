@@ -20,10 +20,6 @@ class Subcommands:
     """
 
     @property
-    def app(self) -> typer.Typer:
-        return self._app
-
-    @property
     def template_manager(self) -> TemplateManager:
         return self._template_manager
 
@@ -33,26 +29,21 @@ class Subcommands:
 
     def __init__(
         self,
-        app: typer.Typer,
         configuration: Configuration,
         template_manager: TemplateManager,
     ):
-        self._app = app
         self._template_manager = template_manager
         self._configuration = configuration
 
-        # Initialize the subcommands
-        self.__init_subcommands__()
-
-    def __init_subcommands__(self):
+    def add_subcommands(self, app: typer.Typer):
         for header in self.template_manager.headers:
-            self.app.command(name=header.name, help="Create a new %s." % header.name)(
+            app.command(name=header.name, help="Create a new %s." % header.name)(
                 self.create_subcommand_for(header)
             )
 
     def create_subcommand_for(self, header: Header) -> Callable[..., None]:
         def subcommand():
-            compiler = Compiler(self.configuration, header)
+            compiler = Compiler(self.configuration)
             compiler.compile()
 
         return subcommand

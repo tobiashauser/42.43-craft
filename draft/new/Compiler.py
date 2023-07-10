@@ -47,14 +47,98 @@ class Compiler:
     def prompter(self) -> Prompter:
         return self._prompter
 
-    def __init__(self, configuration: Configuration, header: Header):
+    def __init__(self, configuration: Configuration):
         self._configuration = configuration
         self._preamble = Preamble(self.configuration.preamble, self.configuration)
-        self._header = header
+        self._header = Header(
+            self.configuration.headers
+            / (
+                configuration["header"]
+                if configuration["header"].endswith(".tex")
+                else configuration["header"] + ".tex"
+            ),
+            self.configuration,
+        )
         self._document = ""
         self._prompter = Prompter(configuration)
 
     def compile(self):
+        print(self.configuration)
+        self.resolve_draft_exercises()
+        print(self.configuration)
+
+    def ask_for_count(self, name: str) -> int:
+        """
+        Ask how many instances of the exercise should be included.
+
+        Defaults to 1 if `multiple_exercises` is `False`.
+        """
+        if self.configuration.get("multiple-exercises", False):
+            return prompt(
+                Input(
+                    name="count",
+                    message="How many %s should be included?" % name,
+                    validate=ExerciseCountValidator,
+                )
+            ).get("count", 1)
+        else:
+            return 1
+
+    def resolve_draft_exercises(self):
+        """
+        Asks which and how many exercises should be included.
+
+        #TODO: placeholders should be scoped per exercise, header, preamble by default
+
+        Accepted format in `draftrc` files:
+
+        ```YAML
+        draft-exercises: intervals
+
+        draft-exercises:
+            - intervals
+            - chords: 2
+
+        draft-exercises:
+            - intervals: 3
+            - chords:
+                count: 2
+
+        draft-exercises:
+            intervals: 3
+
+        draft-exercises:
+            intervals:
+                count: 3
+        ```
+        """
+
+        result = {}
+
+        # draft-exercises exists in configuration
+        if "draft-exercises" in self.configuration:
+            draft_exercises = self.configuration["draft-exercises"]
+
+            """
+            draft-exercises: intervals
+            """
+            if (not isinstance(draft_exercises, list)) and (
+                not isinstance(draft_exercises, dict)
+            ):
+                result[draft_exercises] = {"count": self.ask_for_count(draft_exercises)}
+
+            """
+            draft-exercises:
+                - intervals
+            """
+            if isinstance(draft_exercises, list):
+                for element in draft_exercises:
+                    if isinstance(element, dict):
+                        for name, count in element.items():
+                            print(name, count)
+        self.configuration["draft-exercises"] = result
+
+    def _compile(self):
         """
         Compile the document. This involves the following steps:
 

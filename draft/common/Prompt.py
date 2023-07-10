@@ -12,7 +12,12 @@ Answers = Dict[str, Any]
 
 
 class Prompt(dict, ABC):
-    """Dictonary representing a PyInquirer prompt."""
+    """
+    Dictonary representing a PyInquirer prompt.
+
+    Use the specific subclasses that represent
+    the different types of prompt.
+    """
 
     class Type(Enum):
         list = "list"
@@ -258,7 +263,7 @@ class Input(Prompt):
         message: str | None = None,
         default: str | Callable[[Answers], str] | None = None,
         filter: Callable[[str], str] | None = None,
-        when: Callable[[Dict[str, Any]], bool] | bool = True,
+        when: Callable[[Answers], bool] | bool = True,
         validate: Callable[[str], bool | str] | Validator | None = None,
     ):
         super().__init__(Prompt.Type.input, name, message, when)
@@ -285,7 +290,7 @@ class Password(Prompt):
         message: str | None = None,
         default: str | Callable[[Answers], str] | None = None,
         filter: Callable[[str], str] | None = None,
-        when: Callable[[Dict[str, Any]], bool] | bool = True,
+        when: Callable[[Answers], bool] | bool = True,
         validate: Callable[[str], bool | str] | Validator | None = None,
     ):
         super().__init__(Prompt.Type.password, name, message, when)
@@ -359,7 +364,7 @@ class Editor(Prompt):
         message: str | None = None,
         default: str | Callable[[Answers], str] | None = None,
         filter: Callable[[str], str] | None = None,
-        when: Callable[[Dict[str, Any]], bool] | bool = True,
+        when: Callable[[Answers], bool] | bool = True,
         validate: Callable[[str], bool | str] | Validator | None = None,
         eargs: Eargs | None = None,
     ):

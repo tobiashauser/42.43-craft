@@ -22,6 +22,11 @@ class Template(File):
 
     Subclasses should remember to call `super().__init__()`
     if they implement their own initializer.
+
+    Subclasses will probably want to customize `self.load()`
+    in order to strip parts of the contents that should not
+    be included in the template such as inputs in a tex-
+    document.
     """
 
     @property
@@ -129,7 +134,7 @@ class Template(File):
         # Iterate over all the block comments
         for match in matches:
             try:
-                dict = combine_dictionaries(dict, yaml.safe_load(match))  # type: ignore
+                dict = combine_dictionaries(dict, yaml.safe_load(match))
             except:
                 pass
 
@@ -143,13 +148,6 @@ class Template(File):
 
         They can be customized in any YAML-block.
         """
-
-        # def exists(key: str) -> Callable[..., bool]:
-        #     print(key, "not in", self.configuration)
-        #     print(key not in self.configuration)
-        #     return lambda: True
-        #     return lambda: key in self.configuration
-
         prompts: List[Prompt] = []
 
         # TODO: Rewrite to use 'typed' prompts
@@ -215,3 +213,6 @@ class Template(File):
                 )
 
         self.__init_placeholders__()
+
+    def resolve_placeholders(self, storage: dict):
+        pass

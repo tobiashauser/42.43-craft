@@ -34,23 +34,23 @@ class Exercise(TexTemplate):
 
     def __init__(self, path: Path, configuration: Configuration):
         """
-        In addition to initializing `self` with the tex template,
-        also initialize any supplemental templates declared under
-        the key `supplements` in the yaml block.
+        Initialize `self` as the tex-template.
+
+        Initialize any additional supplemental template
+        files. They are declared in a yaml block in the
+        tex-template under the key `supplements`.
         """
         super().__init__(path, configuration)
 
         self._supplements: List[Template] = []
         for path in create_list(self.yaml.get("supplements", [])):
-            self._supplements.append(Template(configuration, self.path.parent / path))
+            self._supplements.append(
+                Template(self.configuration, self.path.parent / path)
+            )
 
     def load(self):
         """
         Load the contents of the exercise template.
-
-        Initialize any additional supplemental template
-        files. They are declared in a yaml block in the
-        tex-template under the key `supplements`.
         """
         with self.path.open() as file:
             self._contents = file.read()
