@@ -1,0 +1,2 @@
+# Place to put configuration values to skip prompts when live-testing
+document-name: test.tex
