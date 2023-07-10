@@ -46,9 +46,9 @@ class Configuration(dict):
 
     def __init__(
         self,
-        main: Path = Path.home() / ".config/draft/draftrc",
-        root: Path = Path.home(),
-        cwd: Path = Path.cwd(),
+        main: Path,  # = Path.home() / ".config/draft/draftrc",
+        root: Path,  # = Path.home(),
+        cwd: Path,  # = Path.cwd(),
         *args,
         **kwargs
     ):

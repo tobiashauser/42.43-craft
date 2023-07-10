@@ -17,3 +17,4 @@ __pycache__/
 # Test files
 tests/draftrc
 tests/common/test_live_loading.tex
+.draftrc

@@ -58,6 +58,8 @@ class Compiler:
         2. Resolve any prompts in the preamble. Then add its contents to
            `self.document`.
         """
+        print(self.configuration)
+
         # Ask for the name of the compiled document.
         question = Input(
             name="document-name",
@@ -69,7 +71,6 @@ class Compiler:
         self.prompter.ask(question)
 
         # Process the preamble
-        print(self.preamble.prompts)
-        prompt(self.preamble.prompts)
-        # self.prompter.ask(self.preamble.prompts)
-        # print(self.configuration)
+        # print(self.preamble.prompts)
+        self.prompter.ask(self.preamble.prompts)
+        print(self.configuration)

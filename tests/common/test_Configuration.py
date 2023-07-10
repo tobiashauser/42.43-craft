@@ -22,7 +22,7 @@ class Configuration(LiveConfiguration):
 
 def test_live_loading():
     configuration = yaml.safe_load(Path("config.draft/draftrc").open())
-    root = Path("draftrc")
+    root = Path(".draftrc")
     cwd = Path("tests/draftrc")
 
     with root.open("w") as file:

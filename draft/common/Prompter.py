@@ -6,6 +6,7 @@ from draft.common.Prompt import Prompt
 
 collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import prompt
+from rich import print
 
 
 class Prompter:
@@ -21,10 +22,10 @@ class Prompter:
     def __init__(self, configuration: Configuration):
         self._configuration = configuration
 
-    # TODO: Remove `Any` when prompts are typed in Template.py
-    def ask(self, prompts: Prompt | List[Prompt] | Any):
+    def ask(self, prompts: Prompt | List[Prompt]):
         """
         Ask the prompts and add the answers to the configuration.
         """
-        questions = prompts if not isinstance(prompts, List) else [prompts]
+        questions = prompts if isinstance(prompts, List) else [prompts]
+        # print(questions)
         prompt(questions=questions, answers=self.configuration)

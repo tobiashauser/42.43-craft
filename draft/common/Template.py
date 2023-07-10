@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Set
 
 import yaml
+from rich import print
 
 from draft.common.Configuration import Configuration
 from draft.common.File import File
@@ -128,7 +129,7 @@ class Template(File):
         # Iterate over all the block comments
         for match in matches:
             try:
-                dict = combine_dictionaries(dict, yaml.safe_load(match))
+                dict = combine_dictionaries(dict, yaml.safe_load(match))  # type: ignore
             except:
                 pass
 
@@ -143,8 +144,11 @@ class Template(File):
         They can be customized in any YAML-block.
         """
 
-        def exists(key: str) -> Callable[..., bool]:
-            return lambda: key not in self.configuration
+        # def exists(key: str) -> Callable[..., bool]:
+        #     print(key, "not in", self.configuration)
+        #     print(key not in self.configuration)
+        #     return lambda: True
+        #     return lambda: key in self.configuration
 
         prompts: List[Prompt] = []
 
@@ -170,15 +174,14 @@ class Template(File):
                             question[key] = eval(value)
                     elif key == "when":
                         if self.configuration.get("allow_eval", False):
-                            question[key] = lambda _: eval(value) and exists(
-                                question["name"]
-                            )
+                            question[key] = eval(value)
                     else:
                         question[key] = value
 
             # Insert when condition
             if "when" not in question:
-                question["when"] = lambda _: exists(question["name"])
+                # question["when"] = lambda _: exists(question["name"])
+                question["when"] = lambda _: question["name"] not in self.configuration
 
             prompts.append(question)
 
