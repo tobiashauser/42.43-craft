@@ -16,7 +16,7 @@ class TexTemplate(Template, ABC):
     - Header
     - Exercise
 
-    This class ssets default prefixes and suffixes
+    This class sets default prefixes and suffixes
     for a tex document.
 
     This class provides methods to remove the

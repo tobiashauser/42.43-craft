@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from draft.configuration.Configuration import Configuration as LiveConfiguration
+from draft.configuration.TokensValidator import TokensValidator
 
 
 class Configuration(LiveConfiguration):
@@ -24,7 +25,12 @@ def test_instantiation():
 
 def test_properties_after_validate():
     c = Configuration(allow_eval=True)
+    c["draft-exercises"] = "intervals"
     c.validate()
+
+    intervals = Path(
+        "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 draft/config.draft/exercises/intervals.tex"
+    )
 
     assert c == {
         "allow_eval": True,
@@ -33,6 +39,8 @@ def test_properties_after_validate():
         ),
         "remove_comments": False,
         "multiple-exercises": True,
+        "draft-exercises": {"intervals": {"count": 1, "path": intervals}},
+        TokensValidator().key: TokensValidator().default(),
     }
 
     assert c.allow_eval == True
@@ -41,3 +49,4 @@ def test_properties_after_validate():
     )
     assert c.remove_comments == False
     assert c.multiple_exercises == True
+    assert c.draft_exercises == {"intervals": {"count": 1, "path": intervals}}

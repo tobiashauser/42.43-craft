@@ -1,6 +1,5 @@
 import re
 from pathlib import Path
-from typing import List
 
 from draft.common.helpers import create_list
 from draft.common.Template import Template
@@ -29,7 +28,7 @@ class Exercise(TexTemplate):
         return super().contents
 
     @property
-    def supplements(self) -> List[Template]:
+    def supplements(self) -> list[Template]:
         return self._supplements
 
     def __init__(self, path: Path, configuration: Configuration):
@@ -42,7 +41,7 @@ class Exercise(TexTemplate):
         """
         super().__init__(path, configuration)
 
-        self._supplements: List[Template] = []
+        self._supplements: list[Template] = []
         for path in create_list(self.yaml.get("supplements", [])):
             self._supplements.append(
                 Template(self.configuration, self.path.parent / path)

@@ -3,7 +3,7 @@ from pathlib import Path
 from draft.common.helpers import combine_dictionaries
 from draft.common.Template import Template
 from draft.configuration.Configuration import Configuration as LiveConfiguration
-from tests.configuration.test_Configuration import Configuration
+from tests.common.test_common_Configuration import Configuration
 
 contents = r"""
 This is a template for a <<course>>. It is
@@ -146,22 +146,16 @@ It doesn't do anything.
 
 
 def test_tokens_not_present():
-    test_config = Path("tests/test_config.yaml")
-    test_file = Path("tests/test_tokens_not_present.tex")
-
-    with test_config.open("w") as file:
-        file.write("")
+    test_file = Path("tests/test_tokens_not_present.INVALID")
 
     with test_file.open("w") as file:
         file.write(contents)
 
-    live_config = LiveConfiguration(test_config, Path(), Path())
     try:
-        t = Template(live_config, test_file)
+        t = Template(Configuration(), test_file)  # this line throws an exception
     except Exception:
-        pass
+        assert True
 
-    test_config.unlink()
     test_file.unlink()
 
 

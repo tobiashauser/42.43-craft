@@ -9,6 +9,8 @@ from draft.common.File import File
 from draft.common.helpers import combine_dictionaries
 from draft.common.Prompt import Prompt
 from draft.configuration.Configuration import Configuration
+from draft.configuration.RemoveCommentsValidator import RemoveCommentsValidator
+from draft.configuration.TokensValidator import TokensValidator
 
 
 class Template(File):
@@ -75,8 +77,9 @@ class Template(File):
         self._configuration = configuration
 
         # get tokens from the configuration
+        assert "tokens" in self.configuration
         try:
-            tokens = self.configuration["tokens"][self.extension]
+            tokens = self.configuration[TokensValidator().key][self.extension]
 
             # YAML
             self._block_comment_prefix: str = tokens["block_comment_prefix"]
@@ -92,7 +95,7 @@ class Template(File):
             raise Exception("Couldn't find tokens for %s." % self.extension)
             # TODO: Prompt for the tokens and add them to the configuration
 
-        if configuration.get("remove_comments", False):
+        if configuration.get(RemoveCommentsValidator().key, False):
             self.remove_comments()
 
         self.__init_yaml__()

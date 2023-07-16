@@ -205,6 +205,18 @@ def test_run_valid_input():
     assert c == {"draft-exercises": {"intervals": {"count": 2, "path": intervals}}}
 
 
+def test_run_multiple_valid_input():
+    v = DraftExercisesValidator()
+    c = Configuration()
+    c[v.key] = {
+        "intervals": 2,
+        "chords": 1,
+    }  # chords is removed because it doesn't exist yet
+    v.run(c)
+
+    assert c == {"draft-exercises": {"intervals": {"count": 2, "path": intervals}}}
+
+
 def test_run_invalid_input():
     v = DraftExercisesValidator()
     c = Configuration()

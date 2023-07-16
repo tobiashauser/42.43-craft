@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 import yaml
 
@@ -10,35 +10,13 @@ from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
 from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
 from draft.configuration.PreambleValidator import PreambleValidator
 from draft.configuration.RemoveCommentsValidator import RemoveCommentsValidator
+from draft.configuration.TokensValidator import TokensValidator
 from draft.configuration.Validator import Validator
 
 
 class Configuration(dict):
     """
-    A dictionary like class that represents the
-    configuration of the user.
-
-    Special keys:
-    - `allow_eval`: If true, the user can specify lambdas to
-        customize how prompts behave. This is opt-in because
-        it introduces quite big security risks.
-    - `draft-exercises`: Holds a list of exercises to be
-        included in the compiled document.
-        (also "Special placeholders")
-    - `remove_comments`: If true, comments from the templates
-        will be removed when compiling the document.
-    - `supplements`: Specify a list of supplemental templates
-        in an exercise template. Specify as a relative path.
-    - `preamble`: Declare which preamble should be used ("default").
-
-    Special placeholders:
-    - `<<draft-exercises>>`: This placeholder gets replaced by
-        the exericses. It should only appear in a header.
-        It can also be set in a `draftrc` configuration file. TODO
-    """
-
-    """
-    A dictionary like class that represents the configuration 
+    A dictionary like class that represents the configuration
     of the user.
 
     ### Settings
@@ -48,6 +26,7 @@ class Configuration(dict):
     - `remove_comments`: required, defaults to `False`
     - `draft-exercises`: optional
     - `multiple-exercises`: required, defaults to `True`
+    - `tokens`: required, loads defaults for `.tex` and `.ly`
     """
 
     @property
@@ -79,8 +58,8 @@ class Configuration(dict):
         return self[RemoveCommentsValidator().key]
 
     @property
-    def draft_exercises(self):
-        pass
+    def draft_exercises(self) -> dict[str, dict[str, Any]] | None:
+        return self.get(DraftExercisesValidator().key, None)
 
     @property
     def multiple_exercises(self) -> bool:
@@ -166,6 +145,7 @@ class Configuration(dict):
             RemoveCommentsValidator(),
             MultipleExercisesValidator(),
             DraftExercisesValidator(),
+            TokensValidator(),
         ]
         for validator in self.validators:
             validator.run(self)
