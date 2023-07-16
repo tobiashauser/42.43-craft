@@ -1,9 +1,9 @@
 from pathlib import Path
 
 from draft.new.Compiler import Compiler
-from tests.common.test_Configuration import Configuration
 from tests.common.test_Header import Header as HeaderTest
 from tests.common.test_Preamble import Preamble as PreambleTest
+from tests.configuration.test_Configuration import Configuration
 
 preamble_contents = r"""
 \documentclass{scrreport}

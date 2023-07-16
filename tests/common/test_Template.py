@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from draft.common.Configuration import Configuration as LiveConfiguration
 from draft.common.helpers import combine_dictionaries
 from draft.common.Template import Template
-from tests.common.test_Configuration import Configuration
+from draft.configuration.Configuration import Configuration as LiveConfiguration
+from tests.configuration.test_Configuration import Configuration
 
 contents = r"""
 This is a template for a <<course>>. It is

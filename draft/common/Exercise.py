@@ -2,10 +2,10 @@ import re
 from pathlib import Path
 from typing import List
 
-from draft.common.Configuration import Configuration
 from draft.common.helpers import create_list
 from draft.common.Template import Template
 from draft.common.TexTemplate import TexTemplate
+from draft.configuration.Configuration import Configuration
 
 
 class Exercise(TexTemplate):

@@ -2,10 +2,10 @@ from pathlib import Path
 
 import typer
 
-from draft.common.Configuration import Configuration
 from draft.common.Prompt import Checkbox, List
 from draft.common.Prompter import Prompter
 from draft.common.TemplateManager import TemplateManager
+from draft.configuration.Configuration import Configuration
 from draft.new.Compiler import Compiler
 from draft.new.Subcommands import Subcommands
 

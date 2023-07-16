@@ -2,8 +2,8 @@ import re
 from abc import ABC
 from pathlib import Path
 
-from draft.common.Configuration import Configuration
 from draft.common.Template import Template
+from draft.configuration.Configuration import Configuration
 
 
 class TexTemplate(Template, ABC):

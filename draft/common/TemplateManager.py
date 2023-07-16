@@ -1,11 +1,11 @@
 from pathlib import Path
 from typing import List
 
-from draft.common.Configuration import Configuration
 from draft.common.Exercise import Exercise
 from draft.common.Folder import Folder
 from draft.common.Header import Header
 from draft.common.Preamble import Preamble
+from draft.configuration.Configuration import Configuration
 
 
 class TemplateManager:

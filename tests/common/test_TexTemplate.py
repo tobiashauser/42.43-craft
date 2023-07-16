@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from draft.common.TexTemplate import TexTemplate
-from tests.common.test_Configuration import Configuration
+from tests.configuration.test_Configuration import Configuration
 
 contents = r"""
 \documentclass{scrreport}

@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from draft.common.Configuration import Configuration
 from draft.common.TexTemplate import TexTemplate
+from draft.configuration.Configuration import Configuration
 
 
 class Preamble(TexTemplate):

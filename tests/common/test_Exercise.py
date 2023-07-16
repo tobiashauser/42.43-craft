@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from draft.common.Exercise import Exercise as LiveExercise
-from tests.common.test_Configuration import Configuration
+from tests.configuration.test_Configuration import Configuration
 
 test_folder = Path("tests/test_Folder")
 tex = test_folder / "intervals.tex"

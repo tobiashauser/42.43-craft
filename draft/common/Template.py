@@ -5,10 +5,10 @@ from typing import Any, Dict, List, Set
 import yaml
 from rich import print
 
-from draft.common.Configuration import Configuration
 from draft.common.File import File
 from draft.common.helpers import combine_dictionaries
 from draft.common.Prompt import Prompt
+from draft.configuration.Configuration import Configuration
 
 
 class Template(File):

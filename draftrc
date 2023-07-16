@@ -12,17 +12,17 @@ multiple-exercises: True
 # draft-exercises: intervals
 # draft-exercises:
 #   - intervals
-# draft-exercises:
-#   intervals: 2
-# draft-exercises:
-#   intervals:
-#     count: 2
+draft-exercises:
+  intervals: 2
+draft-exercises:
+  intervals:
+    count: 2
 draft-exercises:
     - intervals: 3
     - chords: 3
     - melody
-# draft-exercises:
-#     intervals: 3
-#     chords: 3
-#     melody:
-#       count: 3
+draft-exercises:
+    intervals: 3
+    chords: 3
+    melody:
+      count: 3

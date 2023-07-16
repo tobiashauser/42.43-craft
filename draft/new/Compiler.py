@@ -12,9 +12,9 @@ collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import prompt
 from rich import print
 
-from draft.common.Configuration import Configuration
 from draft.common.Header import Header
 from draft.common.Preamble import Preamble
+from draft.configuration.Configuration import Configuration
 from draft.new.Validators import DocumentNameValidator, ExerciseCountValidator
 
 

@@ -1,7 +1,16 @@
+from __future__ import annotations
+
 from pathlib import Path
 from typing import List
 
 import yaml
+
+from draft.configuration.AllowEvalValidator import MultipleExercisesValidator
+from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
+from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
+from draft.configuration.PreambleValidator import PreambleValidator
+from draft.configuration.RemoveCommentsValidator import RemoveCommentsValidator
+from draft.configuration.Validator import Validator
 
 
 class Configuration(dict):
@@ -28,6 +37,23 @@ class Configuration(dict):
         It can also be set in a `draftrc` configuration file. TODO
     """
 
+    """
+    A dictionary like class that represents the configuration 
+    of the user.
+
+    ### Settings
+
+    - `preamble`: required, defaults to `default.tex`
+    - `allow_eval`: required, defaults to `False`
+    - `remove_comments`: required, defaults to `False`
+    - `draft-exercises`: optional
+    - `multiple-exercises`: required, defaults to `True`
+    """
+
+    @property
+    def validators(self) -> list[Validator]:
+        return self._validators
+
     @property
     def main(self) -> Path:
         return self._main
@@ -42,15 +68,23 @@ class Configuration(dict):
 
     @property
     def preamble(self) -> Path:
-        return self._preamble
+        return self[PreambleValidator().key]
 
     @property
-    def headers(self) -> Path:
-        return self._headers
+    def allow_eval(self) -> bool:
+        return self[MultipleExercisesValidator().key]
 
     @property
-    def exercises(self) -> Path:
-        return self._exercises
+    def remove_comments(self) -> bool:
+        return self[RemoveCommentsValidator().key]
+
+    @property
+    def draft_exercises(self):
+        pass
+
+    @property
+    def multiple_exercises(self) -> bool:
+        return self[MultipleExercisesValidator().key]
 
     def __init__(
         self,
@@ -58,7 +92,7 @@ class Configuration(dict):
         root: Path,  # = Path.home(),
         cwd: Path,  # = Path.cwd(),
         *args,
-        **kwargs
+        **kwargs,
     ):
         self._main = main
         self._root = root
@@ -66,12 +100,7 @@ class Configuration(dict):
 
         self.update(*args, **kwargs)
         self.load()
-
-        self._preamble = Path(
-            main.parent / "preambles" / self.get("preamble", "default.tex")
-        )
-        self._headers = Path(main.parent) / "headers/"
-        self._exercises = Path(main.parent) / "exercises/"
+        self.validate()
 
     def load(self):
         """
@@ -124,3 +153,19 @@ class Configuration(dict):
                     self[key] = value
         except:
             pass
+
+    def validate(self):
+        """
+        Validate the configuration and employ resolving strategies if
+        necessary. This is done by setting and running every validator in
+        `self.validators`.
+        """
+        self._validators = [
+            PreambleValidator(),
+            MultipleExercisesValidator(),
+            RemoveCommentsValidator(),
+            MultipleExercisesValidator(),
+            DraftExercisesValidator(),
+        ]
+        for validator in self.validators:
+            validator.run(self)

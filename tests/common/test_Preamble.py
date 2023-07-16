@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from draft.common.Configuration import Configuration
 from draft.common.Preamble import Preamble as LivePreamble
-from tests.common.test_Configuration import Configuration
+from draft.configuration.Configuration import Configuration
+from tests.configuration.test_Configuration import Configuration
 
 contents = r"""
 \documentclass{scrreport}

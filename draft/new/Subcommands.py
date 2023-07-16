@@ -3,9 +3,9 @@ from typing import Callable
 import typer
 from rich import print
 
-from draft.common.Configuration import Configuration
 from draft.common.Header import Header
 from draft.common.TemplateManager import TemplateManager
+from draft.configuration.Configuration import Configuration
 from draft.new.Compiler import Compiler
 
 
