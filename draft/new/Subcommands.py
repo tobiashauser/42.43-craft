@@ -6,7 +6,7 @@ from rich import print
 from draft.common.Header import Header
 from draft.common.TemplateManager import TemplateManager
 from draft.configuration.Configuration import Configuration
-from draft.new.Compiler import Compiler
+from tests.new.test_Compiler import Compiler
 
 
 class Subcommands:
@@ -45,6 +45,6 @@ class Subcommands:
         def subcommand():
             self.configuration.header = header.name
             compiler = Compiler(self.configuration)  # type: ignore
-            # compiler.compile()
+            compiler.compile()
 
         return subcommand

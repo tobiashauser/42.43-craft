@@ -1,6 +1,9 @@
+from rich import print
+
 from draft.common.Header import Header
 from draft.common.Preamble import Preamble
 from draft.configuration.Configuration import Configuration
+from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
 
 
 class Compiler:
@@ -34,3 +37,16 @@ class Compiler:
         else:
             raise Exception("Unexpectedly found `None` at `configuration.header`.")
             # TODO: Handle Exception
+
+    def compile(self):
+        """
+        Compile the document.
+        """
+        if DraftExercisesValidator().key not in self.configuration:
+            self.prompt_for_exercises()
+
+    def prompt_for_exercises(self):
+        """
+        Prompt the user which exercises should be included.
+        """
+        print("Prompt for exercises")

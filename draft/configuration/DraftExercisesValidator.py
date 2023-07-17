@@ -1,7 +1,55 @@
 from pathlib import Path
 
+# from draft.configuration.Configuration import Configuration
 from draft.configuration.Semantic import Semantic
 from draft.configuration.Validator import Validator
+
+
+class ExerciseConfiguration(dict):
+    """
+    Wrapper around a dictionary that defines a minimal interface of
+    an exercise configured in the configuration.
+    """
+
+    # TODO: Untyped reference to configuration...
+    def __init__(self, configuration, name: str, *args, **kwargs):
+        """
+        Set `count` or `path` as kwargs to overwrite the defaults.
+
+        - `count: int`
+        - `path: str | Path`
+        """
+        name = name.removesuffix(".tex")
+
+        # set any additional values
+        self.update(*args, **kwargs)
+
+        # Ensure count
+        if "count" not in self:
+            self["count"] = 1
+
+        # Ensure path
+        if "path" not in self:
+            self["path"] = configuration.main.parent / ("exercises/%s.tex" % name)
+        # Convert relative path to absolute path
+        else:
+            match self["path"]:
+                case str(path):
+                    path = Path(path.removesuffix(".tex") + ".tex")
+                    if path.is_absolute():
+                        self["path"] = path
+                    else:
+                        self["path"] = configuration.main.parent / "exercises" / path
+                case Path():
+                    # TODO: Conditionally append `.tex`
+                    path = self["path"]
+                    if path.is_absolute():
+                        self["path"] = path
+                    else:
+                        self["path"] = configuration.main.parent / "exercises" / path
+
+        # Absolute path
+        self["path"] = self["path"].resolve()
 
 
 class DraftExercisesValidator(Validator):
@@ -40,31 +88,6 @@ class DraftExercisesValidator(Validator):
     def lint(self, value) -> dict:
         result = {}
 
-        def exercise_configuration(
-            name: str,
-            count_YqthQh: int | None = None,  # guarantees unique keys
-            path_e5oVVY: Path | None = None,  # in with **kwargs
-            **kwargs,
-        ) -> dict:
-            result = {}
-            result.update(**kwargs)
-
-            result["count"] = (
-                count_YqthQh if count_YqthQh is not None else kwargs.get("count", 1)
-            )
-
-            if "path" in kwargs or path_e5oVVY is not None:
-                if Path(kwargs.get("path", path_e5oVVY)).is_absolute():
-                    result["path"] = Path(kwargs.get("path", path_e5oVVY))
-                else:
-                    result["path"] = self.exercise_path_appending(
-                        kwargs.get("path", path_e5oVVY)
-                    )
-            else:
-                result["path"] = self.exercise_path_appending(name)
-
-            return result
-
         def dict_types(dictionary: dict, key, value) -> bool:
             return all(
                 isinstance(k, key) and isinstance(v, value)
@@ -74,7 +97,9 @@ class DraftExercisesValidator(Validator):
         match value:
             # draft-exercises: intervals
             case str(exercise_name):
-                result[exercise_name] = exercise_configuration(exercise_name)
+                result[exercise_name] = ExerciseConfiguration(
+                    self.configuration, exercise_name
+                )
 
             # draft-exercises:
             case list(items):
@@ -82,30 +107,38 @@ class DraftExercisesValidator(Validator):
                     match item:
                         # - intervals
                         case str(exercise_name):
-                            result[exercise_name] = exercise_configuration(
-                                exercise_name
+                            result[exercise_name] = ExerciseConfiguration(
+                                self.configuration, exercise_name
                             )
                         # - intervals: 2
                         case dict(item) if dict_types(item, str, int):
-                            for k, v in item.items():
-                                result[k] = exercise_configuration(k, v)
+                            for exercise_name, count in item.items():
+                                result[exercise_name] = ExerciseConfiguration(
+                                    self.configuration, exercise_name, count=count
+                                )
 
                         # - intervals:
                         case dict(item) if dict_types(item, str, dict):
-                            for k, v in item.items():
-                                result[k] = exercise_configuration(k, **v)
+                            for exercise_name, kwargs in item.items():
+                                result[exercise_name] = ExerciseConfiguration(
+                                    self.configuration, exercise_name, **kwargs
+                                )
 
             # draft-exercises:
             case dict(items):
-                for k, v in items.items():
+                for exercise_name, v in items.items():
                     match v:
                         # 2
                         case int(count):
-                            result[k] = exercise_configuration(k, v)
+                            result[exercise_name] = ExerciseConfiguration(
+                                self.configuration, exercise_name, count=count
+                            )
 
                         # count: 3
                         case dict(config):
-                            result[k] = exercise_configuration(k, **config)
+                            result[exercise_name] = ExerciseConfiguration(
+                                self.configuration, exercise_name, **config
+                            )
 
         return {self.remove_tex(key): value for key, value in result.items()}
 
@@ -118,17 +151,17 @@ class DraftExercisesValidator(Validator):
         """
         invalid_keys = []
 
-        for k, v in value.items():
+        for exercise_name, config in value.items():
             # path points to existing file
-            if not v["path"].is_file():
-                invalid_keys.append(k)
+            if not config["path"].is_file():
+                invalid_keys.append(exercise_name)
 
             # count is greater than 0
-            if not v["count"] > 0:
-                invalid_keys.append(k)
+            if not config["count"] > 0:
+                invalid_keys.append(exercise_name)
 
-        for k in invalid_keys:
-            value.pop(k)
+        for exercise_name in invalid_keys:
+            value.pop(exercise_name)
 
         if self.configuration[self.key] == {}:
             self.configuration.pop(self.key)

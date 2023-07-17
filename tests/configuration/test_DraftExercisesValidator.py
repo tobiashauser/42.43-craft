@@ -3,7 +3,10 @@ from typing import List
 
 import yaml
 
-from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
+from draft.configuration.DraftExercisesValidator import (
+    DraftExercisesValidator,
+    ExerciseConfiguration,
+)
 from tests.configuration.test_Configuration import Configuration
 
 
@@ -116,6 +119,12 @@ draft-exercises:
 intervals = Path(
     "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 draft/config.draft/exercises/intervals.tex"
 )
+
+
+def test_ExerciseConfiguration():
+    c = Configuration()
+    e = ExerciseConfiguration(c, "intervals")
+    assert e == {"count": 1, "path": intervals}
 
 
 def test_linter_str():

@@ -7,6 +7,7 @@ from tests.common.test_Header import Header as HeaderTest
 from tests.common.test_Preamble import Preamble as PreambleTest
 
 preamble_contents = r"""
+% TESTING %
 \documentclass{scrreport}
 
 \newcounter{exerciseCounter}
@@ -24,6 +25,7 @@ Hello, world!
 """
 
 header_contents = r"""
+% TESTING %
 \documentclass{scrreport}
 
 \input{../preambles/default}

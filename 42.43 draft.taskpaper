@@ -5,6 +5,7 @@ Inbox:
 	Ideas:
 	Bugs:
 		- The Header templates do not compile on their own because they import the document body from the preamble.
+		- Using the live environment crashes because `~/.config/draft/` doesn't exists yet.
 Archive:
 Search Definitions:
 	Top Priority @search(@priority = 5 and not @done)
