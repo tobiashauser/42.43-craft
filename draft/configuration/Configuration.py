@@ -12,6 +12,9 @@ from draft.configuration.MultipleExercisesValidator import MultipleExercisesVali
 from draft.configuration.PreambleValidator import PreambleValidator
 from draft.configuration.RemoveCommentsValidator import RemoveCommentsValidator
 from draft.configuration.TokensValidator import TokensValidator
+from draft.configuration.UniqueExercisePlaceholdersValidator import (
+    UniqueExercisePlaceholdersValidator,
+)
 from draft.configuration.Validator import Validator
 
 
@@ -87,6 +90,10 @@ class Configuration(dict):
     @property
     def multiple_exercises(self) -> bool:
         return self[AllowEvalValidator().key]
+
+    @property
+    def unique_exercise_placeholders(self) -> bool:
+        return self[UniqueExercisePlaceholdersValidator().key]
 
     def __init__(
         self,
@@ -171,6 +178,7 @@ class Configuration(dict):
             MultipleExercisesValidator(),
             TokensValidator(),
             HeaderValidator(),
+            UniqueExercisePlaceholdersValidator(),
         ]
         for validator in self.validators:
             validator.run(self)

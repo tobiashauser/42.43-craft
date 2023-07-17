@@ -8,7 +8,9 @@ from rich import print
 from draft.common.File import File
 from draft.common.helpers import combine_dictionaries
 from draft.common.Prompt import Prompt
+from draft.common.Prompter import Prompter
 from draft.configuration.Configuration import Configuration
+from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
 from draft.configuration.RemoveCommentsValidator import RemoveCommentsValidator
 from draft.configuration.TokensValidator import TokensValidator
 
@@ -181,10 +183,6 @@ class Template(File):
                     else:
                         question[key] = value
 
-            # Insert when condition
-            if "when" not in question:
-                question["when"] = lambda _: question["name"] not in self.configuration
-
             prompts.append(question)
 
         self._prompts = prompts
@@ -199,23 +197,33 @@ class Template(File):
             prefix=self.block_comment_prefix, suffix=self.block_comment_suffix
         )
 
-    def set_placeholders(self):
+    def set_placeholders(self, values: dict[str, Any]):
         """
-        Replaces the placeholders with their values in the configuration.
+        Replaces the placeholders with their values.
         """
 
-        for placeholder in self._placeholders:
-            if placeholder in self.configuration:
+        for placeholder in self.placeholders:
+            if placeholder in values:
                 pattern = re.compile(
                     r"%s%s%s"
                     % (self.placeholder_prefix, placeholder, self.placeholder_suffix)
                 )
 
-                self._contents = re.sub(
-                    pattern, self.configuration[placeholder], self.contents
-                )
+                if isinstance(values[placeholder], str):
+                    self._contents = re.sub(pattern, values[placeholder], self.contents)
 
         self.__init_placeholders__()
 
     def resolve_placeholders(self, storage: dict):
-        pass
+        prompter = Prompter(storage)
+        prompter.ask(self.prompts)
+        self.set_placeholders(storage)
+
+    def will_prompt(self) -> bool:
+        """
+        Returns a boolean indicating whether or not resolving the placeholders
+        will need to prompt the user for input.
+        """
+        return any(
+            [prompt["name"] not in self.configuration for prompt in self.prompts]
+        )

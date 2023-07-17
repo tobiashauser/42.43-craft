@@ -1,6 +1,8 @@
 import collections.abc
+from pathlib import Path
 
 from rich import print
+from rich.console import Console
 
 collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import prompt  # bugfix collections
@@ -77,12 +79,67 @@ class Compiler:
                 Exercise(config["path"], self.configuration)
                 for _ in range(config["count"])
             ]
+        self.disambiguate_exercises()
 
     def compile(self):
         """
         Compile the document.
         """
-        print(self.configuration)
+        console = Console()
+        print(
+            "Drafting new [bold yellow]%s[/bold yellow] with [bold yellow]%s[/bold yellow] preamble...\n"
+            % (self.header.name, self.preamble.name)
+        )
+
+        # preamble
+        if self.preamble.will_prompt():
+            print("")
+            console.rule("[bold red]preamble")
+        self.preamble.resolve_placeholders(self.configuration)
+        print("[blue]==>[/blue] [bold]Compiled preamble :sparkles:")
+
+        # header
+        if self.header.will_prompt():
+            print("")
+            console.rule("[bold red]header")
+        self.header.resolve_placeholders(self.configuration)
+        print("[blue]==>[/blue] [bold]Compiled header :sparkles:")
+
+        # exercises
+        print("")
+        console.rule("[bold red]exercises")
+        for exercise in self.exercises:
+            print(
+                "[bold red]%s%s[/bold red]" % (exercise.name, exercise.extension)
+                + " (%s)" % exercise.disambiguated_name
+                if exercise.name != exercise.disambiguated_name
+                else ""
+            )
+            exercise.resolve_placeholders()
+            exercise.rename_supplements()
+            print("[blue]==>[/blue] [bold]Compiled exercise :sparkles:\n")
+
+            # handle the supplemental files for the exercise
+            for supplement in exercise.supplements:
+                print(
+                    "[bold red]%s%s[/bold red]"
+                    % (exercise.disambiguated_name, supplement.extension)
+                )
+
+                supplement.resolve_placeholders(
+                    exercise.unique_placeholder_values
+                    if self.configuration.unique_exercise_placeholders
+                    else self.configuration
+                )
+                print("[blue]==>[/blue] [bold]Compiled supplemental file :sparkles:")
+
+                supplement_file = Path(exercise.disambiguate_supplement(supplement))
+                supplement_file.write_text(supplement.contents)
+                print("[blue]==>[/blue] [bold]Copied to current directory :printer:\n")
+
+            exercise.clean_resolve_placeholders()
+
+        # TODO: Ask what the new document should be called and then write to it...
 
     def prompt_for_exercises(self) -> dict:
         """
@@ -101,11 +158,11 @@ class Compiler:
 
         # answer = ['intervals']
         answer = prompt(question)[key]
+        # answer = {'intervals': {'count': ..., 'path': ... }}
         answer = {
             exercise_name: ExerciseConfiguration(self.configuration, exercise_name)
             for exercise_name in answer
         }
-        # answer = {'intervals': {'count': ..., 'path': ... }}
 
         # multiple exercises
         if self.configuration[MultipleExercisesValidator().key]:
@@ -120,3 +177,11 @@ class Compiler:
                 config["count"] = int(count)
 
         return answer
+
+    def disambiguate_exercises(self):
+        count = {}
+        for exercise in self.exercises:
+            if self.configuration["draft-exercises"][exercise.name]["count"] > 1:
+                add = count.get(exercise.name, 1)
+                exercise.disambiguation_suffix = add
+                count[exercise.name] = count.get(exercise.name, 1) + 1

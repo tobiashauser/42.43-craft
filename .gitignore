@@ -5,6 +5,9 @@
 __pycache__/
 .pytest_cache/
 
+# rich
+emoji.txt
+
 # LaTeX
 *.aux
 *.fdb_latexmk
@@ -18,3 +21,5 @@ __pycache__/
 tests/draftrc
 tests/common/test_live_loading.tex
 .draftrc
+intervals-1.ly
+intervals-2.ly

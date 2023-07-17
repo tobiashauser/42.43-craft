@@ -95,14 +95,14 @@ def test_prompts():
     assert prompts[0]["type"] == "input"
     assert prompts[0]["message"] == "Please provide the 'author'."
     assert "validate" not in prompts[0]
-    assert "when" in prompts[0]
-    assert len(prompts[0]) == 4
+    # assert "when" in prompts[0]
+    assert len(prompts[0]) == 3
 
     assert prompts[1]["name"] == "course"
     assert prompts[1]["type"] == "input"
     assert prompts[1]["message"] == "Please provide the 'course'."
     assert "validate" in prompts[1]
-    assert "when" in prompts[1]
+    # assert "when" in prompts[1]
     assert len(prompts[1]) == 5
 
 
@@ -110,12 +110,12 @@ def test_prompts_allow_eval_configuration():
     t = TemplateImplementation(configuration=Configuration(allow_eval=False))
     prompts = sorted(t.prompts, key=lambda d: d["name"])
     assert "validate" not in prompts[1]
-    assert "when" in prompts[1]
+    # assert "when" in prompts[1]
 
     t = TemplateImplementation(configuration=Configuration(allow_eval=True))
     prompts = sorted(t.prompts, key=lambda d: d["name"])
     assert "validate" in prompts[1]
-    assert "when" in prompts[1]
+    # assert "when" in prompts[1]
 
 
 def test_reference_semantics_of_configuration():
@@ -161,12 +161,12 @@ def test_tokens_not_present():
 
 def test_set_placeholders():
     t = TemplateImplementation()
-    t.set_placeholders()
+    t.set_placeholders(t.configuration)
 
     assert t.contents == contents
     assert t.placeholders == {"author", "course"}
 
     t._configuration = Configuration(author="TH")
-    t.set_placeholders()
+    t.set_placeholders(t.configuration)
     assert not t.contents == contents
     assert t.placeholders == {"course"}

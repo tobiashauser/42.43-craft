@@ -2,6 +2,7 @@ import re
 from abc import ABC
 from pathlib import Path
 
+from draft.common.helpers import create_list
 from draft.common.Template import Template
 from draft.configuration.Configuration import Configuration
 
@@ -38,8 +39,10 @@ class TexTemplate(Template, ABC):
     def declarations(self) -> str:
         """
         Return the declarations in the template.
-
         Those are the contents without the document body.
+
+        Caching the entire contents is done so that the
+        method `remove_document_body` can be used.
         """
         cache = self.contents
         self.remove_document_body()

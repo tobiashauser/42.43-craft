@@ -33,7 +33,9 @@ header_contents = r"""
 \input{../preambles/default}
 
 \begin{document}
-Hello, world!
+Hello, <<planet>>!
+
+<<draft-exercises>>
 \end{document}
 """
 
@@ -51,7 +53,7 @@ unique-placeholders:
 \begin{document}
 \exercise{Intervalle}{<<points>>}
 This exercise has <<interval-count>> intervals.
-\lilypondfile{<<supplements/intervals.ly>>}
+\lilypondfile{intervals.ly}
 \end{document}
 """
 
@@ -73,11 +75,30 @@ class Exercise(ExerciseTest):
 
 
 class Compiler(LiveCompiler):
+    """
+    Subclass of compiler whose dependencies are controlled.
+    Used when live-testing the tool via `make debug`.
+    """
+
     def __init__(self, configuration: Configuration):
-        # Add any kwargs that should not be prompted for when
-        # live testing the debug version
-        configuration.header = "exam.tex"
+        """
+        Add any kwargs that should not be prompted for
+        when live testing the debug version.
+        """
+
+        # uncomment when running tests
         configuration["draft-exercises"] = {"intervals": 2}
+        configuration.header = "exam.tex"
+        configuration["remove_comments"] = False
+        configuration["unique_exercise_placeholders"] = False
+
+        # placeholders
+        configuration["planet"] = "Pluto"
+        configuration["semantic-name"] = "Klausur"
+        configuration["semester"] = "SoSe 2023"
+        configuration["place"] = "Stuttgart"
+        configuration["group"] = "Gruppe 1"
+        configuration["course"] = "HE 2"
 
         configuration.validate()
         super().__init__(configuration)
