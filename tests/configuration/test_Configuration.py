@@ -50,3 +50,31 @@ def test_properties_after_validate():
     assert c.remove_comments == False
     assert c.multiple_exercises == True
     assert c.draft_exercises == {"intervals": {"count": 1, "path": intervals}}
+    assert c.header == None
+
+
+def test_header_setter():
+    exam = Path(
+        "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 draft/config.draft/headers/exam.tex"
+    )
+    worksheet = Path(
+        "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 draft/config.draft/headers/worksheet.tex"
+    )
+
+    c = Configuration()
+    assert c == {}
+
+    c.header = "INVALID.tex"
+    assert c == {}
+
+    c.header = "exam.tex"
+    assert c == {"header": exam}
+
+    c.header = "INVALID.tex"
+    assert c == {"header": exam}
+
+    c.header = "worksheet"
+    assert c == {"header": worksheet}
+
+    c.header = exam
+    assert c == {"header": exam}

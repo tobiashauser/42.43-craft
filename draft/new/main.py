@@ -1,22 +1,19 @@
 from pathlib import Path
 
 import typer
+from rich import print
 
-from draft.common.Prompt import Checkbox, List
-from draft.common.Prompter import Prompter
 from draft.common.TemplateManager import TemplateManager
-from draft.configuration.Configuration import Configuration
-from draft.new.Compiler import Compiler
 from draft.new.Subcommands import Subcommands
+from tests.common.test_common_Configuration import Configuration
 
 app = typer.Typer()
 
 configuration = Configuration(
-    main=Path("config.draft/draftrc"),  # main=Path("~/.config/draft/"),
-    root=Path.cwd(),  # Path.home(),
+    main=Path("~/.config/draft/"),
+    root=Path.home(),
     cwd=Path.cwd(),
-    # test
-    header="exam",
+    # header="exam.tex",
 )
 
 subcommands = Subcommands(
@@ -28,24 +25,9 @@ subcommands.add_subcommands(app)
 
 
 @app.callback(invoke_without_command=True)
-def main():
-    if "header" in configuration:
-        # add ending .tex
-        if not configuration["header"].endswith(".tex"):
-            configuration["header"] = configuration["header"] + ".tex"
-
-        # check that its a valid path else remove it
-        if not (Path(configuration.headers) / configuration["header"]).is_file():
-            configuration.pop("header", None)
-    else:
-        p = Prompter(configuration)
-        p.ask(
-            List(
-                "header",
-                choices=[file.name for file in configuration.headers.iterdir()],
-                message="Which header should be used?",
-            )
-        )
-
-    c = Compiler(configuration)
-    c.compile()
+def callback(ctx: typer.Context):
+    if ctx.invoked_subcommand is None:
+        if configuration.header is not None:
+            print("#TODO: Compiling document for `%s`." % configuration.header.name)
+        else:
+            ctx.get_help()

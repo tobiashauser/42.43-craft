@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from draft.new.Compiler import Compiler
+from draft.configuration.Configuration import Configuration
+from draft.new.Compiler import Compiler as LiveCompiler
+from tests.common.test_common_Configuration import Configuration
 from tests.common.test_Header import Header as HeaderTest
 from tests.common.test_Preamble import Preamble as PreambleTest
-from tests.configuration.test_Configuration import Configuration
 
 preamble_contents = r"""
 \documentclass{scrreport}
@@ -33,6 +34,16 @@ Hello, world!
 """
 
 
+class Compiler(LiveCompiler):
+    def __init__(self, configuration: Configuration):
+        configuration.header = "exam.tex"  # will be discarded
+        super().__init__(configuration)
+
+        # Overwrite with test instances
+        self._preamble = Preamble()
+        self._header = Header()
+
+
 class Preamble(PreambleTest):
     def load(self):
         self._contents = preamble_contents
@@ -43,17 +54,9 @@ class Header(HeaderTest):
         self._contents = header_contents
 
 
-def test_instantiation():
-    configuration = Configuration()
-    c = Compiler(
-        configuration, Header(path=Path("exam.tex"), configuration=configuration)
-    )
-    c._preamble = Preamble(path=Path("default.tex"), configuration=configuration)
+def test_testCompiler():
+    c = Compiler(Configuration(key="value"))
 
-    assert c.preamble.name == "default"
+    assert c.configuration["key"] == "value"
     assert c.preamble.contents == preamble_contents
-    assert c.preamble.configuration is configuration
-
-    assert c.header.name == "exam"
     assert c.header.contents == header_contents
-    assert c.header.configuration is configuration

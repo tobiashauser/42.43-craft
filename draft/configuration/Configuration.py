@@ -7,6 +7,7 @@ import yaml
 
 from draft.configuration.AllowEvalValidator import MultipleExercisesValidator
 from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
+from draft.configuration.HeaderValidator import HeaderValidator
 from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
 from draft.configuration.PreambleValidator import PreambleValidator
 from draft.configuration.RemoveCommentsValidator import RemoveCommentsValidator
@@ -48,6 +49,28 @@ class Configuration(dict):
     @property
     def preamble(self) -> Path:
         return self[PreambleValidator().key]
+
+    @property
+    def header(self) -> Path | None:
+        return self.get(HeaderValidator().key, None)
+
+    @header.setter
+    def header(self, name: str | Path):
+        """
+        Set this property with the name of the header. It can optionally have the suffix
+        `.tex`.
+
+        #TODO: Settings with a relative path is not supported.
+        """
+        v = HeaderValidator()
+        old_value = self.header
+
+        self[v.key] = name
+        v.run(self)
+        if self.header is None:
+            self[v.key] = old_value
+            if self.header is None:
+                self.pop(v.key)
 
     @property
     def allow_eval(self) -> bool:
@@ -146,6 +169,7 @@ class Configuration(dict):
             MultipleExercisesValidator(),
             DraftExercisesValidator(),
             TokensValidator(),
+            HeaderValidator(),
         ]
         for validator in self.validators:
             validator.run(self)

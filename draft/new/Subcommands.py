@@ -43,7 +43,8 @@ class Subcommands:
 
     def create_subcommand_for(self, header: Header) -> Callable[..., None]:
         def subcommand():
-            compiler = Compiler(self.configuration)
-            compiler.compile()
+            self.configuration.header = header.name
+            compiler = Compiler(self.configuration)  # type: ignore
+            # compiler.compile()
 
         return subcommand
