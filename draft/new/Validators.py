@@ -37,6 +37,6 @@ class ExerciseCountValidator(Validator):
                 )
         except:
             raise ValidationError(
-                message="Please input a number!",
+                message="Count should at least be 1.",
                 cursor_position=len(document.text),
             )

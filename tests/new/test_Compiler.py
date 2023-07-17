@@ -1,8 +1,10 @@
 from pathlib import Path
 
 from draft.configuration.Configuration import Configuration
+from draft.configuration.DraftExercisesValidator import ExerciseConfiguration
 from draft.new.Compiler import Compiler as LiveCompiler
 from tests.common.test_common_Configuration import Configuration
+from tests.common.test_Exercise import ExerciseTest
 from tests.common.test_Header import Header as HeaderTest
 from tests.common.test_Preamble import Preamble as PreambleTest
 
@@ -35,15 +37,23 @@ Hello, world!
 \end{document}
 """
 
+exercise_contents = r"""
+% TESTING %
+\iffalse
+# supplements:
+#  - intervals.ly
+unique-placeholders:
+  - interval-count
+\fi
 
-class Compiler(LiveCompiler):
-    def __init__(self, configuration: Configuration):
-        configuration.header = "exam.tex"  # will be discarded
-        super().__init__(configuration)
+\input{../preambles/default.tex}
 
-        # Overwrite with test instances
-        self._preamble = Preamble()
-        self._header = Header()
+\begin{document}
+\exercise{Intervalle}{<<points>>}
+This exercise has <<interval-count>> intervals.
+\lilypondfile{<<supplements/intervals.ly>>}
+\end{document}
+"""
 
 
 class Preamble(PreambleTest):
@@ -56,9 +66,39 @@ class Header(HeaderTest):
         self._contents = header_contents
 
 
+class Exercise(ExerciseTest):
+    def load(self):
+        self._contents = exercise_contents
+        # TODO: control supplements
+
+
+class Compiler(LiveCompiler):
+    def __init__(self, configuration: Configuration):
+        # Add any kwargs that should not be prompted for when
+        # live testing the debug version
+        configuration.header = "exam.tex"
+        configuration["draft-exercises"] = {"intervals": 2}
+
+        configuration.validate()
+        super().__init__(configuration)
+
+    def testing(self):
+        """Control included documents for testing."""
+        self._preamble = Preamble(configuration=self.configuration)  # type: ignore
+        self._header = Header(configuration=self.configuration)  # type: ignore
+        self._exercises = [  # type: ignore
+            Exercise(configuration=self.configuration),  # type: ignore
+            Exercise(configuration=self.configuration),  # type: ignore
+        ]
+
+
 def test_testCompiler():
-    c = Compiler(Configuration(key="value"))
+    configuration = Configuration(key="value")
+    c = Compiler(configuration)
+    c.testing()
 
     assert c.configuration["key"] == "value"
     assert c.preamble.contents == preamble_contents
     assert c.header.contents == header_contents
+    assert len(c.exercises) == 2
+    assert c.exercises[0].contents == exercise_contents

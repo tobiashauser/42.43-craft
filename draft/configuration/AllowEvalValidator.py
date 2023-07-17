@@ -2,7 +2,7 @@ from draft.configuration.Semantic import Semantic
 from draft.configuration.Validator import Validator
 
 
-class MultipleExercisesValidator(Validator):
+class AllowEvalValidator(Validator):
     """
     Boolean that defaults to False.
     """

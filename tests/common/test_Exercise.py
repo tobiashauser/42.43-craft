@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from draft.common.Exercise import Exercise as LiveExercise
+from draft.configuration.Configuration import Configuration
 from tests.common.test_common_Configuration import Configuration
 
 test_folder = Path("tests/test_Folder")
@@ -12,6 +13,14 @@ exercise_contents = r"""
 supplements: intervals.ly
 \fi
 """
+
+
+class ExerciseTest(LiveExercise):
+    def __init__(self, configuration: Configuration = Configuration()):
+        super().__init__(Path("exercise.tex"), configuration)
+
+    def load(self):
+        self._contents = exercise_contents
 
 
 def setup_test_folder():

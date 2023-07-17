@@ -17,8 +17,12 @@ class PreambleValidator(Validator):
         self._key = "preamble"
         self._semantic = Semantic.REQUIRED
 
-    def lint(self, value: str) -> Path:
-        path = Path(value) if value.endswith(".tex") else Path(value + ".tex")
+    def lint(self, value: str | Path) -> Path:
+        match value:
+            case str():
+                path = Path(value) if value.endswith(".tex") else Path(value + ".tex")
+            case Path():
+                path = value
         if path.is_absolute():
             return path.resolve()
         else:

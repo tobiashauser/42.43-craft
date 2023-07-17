@@ -5,7 +5,7 @@ from typing import Any, List
 
 import yaml
 
-from draft.configuration.AllowEvalValidator import MultipleExercisesValidator
+from draft.configuration.AllowEvalValidator import AllowEvalValidator
 from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
 from draft.configuration.HeaderValidator import HeaderValidator
 from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
@@ -74,7 +74,7 @@ class Configuration(dict):
 
     @property
     def allow_eval(self) -> bool:
-        return self[MultipleExercisesValidator().key]
+        return self[AllowEvalValidator().key]
 
     @property
     def remove_comments(self) -> bool:
@@ -86,7 +86,7 @@ class Configuration(dict):
 
     @property
     def multiple_exercises(self) -> bool:
-        return self[MultipleExercisesValidator().key]
+        return self[AllowEvalValidator().key]
 
     def __init__(
         self,
@@ -164,10 +164,11 @@ class Configuration(dict):
         """
         self._validators = [
             PreambleValidator(),
-            MultipleExercisesValidator(),
+            AllowEvalValidator(),
             RemoveCommentsValidator(),
-            MultipleExercisesValidator(),
+            AllowEvalValidator(),
             DraftExercisesValidator(),
+            MultipleExercisesValidator(),
             TokensValidator(),
             HeaderValidator(),
         ]

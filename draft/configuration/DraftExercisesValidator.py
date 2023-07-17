@@ -28,6 +28,12 @@ class ExerciseConfiguration(dict):
         if "count" not in self:
             self["count"] = 1
 
+        # Count is int
+        try:
+            self["count"] = int(self["count"])
+        except:
+            raise Exception("Couldn't convert count to an integer.")
+
         # Ensure path
         if "path" not in self:
             self["path"] = configuration.main.parent / ("exercises/%s.tex" % name)
