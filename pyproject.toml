@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "craft_documents"
-version = "0.1.0"
+version = "0.1.2"
 description = "A template based command line utility to create exams or worksheets with LaTeX."
 authors = ["Tobias Hauser <apps.hausertobias@gmail.com>"]
 license = "MIT"
