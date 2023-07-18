@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "draft"
+name = "craft_documents"
 version = "0.1.0"
 description = "A template based command line utility to create exams or worksheets with LaTeX."
 authors = ["Tobias Hauser <apps.hausertobias@gmail.com>"]
@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.scripts]
-draft = "draft.main:app"
+craft = "craft_documents.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -16,6 +16,7 @@ pathlib = "^1.0.1"
 pyinquirer = "^1.0.3"
 pyyaml = "^6.0"
 rich = "^13.4.2"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"

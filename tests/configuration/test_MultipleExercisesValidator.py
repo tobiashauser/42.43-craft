@@ -1,6 +1,8 @@
 from pathlib import Path
 
-from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
+from craft_documents.configuration.MultipleExercisesValidator import (
+    MultipleExercisesValidator,
+)
 from tests.configuration.test_Configuration import Configuration
 
 

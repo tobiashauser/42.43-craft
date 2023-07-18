@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.common.Header import Header as LiveHeader
+from craft_documents.common.Header import Header as LiveHeader
 from tests.common.test_common_Configuration import Configuration
 
 contents = r"""

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.configuration.PreambleValidator import PreambleValidator
+from craft_documents.configuration.PreambleValidator import PreambleValidator
 from tests.configuration.test_Configuration import Configuration
 
 default = Path(

@@ -1,4 +1,4 @@
-from draft.configuration.AllowEvalValidator import AllowEvalValidator
+from craft_documents.configuration.AllowEvalValidator import AllowEvalValidator
 from tests.configuration.test_Configuration import Configuration
 
 

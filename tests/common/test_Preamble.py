@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.common.Preamble import Preamble as LivePreamble
+from craft_documents.common.Preamble import Preamble as LivePreamble
 from tests.common.test_common_Configuration import Configuration
 
 contents = r"""

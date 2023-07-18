@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.configuration.HeaderValidator import HeaderValidator
+from craft_documents.configuration.HeaderValidator import HeaderValidator
 from tests.configuration.test_Configuration import Configuration
 
 default = Path(

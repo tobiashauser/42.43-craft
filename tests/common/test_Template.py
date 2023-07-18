@@ -1,8 +1,10 @@
 from pathlib import Path
 
-from draft.common.helpers import combine_dictionaries
-from draft.common.Template import Template
-from draft.configuration.Configuration import Configuration as LiveConfiguration
+from craft_documents.common.helpers import combine_dictionaries
+from craft_documents.common.Template import Template
+from craft_documents.configuration.Configuration import (
+    Configuration as LiveConfiguration,
+)
 from tests.common.test_common_Configuration import Configuration
 
 contents = r"""

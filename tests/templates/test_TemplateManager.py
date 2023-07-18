@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.templates.TemplateManager import TemplateManager
+from craft_documents.templates.TemplateManager import TemplateManager
 from tests.common.test_common_Configuration import Configuration
 
 test_templates_dir = Path("config.draft").resolve()

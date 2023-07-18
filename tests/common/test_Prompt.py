@@ -1,6 +1,6 @@
 import collections.abc
 
-from draft.common.Prompt import Expand, List
+from craft_documents.common.Prompt import Expand, List
 
 collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import Separator

@@ -4,9 +4,9 @@ from rich import print
 from rich.columns import Columns
 from rich.panel import Panel
 
-from draft.configuration.Configuration import Configuration
-from draft.configuration.DraftExercisesValidator import ExerciseConfiguration
-from draft.new.Compiler import Compiler as LiveCompiler
+from craft_documents.configuration.Configuration import Configuration
+from craft_documents.configuration.DraftExercisesValidator import ExerciseConfiguration
+from craft_documents.new.Compiler import Compiler as LiveCompiler
 from tests.common.test_common_Configuration import Configuration
 from tests.common.test_Exercise import ExerciseTest
 from tests.common.test_Header import Header as HeaderTest
@@ -129,6 +129,9 @@ class Compiler(LiveCompiler):
         ly = Path("exercise.ly")
         ly.write_text(exercise_ly_contents)
 
+        # this fixes a crash during tests with the debug definition of `work_jobs`
+        self.work_jobs = lambda: print("hello, world")  # type: ignore
+
         self.configuration["planet"] = "Pluto"
         self.configuration["semantic-name"] = "Klausur"
         self.configuration["semester"] = "SoSe 2023"
@@ -201,6 +204,7 @@ def test_jobs_after_compile():
   \textbf{{\Large Aufgabe\hspace{1mm}\arabic{exerciseCounter}:\hspace{1mm}#1}\hfill{\normalsize/#2}}%
   \vspace{1em}
 }
+
 
 % Header ------------------------------------------------------------------- %
 

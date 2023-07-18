@@ -1,6 +1,8 @@
 from pathlib import Path
 
-from draft.configuration.RemoveCommentsValidator import RemoveCommentsValidator
+from craft_documents.configuration.RemoveCommentsValidator import (
+    RemoveCommentsValidator,
+)
 from tests.configuration.test_Configuration import Configuration
 
 

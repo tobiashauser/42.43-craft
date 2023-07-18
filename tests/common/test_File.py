@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.common.File import File
+from craft_documents.common.File import File
 
 
 class FileImplementation(File):

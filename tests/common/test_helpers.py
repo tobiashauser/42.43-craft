@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from draft.common.helpers import *
+from craft_documents.common.helpers import *
 
 
 def test_combine_dictionaries():

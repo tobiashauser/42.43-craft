@@ -1,8 +1,10 @@
 from pathlib import Path
 from typing import Any, Dict
 
-from draft.configuration.Configuration import Configuration as LiveConfiguration
-from draft.configuration.TokensValidator import TokensValidator
+from craft_documents.configuration.Configuration import (
+    Configuration as LiveConfiguration,
+)
+from craft_documents.configuration.TokensValidator import TokensValidator
 
 
 class Configuration(LiveConfiguration):

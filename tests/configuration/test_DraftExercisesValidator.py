@@ -3,7 +3,7 @@ from typing import List
 
 import yaml
 
-from draft.configuration.DraftExercisesValidator import (
+from craft_documents.configuration.DraftExercisesValidator import (
     DraftExercisesValidator,
     ExerciseConfiguration,
 )

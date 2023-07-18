@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.common.TexTemplate import TexTemplate
+from craft_documents.common.TexTemplate import TexTemplate
 from tests.common.test_common_Configuration import Configuration
 
 contents = r"""

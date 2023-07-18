@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from draft.common.Exercise import Exercise as LiveExercise
-from draft.configuration.Configuration import Configuration
+from craft_documents.common.Exercise import Exercise as LiveExercise
+from craft_documents.configuration.Configuration import Configuration
 from tests.common.test_common_Configuration import Configuration
 
 test_folder = Path("tests/test_Folder")

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from draft.common.Folder import Folder
+from craft_documents.common.Folder import Folder
 
 
 class LiveFolderImplementation(Folder):

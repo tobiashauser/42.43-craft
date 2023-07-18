@@ -1,6 +1,8 @@
 from pathlib import Path
 
-from draft.configuration.Configuration import Configuration as LiveConfiguration
+from craft_documents.configuration.Configuration import (
+    Configuration as LiveConfiguration,
+)
 
 
 class Configuration(LiveConfiguration):
