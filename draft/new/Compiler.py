@@ -190,9 +190,9 @@ class Compiler:
             if len(exercise.declarations) != 0:
                 self.document += (
                     "% "
-                    + exercise.disambiguated_name
+                    + exercise.name
                     + " "
-                    + "-" * (80 - 5 - len(exercise.disambiguated_name))
+                    + "-" * (80 - 5 - len(exercise.name))
                     + " %\n"
                 )
             self.document += exercise.declarations  # declarations in exercises
