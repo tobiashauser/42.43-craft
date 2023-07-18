@@ -26,6 +26,7 @@ class Header(TexTemplate):
         """
         with self.path.open("r") as file:
             self._contents = file.read()
+            self._disk_contents = self.contents
 
     def set_draft_exercises(self, value: str):
         pattern = re.compile(

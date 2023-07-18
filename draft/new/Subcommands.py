@@ -6,10 +6,10 @@ from rich.panel import Panel
 from typing_extensions import Annotated
 
 from draft.common.Header import Header
-from draft.common.TemplateManager import TemplateManager
 from draft.configuration.Configuration import Configuration
 from draft.configuration.VerboseValidator import VerboseValidator
 from draft.debug.Debugger import Debugger
+from draft.templates.TemplateManager import TemplateManager
 from tests.new.test_Compiler import Compiler
 
 

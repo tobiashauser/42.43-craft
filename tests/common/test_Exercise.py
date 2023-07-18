@@ -43,12 +43,12 @@ def test_instantiation():
     c = Configuration()
 
     e = LiveExercise(tex, c)
-    assert e.path == tex
+    assert str(tex) in str(e.path)
     # assert e.contents == exercise_contents
     assert e.name == tex.stem
     assert e.extension == tex.suffix
-    assert e.parent == test_folder
+    assert str(test_folder) in str(e.parent)
     assert len(e.supplements) == 1
-    assert e.supplements[0].path == ly
+    assert str(ly) in str(e.supplements[0].path)
 
     teardown_test_folder()

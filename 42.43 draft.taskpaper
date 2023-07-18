@@ -1,5 +1,5 @@
 Inbox:
-	- Create a `template` subcommand to manage `~/.config/draft` @ticket(N0vvgW)
+	- Create a `template` subcommand to manage `~/.config/draft` @ticket(N0vvgW) @done(2023-07-18)
 42.43 draft:
 	Feature Requests:
 		- Make class Folder use the types File and Folder for its subfiles and subfolders.

@@ -23,3 +23,4 @@ class Preamble(TexTemplate):
         """
         with self.path.open("r") as file:
             self._contents = file.read()
+            self._disk_contents = self.contents

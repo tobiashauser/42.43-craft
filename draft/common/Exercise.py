@@ -90,6 +90,7 @@ class Exercise(TexTemplate):
         """
         with self.path.open() as file:
             self._contents = file.read()
+            self._disk_contents = self.contents
 
     def resolve_placeholders(self):
         if self.configuration.unique_exercise_placeholders:

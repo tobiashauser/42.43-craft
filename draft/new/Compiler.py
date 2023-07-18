@@ -14,7 +14,6 @@ from draft.common.Folder import Folder
 from draft.common.Header import Header
 from draft.common.Preamble import Preamble
 from draft.common.Prompt import Checkbox, Input
-from draft.common.TemplateManager import TemplateManager
 from draft.configuration.Configuration import Configuration
 from draft.configuration.DraftExercisesValidator import (
     DraftExercisesValidator,
@@ -22,6 +21,7 @@ from draft.configuration.DraftExercisesValidator import (
 )
 from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
 from draft.new.Validators import DocumentNamePromptValidator, ExerciseCountValidator
+from draft.templates.TemplateManager import TemplateManager
 
 
 class Compiler:

@@ -1,3 +1,4 @@
+import os
 from abc import ABC
 from pathlib import Path
 from typing import List
@@ -21,8 +22,8 @@ class Folder(ABC, DiskRepresentable):
     def subfolders(self) -> List[Path]:
         return self._subfolders
 
-    def __init__(self, path):
-        self._path = path
+    def __init__(self, path: Path):
+        self._path = path.resolve()
         self.load()
 
     def load(self):
@@ -45,3 +46,7 @@ class Folder(ABC, DiskRepresentable):
                 self._subfiles.append(subpath)
             elif subpath.is_dir():
                 self._subfolders.append(subpath)
+
+    def open(self):
+        """`open <self.path>`"""
+        os.system("open '%s'" % self.path)

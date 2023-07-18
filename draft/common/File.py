@@ -17,10 +17,16 @@ class File(ABC, DiskRepresentable):
     """
 
     _contents: str
+    _disk_contents: str
 
     @property
     def contents(self) -> str:
         return self._contents
+
+    @property
+    def disk_contents(self) -> str:
+        """Should always return the contents on the disk."""
+        return self._disk_contents
 
     @property
     def extension(self) -> str:
@@ -30,13 +36,14 @@ class File(ABC, DiskRepresentable):
     def parent(self) -> Path:
         return self.path.parent
 
-    def __init__(self, path):
-        self._path = path
+    def __init__(self, path: Path):
+        self._path = path.resolve()
         self.load()
 
     def load(self):
         with self.path.open("r") as file:
             self._contents = file.read()
+            self._disk_contents = self.contents
 
     def remove_lines(self, prefix: str):
         """
