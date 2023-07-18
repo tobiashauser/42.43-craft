@@ -30,10 +30,6 @@ def test_live_loading():
 \documentclass{scrreport}
 
 <<one>>
-
-\begin{document}
-Hello, <<world>>!
-\end{document}
 """
     with path.open("w") as file:
         file.write(contents)
@@ -45,7 +41,6 @@ Hello, <<world>>!
 \documentclass{scrreport}
 
 <<one>>
-
 """
     )
     assert input.placeholders == {"one"}  # <<world>> is removed

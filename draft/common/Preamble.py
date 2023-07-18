@@ -13,10 +13,13 @@ class Preamble(TexTemplate):
     from its contents.
     """
 
+    def __init__(self, path: Path, configuration: Configuration):
+        super().__init__(path, configuration)
+        self.remove_document_body()
+
     def load(self):
         """
         Remove the document environment.
         """
         with self.path.open("r") as file:
             self._contents = file.read()
-        self.remove_document_body()

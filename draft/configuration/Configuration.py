@@ -6,6 +6,7 @@ from typing import Any, List
 import yaml
 
 from draft.configuration.AllowEvalValidator import AllowEvalValidator
+from draft.configuration.DocumentNameValidator import DocumentNameValidator
 from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
 from draft.configuration.HeaderValidator import HeaderValidator
 from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
@@ -95,6 +96,10 @@ class Configuration(dict):
     def unique_exercise_placeholders(self) -> bool:
         return self[UniqueExercisePlaceholdersValidator().key]
 
+    @property
+    def document_name(self) -> str:
+        return self.get(DocumentNameValidator().key, None)
+
     def __init__(
         self,
         main: Path,  # = Path.home() / ".config/draft/draftrc",
@@ -179,6 +184,7 @@ class Configuration(dict):
             TokensValidator(),
             HeaderValidator(),
             UniqueExercisePlaceholdersValidator(),
+            DocumentNameValidator(),
         ]
         for validator in self.validators:
             validator.run(self)

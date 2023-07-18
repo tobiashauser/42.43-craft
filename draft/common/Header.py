@@ -1,6 +1,9 @@
+import re
 from pathlib import Path
 
 from draft.common.TexTemplate import TexTemplate
+from draft.configuration.Configuration import Configuration
+from draft.configuration.DraftExercisesValidator import DraftExercisesValidator
 
 
 class Header(TexTemplate):
@@ -11,10 +14,29 @@ class Header(TexTemplate):
     They are always latex documents.
     """
 
+    def __init__(self, path: Path, configuration: Configuration):
+        super().__init__(path, configuration)
+
+        self.remove_documentclass()
+        self.remove_include_preamble()
+
     def load(self):
         """
         Remove the input statement of the preamble from the contents.
         """
         with self.path.open("r") as file:
             self._contents = file.read()
-        self.remove_include_preamble()
+
+    def set_draft_exercises(self, value: str):
+        pattern = re.compile(
+            r"%s%s%s"
+            % (
+                self.placeholder_prefix,
+                DraftExercisesValidator().key,
+                self.placeholder_suffix,
+            )
+        )
+
+        # escape `\`
+        value = re.sub("\\\\", "\\\\\\\\", value)
+        self._contents = re.sub(pattern, value, self.contents)

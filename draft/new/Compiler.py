@@ -4,6 +4,8 @@ from pathlib import Path
 from rich import print
 from rich.console import Console
 
+from draft.configuration.DocumentNameValidator import DocumentNameValidator
+
 collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import prompt  # bugfix collections
 
@@ -19,7 +21,7 @@ from draft.configuration.DraftExercisesValidator import (
     ExerciseConfiguration,
 )
 from draft.configuration.MultipleExercisesValidator import MultipleExercisesValidator
-from draft.new.Validators import ExerciseCountValidator
+from draft.new.Validators import DocumentNamePromptValidator, ExerciseCountValidator
 
 
 class Compiler:
@@ -51,6 +53,31 @@ class Compiler:
     def template_manager(self) -> TemplateManager:
         return self._template_manager
 
+    @property
+    def jobs(self) -> dict[Path, str]:
+        """
+        A dictionary of documents to create in the current
+        working directory.
+        """
+        return self._jobs
+
+    @property
+    def document(self) -> str:
+        """The compiled document."""
+        if self.configuration.document_name is not None:
+            return self.jobs.get(Path(self.configuration.document_name), "")
+        else:
+            return ""
+
+    @document.setter
+    def document(self, newValue: str):
+        """
+        Will only set the newValue if
+        `self.configuration.document_name` is not None.
+        """
+        if self.configuration.document_name is not None:
+            self.jobs[Path(self.configuration.document_name)] = newValue
+
     def __init__(self, configuration: Configuration):
         """
         You should guarantee values for `preamble` and `header` in the
@@ -60,6 +87,7 @@ class Compiler:
         self._configuration = configuration
         self._preamble = Preamble(configuration.preamble, configuration)
         self._template_manager = TemplateManager(self.configuration)
+        self._jobs = {}
 
         if configuration.header is not None:
             self._header = Header(configuration.header, configuration)
@@ -81,13 +109,19 @@ class Compiler:
             ]
         self.disambiguate_exercises()
 
+        if DocumentNameValidator().key not in self.configuration:
+            self.configuration[
+                DocumentNameValidator().key
+            ] = self.prompt_for_document_name()
+            DocumentNameValidator().run(self.configuration)
+
     def compile(self):
         """
         Compile the document.
         """
         console = Console()
         print(
-            "Drafting new [bold yellow]%s[/bold yellow] with [bold yellow]%s[/bold yellow] preamble...\n"
+            "Drafting new [bold orange1]%s[/bold orange1] with [bold orange1]%s[/bold orange1] preamble...\n"
             % (self.header.name, self.preamble.name)
         )
 
@@ -134,12 +168,64 @@ class Compiler:
                 print("[blue]==>[/blue] [bold]Compiled supplemental file :sparkles:")
 
                 supplement_file = Path(exercise.disambiguate_supplement(supplement))
-                supplement_file.write_text(supplement.contents)
+                self.jobs[supplement_file] = supplement.contents
                 print("[blue]==>[/blue] [bold]Copied to current directory :printer:\n")
 
             exercise.clean_resolve_placeholders()
 
-        # TODO: Ask what the new document should be called and then write to it...
+        # Glue together the compiled document.
+
+        # Preamble
+        self.document += "% Preamble " + "-" * 67 + " %\n"
+        self.document += self.preamble.contents  # preamble
+
+        # Header
+        if len(self.header.declarations) != 0:
+            self.document += "% Header " + "-" * 68 + " %\n"
+        self.document += self.header.declarations  # declarations in header
+
+        # Exercises
+        body_exercises = ""
+        for exercise in self.exercises:
+            if len(exercise.declarations) != 0:
+                self.document += (
+                    "% "
+                    + exercise.disambiguated_name
+                    + " "
+                    + "-" * (80 - 5 - len(exercise.disambiguated_name))
+                    + " %\n"
+                )
+            self.document += exercise.declarations  # declarations in exercises
+            if len(exercise.body) != 0:
+                body_exercises += (
+                    "% "
+                    + exercise.disambiguated_name
+                    + " "
+                    + "-" * (80 - 5 - len(exercise.disambiguated_name))
+                    + " %\n"
+                )
+            body_exercises += exercise.body
+
+        self.header.set_draft_exercises(body_exercises)
+        self.document += "\\begin{document}\n"
+        self.document += self.header.body
+        self.document += "\\end{document}\n"
+
+        print(self.document)
+
+    def prompt_for_document_name(self) -> str:
+        """
+        Prompt the user what the compiled document should be called.
+        """
+        key = DocumentNameValidator().key
+        question = Input(
+            key,
+            message="What the compiled document be called?",
+            default=self.header.name,
+            validate=DocumentNamePromptValidator,
+        )
+        answer = prompt(question)
+        return answer[key]
 
     def prompt_for_exercises(self) -> dict:
         """

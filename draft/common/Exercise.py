@@ -81,6 +81,9 @@ class Exercise(TexTemplate):
             self.yaml.get("unique-placeholders", [])
         )
 
+        self.remove_documentclass()
+        self.remove_include_preamble()
+
     def load(self):
         """
         Load the contents of the exercise template.

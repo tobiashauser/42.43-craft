@@ -97,3 +97,25 @@ Hello, world!
 \end{document}
 """
     )
+
+
+def test_remove_documentclass():
+    input = r"""
+\documentclass{scrreport}
+
+\begin{document}
+Hello, world!
+\end{document}
+"""
+
+    t = TexTemplateImplementation(input)
+    t.remove_documentclass()
+
+    assert (
+        t.contents
+        == r"""
+\begin{document}
+Hello, world!
+\end{document}
+"""
+    )

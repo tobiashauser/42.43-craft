@@ -4,7 +4,7 @@ from typing import Optional
 from PyInquirer import ValidationError, Validator
 
 
-class DocumentNameValidator(Validator):
+class DocumentNamePromptValidator(Validator):
     @staticmethod
     def __validate__(text: str) -> Optional[ValidationError]:
         if not len(text) != 0:
@@ -20,7 +20,7 @@ class DocumentNameValidator(Validator):
             )
 
     def validate(self, document):
-        error = DocumentNameValidator.__validate__(document.text)
+        error = DocumentNamePromptValidator.__validate__(document.text)
         if error is not None:
             raise error
 

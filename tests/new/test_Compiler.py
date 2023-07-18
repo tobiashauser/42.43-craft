@@ -31,6 +31,7 @@ header_contents = r"""
 \documentclass{scrreport}
 
 \input{../preambles/default}
+\newcommand{\header}[]{Defined in the header.}
 
 \begin{document}
 Hello, <<planet>>!
@@ -49,6 +50,7 @@ unique-placeholders:
 \fi
 
 \input{../preambles/default.tex}
+\newcommand{\lorem}[]{Defined in the exercise.}
 
 \begin{document}
 \exercise{Intervalle}{<<points>>}
@@ -61,11 +63,14 @@ This exercise has <<interval-count>> intervals.
 class Preamble(PreambleTest):
     def load(self):
         self._contents = preamble_contents
+        self.remove_document_body()
 
 
 class Header(HeaderTest):
     def load(self):
         self._contents = header_contents
+        self.remove_documentclass()
+        self.remove_include_preamble()
 
 
 class Exercise(ExerciseTest):
@@ -86,31 +91,53 @@ class Compiler(LiveCompiler):
         when live testing the debug version.
         """
 
-        # uncomment when running tests
+        # never uncomment...
         configuration["draft-exercises"] = {"intervals": 2}
         configuration.header = "exam.tex"
-        configuration["remove_comments"] = False
-        configuration["unique_exercise_placeholders"] = False
+        configuration["document-name"] = "test"
+
+        # can be customized
+        # configuration["remove_comments"] = True
+        # configuration["unique_exercise_placeholders"] = False
 
         # placeholders
-        configuration["planet"] = "Pluto"
-        configuration["semantic-name"] = "Klausur"
-        configuration["semester"] = "SoSe 2023"
-        configuration["place"] = "Stuttgart"
-        configuration["group"] = "Gruppe 1"
-        configuration["course"] = "HE 2"
+        # configuration["planet"] = "Pluto"
+        # configuration["semantic-name"] = "Klausur"
+        # configuration["semester"] = "SoSe 2023"
+        # configuration["place"] = "Stuttgart"
+        # configuration["group"] = "Gruppe 1"
+        # configuration["course"] = "HE 2"
+        # configuration["interval-count"] = "3"
+        # configuration["points"] = "2"
 
         configuration.validate()
         super().__init__(configuration)
 
     def testing(self):
         """Control included documents for testing."""
-        self._preamble = Preamble(configuration=self.configuration)  # type: ignore
-        self._header = Header(configuration=self.configuration)  # type: ignore
+        self.configuration["planet"] = "Pluto"
+        self.configuration["semantic-name"] = "Klausur"
+        self.configuration["semester"] = "SoSe 2023"
+        self.configuration["place"] = "Stuttgart"
+        self.configuration["group"] = "Gruppe 1"
+        self.configuration["course"] = "HE 2"
+        self.configuration["interval-count"] = "3"
+        self.configuration["points"] = "2"
+        self.configuration["document-name"] = "test"
+        self.configuration["remove_comments"] = True
+        self.configuration["unique_exercise_placeholders"] = False
+
+        self.configuration.validate()
+
+        self._preamble = Preamble(path=Path("preamble.tex"), configuration=self.configuration)  # type: ignore
+        self._header = Header(path=Path("header.tex"), configuration=self.configuration)  # type: ignore
+
+        self.configuration["draft-exercises"] = {"exercise": {"count": 2}}
         self._exercises = [  # type: ignore
             Exercise(configuration=self.configuration),  # type: ignore
             Exercise(configuration=self.configuration),  # type: ignore
         ]
+        self.disambiguate_exercises()
 
 
 def test_testCompiler():
@@ -119,7 +146,60 @@ def test_testCompiler():
     c.testing()
 
     assert c.configuration["key"] == "value"
-    assert c.preamble.contents == preamble_contents
-    assert c.header.contents == header_contents
-    assert len(c.exercises) == 2
-    assert c.exercises[0].contents == exercise_contents
+    assert c.exercises[0].disambiguated_name == "exercise-1"
+
+
+def test_jobs_after_compile():
+    c = Compiler(Configuration())
+    c.testing()
+
+    assert c.jobs == {}
+
+    try:
+        c.compile()
+    except:
+        raise Exception("Prompting the user is not allowed in tests.")
+
+    assert c.jobs == {
+        Path(
+            "test.tex"
+        ): r"""% Preamble ------------------------------------------------------------------- %
+
+\documentclass{scrreport}
+
+\newcounter{exerciseCounter}
+\newcommand{\exercise}[2]{%
+  \stepcounter{exerciseCounter}
+  \vspace{1em}%
+  \noindent%
+  \textbf{{\Large Aufgabe\hspace{1mm}\arabic{exerciseCounter}:\hspace{1mm}#1}\hfill{\normalsize/#2}}%
+  \vspace{1em}
+}
+
+% Header -------------------------------------------------------------------- %
+
+\newcommand{\header}[]{Defined in the header.}
+
+% exercise-1 ----------------------------------------------------------------- %
+
+\newcommand{\lorem}[]{Defined in the exercise.}
+
+% exercise-2 ----------------------------------------------------------------- %
+
+\newcommand{\lorem}[]{Defined in the exercise.}
+
+\begin{document}
+Hello, Pluto!
+
+% exercise-1 ----------------------------------------------------------------- %
+\exercise{Intervalle}{2}
+This exercise has 3 intervals.
+\lilypondfile{intervals.ly}
+% exercise-2 ----------------------------------------------------------------- %
+\exercise{Intervalle}{2}
+This exercise has 3 intervals.
+\lilypondfile{intervals.ly}
+
+\end{document}
+""",
+    }
