@@ -1,20 +1,15 @@
-from pathlib import Path
-
 import typer
 from rich import print
+from typing_extensions import Annotated
 
 from draft.common.TemplateManager import TemplateManager
+from draft.configuration.VerboseValidator import VerboseValidator
 from draft.new.Subcommands import Subcommands
 from tests.common.test_common_Configuration import Configuration
 
 app = typer.Typer()
 
-configuration = Configuration(
-    main=Path("~/.config/draft/"),
-    root=Path.home(),
-    cwd=Path.cwd(),
-    # header="exam.tex",
-)
+configuration = Configuration()
 
 subcommands = Subcommands(
     configuration,
@@ -25,7 +20,13 @@ subcommands.add_subcommands(app)
 
 
 @app.callback(invoke_without_command=True)
-def callback(ctx: typer.Context):
+def callback(
+    ctx: typer.Context,
+    verbose: Annotated[
+        bool, typer.Option(help="Output additional information.")
+    ] = False,
+):
+    configuration[VerboseValidator().key] = verbose
     if ctx.invoked_subcommand is None:
         if configuration.header is not None:
             print("#TODO: Compiling document for `%s`." % configuration.header.name)

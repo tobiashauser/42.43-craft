@@ -2,10 +2,14 @@ from typing import Callable
 
 import typer
 from rich import print
+from rich.panel import Panel
+from typing_extensions import Annotated
 
 from draft.common.Header import Header
 from draft.common.TemplateManager import TemplateManager
 from draft.configuration.Configuration import Configuration
+from draft.configuration.VerboseValidator import VerboseValidator
+from draft.debug.Debugger import Debugger
 from tests.new.test_Compiler import Compiler
 
 
@@ -42,9 +46,18 @@ class Subcommands:
             )
 
     def create_subcommand_for(self, header: Header) -> Callable[..., None]:
-        def subcommand():
+        def subcommand(
+            verbose: Annotated[
+                bool, typer.Option(help="Output additional information.")
+            ] = False,
+        ):
+            self.configuration[VerboseValidator().key] = verbose
             self.configuration.header = header.name
             compiler = Compiler(self.configuration)  # type: ignore
+
+            if self.configuration.verbose:
+                Debugger(self.configuration).run()
+
             compiler.compile()
 
         return subcommand

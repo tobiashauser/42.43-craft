@@ -3,6 +3,7 @@ Inbox:
 	Feature Requests:
 		- Make class Folder use the types File and Folder for its subfiles and subfolders.
 		- Gracefully fail cancelling prompts with `ctrl-C`
+		- Store the keys in the configuration-validators as a static property.
 	Ideas:
 	Bugs:
 		- The templates do not compile on their own because they import the document body from the preamble @ticket(xYyX7j) @done(2023-07-18)
@@ -10,7 +11,7 @@ Inbox:
 		- Possible box overflow in `chead` when using the worksheet-template
 		- Multiple exercises do not get disambiguated when live-testing in debug. @ticket(iUPqBb)
 		- Remove test subcommand. 
-		- Create a debug subcommand that outputs the configuration with which the tool runs. @ticket(EBvvfU)
+		- Create a debug subcommand that outputs the configuration with which the tool runs. @ticket(EBvvfU) @done(2023-07-18)
 Archive:
 Search Definitions:
 	Top Priority @search(@priority = 5 and not @done)

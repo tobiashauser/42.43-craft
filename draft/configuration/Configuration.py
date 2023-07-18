@@ -17,6 +17,7 @@ from draft.configuration.UniqueExercisePlaceholdersValidator import (
     UniqueExercisePlaceholdersValidator,
 )
 from draft.configuration.Validator import Validator
+from draft.configuration.VerboseValidator import VerboseValidator
 
 
 class Configuration(dict):
@@ -81,6 +82,10 @@ class Configuration(dict):
         return self[AllowEvalValidator().key]
 
     @property
+    def verbose(self) -> bool:
+        return self[VerboseValidator().key]
+
+    @property
     def remove_comments(self) -> bool:
         return self[RemoveCommentsValidator().key]
 
@@ -102,9 +107,9 @@ class Configuration(dict):
 
     def __init__(
         self,
-        main: Path,  # = Path.home() / ".config/draft/draftrc",
-        root: Path,  # = Path.home(),
-        cwd: Path,  # = Path.cwd(),
+        main: Path = Path.home() / ".config/draft/draftrc",
+        root: Path = Path.home(),
+        cwd: Path = Path.cwd(),
         *args,
         **kwargs,
     ):
@@ -185,6 +190,7 @@ class Configuration(dict):
             HeaderValidator(),
             UniqueExercisePlaceholdersValidator(),
             DocumentNameValidator(),
+            VerboseValidator(),
         ]
         for validator in self.validators:
             validator.run(self)

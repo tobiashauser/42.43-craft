@@ -42,6 +42,7 @@ def test_properties_after_validate():
         "draft-exercises": {"intervals": {"count": 1, "path": intervals}},
         TokensValidator().key: TokensValidator().default(),
         "unique_exercise_placeholders": False,
+        "verbose": False,
     }
 
     assert c.allow_eval == True
