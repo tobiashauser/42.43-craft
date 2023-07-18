@@ -1,4 +1,5 @@
 # Declare the tokens per document type #
+# '\' must be escaped as '\\\\'
 # ------------------------------------ #
 tokens:
   .tex:
