@@ -11,6 +11,7 @@ Inbox:
 	Bugs:
 		- Possible box overflow in `chead` when using the worksheet-template
 		- `draft templates fetch` outputs `No new templates on GitHub.` even if new templates were added.
+		- Rename '~/.config/draft/' to '~/.config/craft/' @ticket(NcSI04)
 Archive:
 	- Create a `template` subcommand to manage `~/.config/draft` @ticket(N0vvgW) @done(2023-07-18)
 	- Using the live environment crashes because `~/.config/draft/` doesn't exists yet. @ticket(i7HQ1L) @done(2023-07-18)
