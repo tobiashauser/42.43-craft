@@ -1,4 +1,5 @@
 Inbox:
+	- Create a `template` subcommand to manage `~/.config/draft` @ticket(N0vvgW)
 42.43 draft:
 	Feature Requests:
 		- Make class Folder use the types File and Folder for its subfiles and subfolders.
@@ -6,16 +7,15 @@ Inbox:
 		- Store the keys in the configuration-validators as a static property.
 	Ideas:
 	Bugs:
-		- The templates do not compile on their own because they import the document body from the preamble @ticket(xYyX7j) @done(2023-07-18)
 		- Using the live environment crashes because `~/.config/draft/` doesn't exists yet. @ticket(i7HQ1L)
 		- Possible box overflow in `chead` when using the worksheet-template
-		- Multiple exercises do not get disambiguated when live-testing in debug. @ticket(iUPqBb) @done(2023-07-18)
-		- Remove test subcommand. @done(2023-07-18)
-		- Create a debug subcommand that outputs the configuration with which the tool runs. @ticket(EBvvfU) @done(2023-07-18)
-		- Remove `\usepackage{subfiles}` from the compiled document.
-		- Unexpected behaviour when setting `unique_exercise_placeholders` to `False`. @ticket(iEF6Qo) @done(2023-07-18)
-			The first placeholder will still be set from a value in the configuration. However this should be cleared out first.
 Archive:
+	- The templates do not compile on their own because they import the document body from the preamble @ticket(xYyX7j) @done(2023-07-18)
+	- Multiple exercises do not get disambiguated when live-testing in debug. @ticket(iUPqBb) @done(2023-07-18)
+	- Remove test subcommand. @done(2023-07-18)
+	- Create a debug subcommand that outputs the configuration with which the tool runs. @ticket(EBvvfU) @done(2023-07-18)
+	- Unexpected behaviour when setting `unique_exercise_placeholders` to `False`. @ticket(iEF6Qo) @done(2023-07-18)
+		The first placeholder will still be set from a value in the configuration. However this should be cleared out first.
 Search Definitions:
 	Top Priority @search(@priority = 5 and not @done)
 	High Priority @search(@priority > 3 and not @done)
