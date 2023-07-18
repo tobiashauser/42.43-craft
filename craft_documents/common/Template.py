@@ -9,8 +9,8 @@ from craft_documents.common.helpers import combine_dictionaries
 from craft_documents.common.Prompt import Prompt
 from craft_documents.common.Prompter import Prompter
 from craft_documents.configuration.Configuration import Configuration
-from craft_documents.configuration.DraftExercisesValidator import (
-    DraftExercisesValidator,
+from craft_documents.configuration.CraftExercisesValidator import (
+    CraftExercisesValidator,
 )
 from craft_documents.configuration.RemoveCommentsValidator import (
     RemoveCommentsValidator,
@@ -160,8 +160,8 @@ class Template(File):
 
         # TODO: Rewrite to use 'typed' prompts
         for placeholder in self.placeholders:
-            # ignore `<<draft-exercises>>`
-            if placeholder == "draft-exercises" or placeholder.startswith(
+            # ignore `<<craft-exercises>>`
+            if placeholder == "craft-exercises" or placeholder.startswith(
                 "supplements/"
             ):
                 continue

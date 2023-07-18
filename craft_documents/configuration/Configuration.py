@@ -8,8 +8,8 @@ from rich import print
 
 from craft_documents.configuration.AllowEvalValidator import AllowEvalValidator
 from craft_documents.configuration.DocumentNameValidator import DocumentNameValidator
-from craft_documents.configuration.DraftExercisesValidator import (
-    DraftExercisesValidator,
+from craft_documents.configuration.CraftExercisesValidator import (
+    CraftExercisesValidator,
 )
 from craft_documents.configuration.HeaderValidator import HeaderValidator
 from craft_documents.configuration.MultipleExercisesValidator import (
@@ -37,7 +37,7 @@ class Configuration(dict):
     - `preamble`: required, defaults to `default.tex`
     - `allow_eval`: required, defaults to `False`
     - `remove_comments`: required, defaults to `False`
-    - `draft-exercises`: optional
+    - `craft-exercises`: optional
     - `multiple-exercises`: required, defaults to `True`
     - `tokens`: required, loads defaults for `.tex` and `.ly`
     """
@@ -97,8 +97,8 @@ class Configuration(dict):
         return self[RemoveCommentsValidator().key]
 
     @property
-    def draft_exercises(self) -> dict[str, dict[str, Any]] | None:
-        return self.get(DraftExercisesValidator().key, None)
+    def craft_exercises(self) -> dict[str, dict[str, Any]] | None:
+        return self.get(CraftExercisesValidator().key, None)
 
     @property
     def multiple_exercises(self) -> bool:
@@ -114,7 +114,7 @@ class Configuration(dict):
 
     def __init__(
         self,
-        main: Path = Path.home() / ".config/draft/draftrc",
+        main: Path = Path.home() / ".config/craft/craftrc",
         root: Path = Path.home(),
         cwd: Path = Path.cwd(),
         *args,
@@ -132,8 +132,8 @@ class Configuration(dict):
         """
         Load the configuration from the disk.
 
-        The user can configure draft in yaml-formatted
-        configuration files: `draftrc`, `.draftrc`.
+        The user can configure craft in yaml-formatted
+        configuration files: `craftrc`, `.craftrc`.
 
         Draft will read all configuration files from
         the current working directory to home and
@@ -142,13 +142,13 @@ class Configuration(dict):
         precedence.
 
         Additionally there is one configuration file
-        at `~/.config/draft/draftrc` which stores
+        at `~/.config/craft/craftrc` which stores
         gets read last. It stores global configuration
         such as prefixes for single-line-comments for
         a specific file extension. Make sure to escape
         them correctly.
         """
-        files: List[str] = ["draftrc", ".draftrc"]
+        files: List[str] = ["craftrc", ".craftrc"]
         directory: Path = self.cwd
 
         while True:
@@ -171,7 +171,7 @@ class Configuration(dict):
             # Move up to the parent directory
             directory = directory.parent
 
-        # read file at `~/.config/draft/draftrc`
+        # read file at `~/.config/craft/craftrc`
         try:
             data = yaml.safe_load(self.main.open())
             for key, value in data.items():
@@ -207,7 +207,7 @@ class Configuration(dict):
             AllowEvalValidator(),
             RemoveCommentsValidator(),
             AllowEvalValidator(),
-            DraftExercisesValidator(),
+            CraftExercisesValidator(),
             MultipleExercisesValidator(),
             TokensValidator(),
             HeaderValidator(),

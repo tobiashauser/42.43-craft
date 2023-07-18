@@ -8,7 +8,7 @@ class HeaderValidator(Validator):
     """
     Accepts an absolute or relative path to a tex-file.
     Relative paths will be interpreted as being inside
-    `~/.config/draft/headers/`.
+    `~/.config/craft/headers/`.
 
     Optional
     """

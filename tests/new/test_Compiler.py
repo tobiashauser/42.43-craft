@@ -5,7 +5,7 @@ from rich.columns import Columns
 from rich.panel import Panel
 
 from craft_documents.configuration.Configuration import Configuration
-from craft_documents.configuration.DraftExercisesValidator import ExerciseConfiguration
+from craft_documents.configuration.CraftExercisesValidator import ExerciseConfiguration
 from craft_documents.new.Compiler import Compiler as LiveCompiler
 from tests.common.test_common_Configuration import Configuration
 from tests.common.test_Exercise import ExerciseTest
@@ -40,7 +40,7 @@ header_contents = r"""
 \begin{document}
 Hello, <<planet>>!
 
-<<draft-exercises>>
+<<craft-exercises>>
 \end{document}
 """
 
@@ -103,7 +103,7 @@ class Compiler(LiveCompiler):
         """
 
         # must be uncommented for testing...
-        configuration["draft-exercises"] = {"intervals": 2}
+        configuration["craft-exercises"] = {"intervals": 2}
         configuration.header = "exam.tex"
         configuration["document-name"] = "test"
 
@@ -149,7 +149,7 @@ class Compiler(LiveCompiler):
         self._preamble = Preamble(path=Path("preamble.tex"), configuration=self.configuration)  # type: ignore
         self._header = Header(path=Path("header.tex"), configuration=self.configuration)  # type: ignore
 
-        self.configuration["draft-exercises"] = {"exercise": {"count": 2}}
+        self.configuration["craft-exercises"] = {"exercise": {"count": 2}}
         self._exercises = [  # type: ignore
             Exercise(configuration=self.configuration),  # type: ignore
             Exercise(configuration=self.configuration),  # type: ignore

@@ -8,8 +8,8 @@ from craft_documents.common.Prompter import Prompter
 from craft_documents.common.Template import Template
 from craft_documents.common.TexTemplate import TexTemplate
 from craft_documents.configuration.Configuration import Configuration
-from craft_documents.configuration.DraftExercisesValidator import (
-    DraftExercisesValidator,
+from craft_documents.configuration.CraftExercisesValidator import (
+    CraftExercisesValidator,
 )
 
 
@@ -17,7 +17,7 @@ class Exercise(TexTemplate):
     """
     A class representing an exercise template.
 
-    Exercise templates are stored in `.config/draft/exercises/`.
+    Exercise templates are stored in `.config/craft/exercises/`.
     They are always latex documents.
     """
 

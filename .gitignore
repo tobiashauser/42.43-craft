@@ -20,9 +20,9 @@ emoji.txt
 tmp-ly/
 
 # Test files
-tests/draftrc
+tests/craftrc
 tests/common/test_live_loading.tex
-.draftrc
+.craftrc
 intervals-1.ly
 intervals-2.ly
 test.tex

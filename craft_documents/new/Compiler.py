@@ -15,8 +15,8 @@ from craft_documents.common.Header import Header
 from craft_documents.common.Preamble import Preamble
 from craft_documents.common.Prompt import Checkbox, Input
 from craft_documents.configuration.Configuration import Configuration
-from craft_documents.configuration.DraftExercisesValidator import (
-    DraftExercisesValidator,
+from craft_documents.configuration.CraftExercisesValidator import (
+    CraftExercisesValidator,
     ExerciseConfiguration,
 )
 from craft_documents.configuration.MultipleExercisesValidator import (
@@ -101,13 +101,13 @@ class Compiler:
             # TODO: Handle Exception
 
         # Prompt for exercises if they are not defined in a configuration file
-        if DraftExercisesValidator().key not in self.configuration:
+        if CraftExercisesValidator().key not in self.configuration:
             self.configuration[
-                DraftExercisesValidator().key
+                CraftExercisesValidator().key
             ] = self.prompt_for_exercises()
 
         self._exercises: list[Exercise] = []
-        for config in self.configuration[DraftExercisesValidator().key].values():
+        for config in self.configuration[CraftExercisesValidator().key].values():
             self._exercises += [
                 Exercise(config["path"], self.configuration)
                 for _ in range(config["count"])
@@ -218,7 +218,7 @@ class Compiler:
                 if not exercise.body.endswith("\n\n"):
                     body_exercises += "\n"
 
-        self.header.set_draft_exercises(body_exercises)
+        self.header.set_craft_exercises(body_exercises)
         self.document += "\\begin{document}\n"
         self.document += self.header.body
         self.document += "\\end{document}\n"
@@ -253,9 +253,9 @@ class Compiler:
         """
         Prompt the user which exercises should be included.
         """
-        key = DraftExercisesValidator().key
+        key = CraftExercisesValidator().key
         question = Checkbox(
-            DraftExercisesValidator().key,
+            CraftExercisesValidator().key,
             [
                 Checkbox.Choice(name=exercise.name)
                 for exercise in self.template_manager.exercises
@@ -289,7 +289,7 @@ class Compiler:
     def disambiguate_exercises(self):
         count = {}
         for exercise in self.exercises:
-            if self.configuration["draft-exercises"][exercise.name]["count"] > 1:
+            if self.configuration["craft-exercises"][exercise.name]["count"] > 1:
                 add = count.get(exercise.name, 1)
                 exercise.disambiguation_suffix = add
                 count[exercise.name] = count.get(exercise.name, 1) + 1

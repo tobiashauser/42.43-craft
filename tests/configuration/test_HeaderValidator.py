@@ -4,7 +4,7 @@ from craft_documents.configuration.HeaderValidator import HeaderValidator
 from tests.configuration.test_Configuration import Configuration
 
 default = Path(
-    "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 draft/config.draft/headers/exam.tex"
+    "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 craft/config.craft/headers/exam.tex"
 )
 
 

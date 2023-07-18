@@ -11,7 +11,7 @@ class PreambleValidator(Validator):
     """
     Accepts an absolute or relative path to a tex-file.
     Relative paths will be interpreted as being inside
-    `~/.config/draft/preambles/`.
+    `~/.config/craft/preambles/`.
 
     Defaults to an absolute path to a tex-file.
     """
@@ -56,6 +56,6 @@ class PreambleValidator(Validator):
             path.touch(exist_ok=True)
             path.write_text(r"\documentclass{scrreport}")
             print(
-                "Run 'draft templates fetch --verbose' to fetch more templates from GitHub.\n"
+                "Run 'craft templates fetch --verbose' to fetch more templates from GitHub.\n"
             )
             return path

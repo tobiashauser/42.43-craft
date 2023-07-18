@@ -1,6 +1,5 @@
 from pathlib import Path
 
-# from craft_documents.configuration.Configuration import Configuration
 from craft_documents.configuration.Semantic import Semantic
 from craft_documents.configuration.Validator import Validator
 
@@ -58,7 +57,7 @@ class ExerciseConfiguration(dict):
         self["path"] = self["path"].resolve()
 
 
-class DraftExercisesValidator(Validator):
+class CraftExercisesValidator(Validator):
     """
     Optional, that defaults to a dictionary:
 
@@ -73,7 +72,7 @@ class DraftExercisesValidator(Validator):
     """
 
     def __init__(self):
-        self._key = "draft-exercises"
+        self._key = "craft-exercises"
         self._semantic = Semantic.OPTIONAL
 
     def remove_tex(self, value: str) -> str:
@@ -101,13 +100,13 @@ class DraftExercisesValidator(Validator):
             )
 
         match value:
-            # draft-exercises: intervals
+            # craft-exercises: intervals
             case str(exercise_name):
                 result[exercise_name] = ExerciseConfiguration(
                     self.configuration, exercise_name
                 )
 
-            # draft-exercises:
+            # craft-exercises:
             case list(items):
                 for item in items:
                     match item:
@@ -130,7 +129,7 @@ class DraftExercisesValidator(Validator):
                                     self.configuration, exercise_name, **kwargs
                                 )
 
-            # draft-exercises:
+            # craft-exercises:
             case dict(items):
                 for exercise_name, v in items.items():
                     match v:

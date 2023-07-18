@@ -3,7 +3,7 @@ from pathlib import Path
 from craft_documents.templates.TemplateManager import TemplateManager
 from tests.common.test_common_Configuration import Configuration
 
-test_templates_dir = Path("config.draft").resolve()
+test_templates_dir = Path("config.craft").resolve()
 
 
 def test_initialisation():

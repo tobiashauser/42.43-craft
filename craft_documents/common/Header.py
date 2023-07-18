@@ -3,8 +3,8 @@ from pathlib import Path
 
 from craft_documents.common.TexTemplate import TexTemplate
 from craft_documents.configuration.Configuration import Configuration
-from craft_documents.configuration.DraftExercisesValidator import (
-    DraftExercisesValidator,
+from craft_documents.configuration.CraftExercisesValidator import (
+    CraftExercisesValidator,
 )
 
 
@@ -12,7 +12,7 @@ class Header(TexTemplate):
     """
     A class representing a header template.
 
-    Header templates are stored in `.config/draft/headers/`.
+    Header templates are stored in `.config/craft/headers/`.
     They are always latex documents.
     """
 
@@ -30,12 +30,12 @@ class Header(TexTemplate):
             self._contents = file.read()
             self._disk_contents = self.contents
 
-    def set_draft_exercises(self, value: str):
+    def set_craft_exercises(self, value: str):
         pattern = re.compile(
             r"%s%s%s"
             % (
                 self.placeholder_prefix,
-                DraftExercisesValidator().key,
+                CraftExercisesValidator().key,
                 self.placeholder_suffix,
             )
         )

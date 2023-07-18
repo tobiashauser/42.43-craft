@@ -9,7 +9,7 @@ contents = r"""
 \begin{document}
 \textbf{Hello, world!}
 
-<<draft-exercises>>
+<<craft-exercises>>
 \end{document}
 """
 
@@ -35,7 +35,7 @@ def test_live_loading():
 \begin{document}
 \textbf{Hello, world!}
 
-<<draft-exercises>>
+<<craft-exercises>>
 \end{document}
 """
     with path.open("w") as file:
@@ -47,7 +47,7 @@ def test_live_loading():
 \begin{document}
 \textbf{Hello, world!}
 
-<<draft-exercises>>
+<<craft-exercises>>
 \end{document}
 """
     )
@@ -63,27 +63,27 @@ def test_inherited_properties():
 \begin{document}
 \textbf{Hello, world!}
 
-<<draft-exercises>>
+<<craft-exercises>>
 \end{document}
 """
     )
-    assert input.placeholders == {"draft-exercises"}
+    assert input.placeholders == {"craft-exercises"}
     assert input.prompts == []
     assert input.yaml == {}
 
 
-def test_set_draft_exercises_unescaped():
+def test_set_craft_exercises_unescaped():
     h = Header()
 
     assert (
         h.body
         == """\\textbf{Hello, world!}
 
-<<draft-exercises>>
+<<craft-exercises>>
 """
     )
 
-    h.set_draft_exercises(r"\lilypondfile{intervals.ly}")
+    h.set_craft_exercises(r"\lilypondfile{intervals.ly}")
 
     assert (
         h.body

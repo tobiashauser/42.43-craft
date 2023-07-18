@@ -17,8 +17,8 @@ class Subcommands:
     """
     Initialize the subcommands; one for each header declared in the
     templates:
-    - draft new exam
-    - draft new worksheet
+    - craft new exam
+    - craft new worksheet
 
     Hand off the neccessary files to the compiler.
     """

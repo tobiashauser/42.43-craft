@@ -4,8 +4,8 @@ import typer
 from rich import print
 from typing_extensions import Annotated
 
-from tests.common.test_common_Configuration import Configuration
 from craft_documents.templates.TemplateManager import TemplateManager
+from tests.common.test_common_Configuration import Configuration
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -77,7 +77,7 @@ def create_template_header(
 \begin{document}
 
 % This placeholder will be replaced with exercises
-<<draft-exercises>> 
+<<craft-exercises>> 
 
 \end{document}
 """

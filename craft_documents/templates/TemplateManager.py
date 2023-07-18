@@ -14,7 +14,7 @@ class TemplateManager:
 
     @property
     def folder(self) -> Folder:
-        """The folder of the templates: `~/.config/draft/`."""
+        """The folder of the templates: `~/.config/craft/`."""
         return self._folder
 
     @property

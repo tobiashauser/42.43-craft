@@ -12,7 +12,7 @@ class Configuration(LiveConfiguration):
         `root` and `cwd`. Instead it uses values that don't leave
         the environment of this repository.
         """
-        self._main = Path("config.draft/draftrc")
+        self._main = Path("config.craft/craftrc")
         self._root = Path()
         self._cwd = Path("tests/configuration")
         self.update(*args, **kwargs)

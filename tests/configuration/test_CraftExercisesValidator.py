@@ -3,8 +3,8 @@ from typing import List
 
 import yaml
 
-from craft_documents.configuration.DraftExercisesValidator import (
-    DraftExercisesValidator,
+from craft_documents.configuration.CraftExercisesValidator import (
+    CraftExercisesValidator,
     ExerciseConfiguration,
 )
 from tests.configuration.test_Configuration import Configuration
@@ -12,24 +12,24 @@ from tests.configuration.test_Configuration import Configuration
 
 def test_yaml_typing_str():
     input = """
-draft-exercises: intervals
+craft-exercises: intervals
 """
     y = yaml.safe_load(input)
-    assert y == {"draft-exercises": "intervals"}
-    assert isinstance(y["draft-exercises"], str)
+    assert y == {"craft-exercises": "intervals"}
+    assert isinstance(y["craft-exercises"], str)
 
 
 def test_yaml_typing_list_str():
     input = """
-draft-exercises: 
+craft-exercises: 
     - intervals
     - chords
 """
     y = yaml.safe_load(input)
-    assert y == {"draft-exercises": ["intervals", "chords"]}
-    assert type(y["draft-exercises"]) == list
+    assert y == {"craft-exercises": ["intervals", "chords"]}
+    assert type(y["craft-exercises"]) == list
 
-    match y["draft-exercises"]:
+    match y["craft-exercises"]:
         case list():
             assert True
         case _:
@@ -38,23 +38,23 @@ draft-exercises:
 
 def test_yaml_typing_dict_one():
     input = """
-draft-exercises:
+craft-exercises:
     intervals:
         count: 2
         path: "intervals.tex"
 """
     y = yaml.safe_load(input)
     assert y == {
-        "draft-exercises": {
+        "craft-exercises": {
             "intervals": {
                 "count": 2,
                 "path": "intervals.tex",
             },
         }
     }
-    assert type(y["draft-exercises"]) == dict
+    assert type(y["craft-exercises"]) == dict
 
-    match y["draft-exercises"]:
+    match y["craft-exercises"]:
         case dict(value):
             assert value == {"intervals": {"count": 2, "path": "intervals.tex"}}
         case _:
@@ -63,7 +63,7 @@ draft-exercises:
 
 def test_yaml_typing_list_of_dict():
     input = """
-draft-exercises:
+craft-exercises:
     - intervals: 1
     - chords: 
         count: 2
@@ -71,10 +71,10 @@ draft-exercises:
 """
     y = yaml.safe_load(input)
     assert y == {
-        "draft-exercises": [{"intervals": 1}, {"chords": {"count": 2}}, "melody"]
+        "craft-exercises": [{"intervals": 1}, {"chords": {"count": 2}}, "melody"]
     }
 
-    match y["draft-exercises"]:
+    match y["craft-exercises"]:
         case list(value):
             for element in value:
                 match element:
@@ -90,7 +90,7 @@ draft-exercises:
 
 def test_yaml_typing_list_with_dict():
     input = """
-draft-exercises:
+craft-exercises:
     - intervals:
         count: 3
         path: blob
@@ -98,7 +98,7 @@ draft-exercises:
 """
     y = yaml.safe_load(input)
     assert y == {
-        "draft-exercises": [
+        "craft-exercises": [
             {"intervals": {"count": 3, "path": "blob"}},
             {"chords": 2},
         ]
@@ -107,17 +107,17 @@ draft-exercises:
 
 def test_yaml_typing_dict():
     input = """
-draft-exercises:
+craft-exercises:
     intervals: 1
     chords:
         count: 3
 """
     y = yaml.safe_load(input)
-    assert y == {"draft-exercises": {"intervals": 1, "chords": {"count": 3}}}
+    assert y == {"craft-exercises": {"intervals": 1, "chords": {"count": 3}}}
 
 
 intervals = Path(
-    "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 draft/config.draft/exercises/intervals.tex"
+    "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 craft/config.craft/exercises/intervals.tex"
 )
 
 
@@ -128,7 +128,7 @@ def test_ExerciseConfiguration():
 
 
 def test_linter_str():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
@@ -136,7 +136,7 @@ def test_linter_str():
 
 
 def test_linter_list_str():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
@@ -144,7 +144,7 @@ def test_linter_list_str():
 
 
 def test_linter_list_dict_str_int():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
@@ -154,7 +154,7 @@ def test_linter_list_dict_str_int():
 
 
 def test_linter_list_dict_str_dict():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
@@ -178,7 +178,7 @@ def test_linter_list_dict_str_dict():
 
 
 def test_linter_dict_int():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
@@ -188,7 +188,7 @@ def test_linter_dict_int():
 
 
 def test_linter_dict_dict():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
@@ -198,7 +198,7 @@ def test_linter_dict_dict():
 
 
 def test_run_no_input():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     v.run(c)
 
@@ -206,16 +206,16 @@ def test_run_no_input():
 
 
 def test_run_valid_input():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     c[v.key] = {"intervals": 2}
     v.run(c)
 
-    assert c == {"draft-exercises": {"intervals": {"count": 2, "path": intervals}}}
+    assert c == {"craft-exercises": {"intervals": {"count": 2, "path": intervals}}}
 
 
 def test_run_multiple_valid_input():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     c[v.key] = {
         "intervals": 2,
@@ -223,11 +223,11 @@ def test_run_multiple_valid_input():
     }  # chords is removed because it doesn't exist yet
     v.run(c)
 
-    assert c == {"draft-exercises": {"intervals": {"count": 2, "path": intervals}}}
+    assert c == {"craft-exercises": {"intervals": {"count": 2, "path": intervals}}}
 
 
 def test_run_invalid_input():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     c[v.key] = Path()
     v.run(c)
@@ -236,7 +236,7 @@ def test_run_invalid_input():
 
 
 def test_run_invalid_path():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     c[v.key] = {"intervals": {"count": 1, "path": Path()}}
     v.run(c)
@@ -245,7 +245,7 @@ def test_run_invalid_path():
 
 
 def test_run_invalid_count():
-    v = DraftExercisesValidator()
+    v = CraftExercisesValidator()
     c = Configuration()
     c[v.key] = {"intervals": {"count": -1, "path": intervals}}
     v.run(c)
