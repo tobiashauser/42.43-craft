@@ -1,5 +1,8 @@
 from pathlib import Path
 
+from rich import print
+from rich.panel import Panel
+
 from draft.configuration.Configuration import Configuration
 from draft.configuration.DraftExercisesValidator import ExerciseConfiguration
 from draft.new.Compiler import Compiler as LiveCompiler
@@ -43,10 +46,8 @@ Hello, <<planet>>!
 exercise_contents = r"""
 % TESTING %
 \iffalse
-# supplements:
-#  - intervals.ly
-unique-placeholders:
-  - interval-count
+supplements:
+ - exercise.ly
 \fi
 
 \input{../preambles/default.tex}
@@ -55,22 +56,23 @@ unique-placeholders:
 \begin{document}
 \exercise{Intervalle}{<<points>>}
 This exercise has <<interval-count>> intervals.
-\lilypondfile{intervals.ly}
+\lilypondfile{exercise.ly}
 \end{document}
+"""
+
+exercise_ly_contents = r"""
+{ c d e f }
 """
 
 
 class Preamble(PreambleTest):
     def load(self):
         self._contents = preamble_contents
-        self.remove_document_body()
 
 
 class Header(HeaderTest):
     def load(self):
         self._contents = header_contents
-        self.remove_documentclass()
-        self.remove_include_preamble()
 
 
 class Exercise(ExerciseTest):
@@ -85,6 +87,10 @@ class Compiler(LiveCompiler):
     Used when live-testing the tool via `make debug`.
     """
 
+    def work_jobs(self):
+        for path, contents in self.jobs.items():
+            print(Panel(contents, title="[bold red]" + path.name, title_align="left"))
+
     def __init__(self, configuration: Configuration):
         """
         Add any kwargs that should not be prompted for
@@ -97,16 +103,16 @@ class Compiler(LiveCompiler):
         configuration["document-name"] = "test"
 
         # can be customized
-        # configuration["remove_comments"] = True
+        configuration["remove_comments"] = True
         # configuration["unique_exercise_placeholders"] = False
 
         # placeholders
-        # configuration["planet"] = "Pluto"
-        # configuration["semantic-name"] = "Klausur"
-        # configuration["semester"] = "SoSe 2023"
-        # configuration["place"] = "Stuttgart"
-        # configuration["group"] = "Gruppe 1"
-        # configuration["course"] = "HE 2"
+        configuration["planet"] = "Pluto"
+        configuration["semantic-name"] = "Klausur"
+        configuration["semester"] = "SoSe 2023"
+        configuration["place"] = "Stuttgart"
+        configuration["group"] = "Gruppe 1"
+        configuration["course"] = "HE 2"
         # configuration["interval-count"] = "3"
         # configuration["points"] = "2"
 
@@ -115,6 +121,9 @@ class Compiler(LiveCompiler):
 
     def testing(self):
         """Control included documents for testing."""
+        ly = Path("exercise.ly")
+        ly.write_text(exercise_ly_contents)
+
         self.configuration["planet"] = "Pluto"
         self.configuration["semantic-name"] = "Klausur"
         self.configuration["semester"] = "SoSe 2023"
@@ -148,6 +157,18 @@ def test_testCompiler():
     assert c.configuration["key"] == "value"
     assert c.exercises[0].disambiguated_name == "exercise-1"
 
+    # Must be true, the rest of the tests depend on this configuration
+    assert c.configuration.unique_exercise_placeholders == False
+    assert c.configuration.remove_comments == True
+    assert c.configuration["planet"] == "Pluto"
+    assert c.configuration["semantic-name"] == "Klausur"
+    assert c.configuration["semester"] == "SoSe 2023"
+    assert c.configuration["place"] == "Stuttgart"
+    assert c.configuration["group"] == "Gruppe 1"
+    assert c.configuration["course"] == "HE 2"
+    assert c.configuration["interval-count"] == "3"
+    assert c.configuration["points"] == "2"
+
 
 def test_jobs_after_compile():
     c = Compiler(Configuration())
@@ -163,7 +184,7 @@ def test_jobs_after_compile():
     assert c.jobs == {
         Path(
             "test.tex"
-        ): r"""% Preamble ------------------------------------------------------------------- %
+        ): r"""% Preamble ------------------------------------------------------------------ %
 
 \documentclass{scrreport}
 
@@ -176,30 +197,30 @@ def test_jobs_after_compile():
   \vspace{1em}
 }
 
-% Header -------------------------------------------------------------------- %
+% Header ------------------------------------------------------------------- %
 
 \newcommand{\header}[]{Defined in the header.}
 
-% exercise-1 ----------------------------------------------------------------- %
-
-\newcommand{\lorem}[]{Defined in the exercise.}
-
-% exercise-2 ----------------------------------------------------------------- %
+% exercise ------------------------------------------------------------------ %
 
 \newcommand{\lorem}[]{Defined in the exercise.}
 
 \begin{document}
 Hello, Pluto!
 
-% exercise-1 ----------------------------------------------------------------- %
+% exercise-1 ---------------------------------------------------------------- %
 \exercise{Intervalle}{2}
 This exercise has 3 intervals.
-\lilypondfile{intervals.ly}
-% exercise-2 ----------------------------------------------------------------- %
+\lilypondfile{exercise-1.ly}
+
+% exercise-2 ---------------------------------------------------------------- %
 \exercise{Intervalle}{2}
 This exercise has 3 intervals.
-\lilypondfile{intervals.ly}
+\lilypondfile{exercise-2.ly}
+
 
 \end{document}
 """,
+        Path("exercise-1.ly"): exercise_ly_contents,
+        Path("exercise-2.ly"): exercise_ly_contents,
     }

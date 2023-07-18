@@ -176,42 +176,59 @@ class Compiler:
         # Glue together the compiled document.
 
         # Preamble
-        self.document += "% Preamble " + "-" * 67 + " %\n"
+        self.document += "% Preamble " + "-" * 66 + " %\n"
         self.document += self.preamble.contents  # preamble
 
         # Header
         if len(self.header.declarations) != 0:
-            self.document += "% Header " + "-" * 68 + " %\n"
+            self.document += "% Header " + "-" * 67 + " %\n"
         self.document += self.header.declarations  # declarations in header
 
         # Exercises
+        extracted_declarations = set()
         body_exercises = ""
         for exercise in self.exercises:
-            if len(exercise.declarations) != 0:
+            if (
+                len(exercise.declarations) != 0
+                and exercise.name not in extracted_declarations
+            ):
                 self.document += (
                     "% "
                     + exercise.name
                     + " "
-                    + "-" * (80 - 5 - len(exercise.name))
+                    + "-" * (79 - 5 - len(exercise.name))
                     + " %\n"
                 )
-            self.document += exercise.declarations  # declarations in exercises
+                self.document += exercise.declarations  # declarations in exercises
+                extracted_declarations.add(exercise.name)
             if len(exercise.body) != 0:
                 body_exercises += (
                     "% "
                     + exercise.disambiguated_name
                     + " "
-                    + "-" * (80 - 5 - len(exercise.disambiguated_name))
+                    + "-" * (79 - 5 - len(exercise.disambiguated_name))
                     + " %\n"
                 )
-            body_exercises += exercise.body
+                body_exercises += exercise.body
+                if not exercise.body.endswith("\n\n"):
+                    body_exercises += "\n"
 
         self.header.set_draft_exercises(body_exercises)
         self.document += "\\begin{document}\n"
         self.document += self.header.body
         self.document += "\\end{document}\n"
 
-        print(self.document)
+        self.work_jobs()
+
+    def work_jobs(self):
+        """
+        Create the files.
+
+        This is overridden in the test_implementation to instead print
+        to the console.
+        """
+        for path, contents in self.jobs.items():
+            path.write_text(contents)
 
     def prompt_for_document_name(self) -> str:
         """

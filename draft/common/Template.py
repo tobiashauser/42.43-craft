@@ -97,14 +97,14 @@ class Template(File):
             raise Exception("Couldn't find tokens for %s." % self.extension)
             # TODO: Prompt for the tokens and add them to the configuration
 
-        if configuration.get(RemoveCommentsValidator().key, False):
-            self.remove_comments()
-
         self.__init_yaml__()
         self.__init_placeholders__()
 
         # Prompts
         self.__init_prompts__()
+
+        if configuration.get(RemoveCommentsValidator().key, False):
+            self.remove_comments()
 
     def __init_placeholders__(self):
         """
