@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import typer
 from rich import print
 
 from draft.configuration.Semantic import Semantic
@@ -43,8 +44,18 @@ class PreambleValidator(Validator):
         """
         default = "default.tex"
 
-        path = self.configuration.main.parent / ("preambles/" + default)
+        path: Path = self.configuration.main.parent / ("preambles/" + default)
         if path.is_file():
             return path.resolve()
         else:
-            raise Exception("The default preamble file doesn't exist.")
+            print(
+                "[blue]==>[/blue] Created the default preamble at '%s' :sparkles:\n"
+                % path
+            )
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.touch(exist_ok=True)
+            path.write_text(r"\documentclass{scrreport}")
+            print(
+                "Run 'draft templates fetch --verbose' to fetch more templates from GitHub.\n"
+            )
+            return path

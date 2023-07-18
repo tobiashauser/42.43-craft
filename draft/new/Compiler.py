@@ -181,7 +181,7 @@ class Compiler:
 
         # Header
         if len(self.header.declarations) != 0:
-            self.document += "% Header " + "-" * 67 + " %\n"
+            self.document += "\n% Header " + "-" * 67 + " %\n"
         self.document += self.header.declarations  # declarations in header
 
         # Exercises

@@ -72,13 +72,16 @@ class TemplateManager:
         ]
 
     def new_preamble(self, name: str, contents: str):
+        self.preambles_path.mkdir(parents=True, exist_ok=True)
         path = self.preambles_path / name
         path.write_text(contents)
 
     def new_header(self, name: str, contents: str):
+        self.headers_path.mkdir(parents=True, exist_ok=True)
         path = self.headers_path / name
         path.write_text(contents)
 
     def new_exercise(self, name: str, contents: str):
+        self.exercises_path.mkdir(parents=True, exist_ok=True)
         path = self.exercises_path / name
         path.write_text(contents)

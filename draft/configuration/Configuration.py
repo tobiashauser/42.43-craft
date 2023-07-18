@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, List
 
 import yaml
+from rich import print
 
 from draft.configuration.AllowEvalValidator import AllowEvalValidator
 from draft.configuration.DocumentNameValidator import DocumentNameValidator
@@ -179,6 +180,22 @@ class Configuration(dict):
         necessary. This is done by setting and running every validator in
         `self.validators`.
         """
+        # Create the configuration if it doesn't exists
+        if (
+            not self.main.parent.is_dir()
+            or not (self.main.parent / "preambles/").is_dir()
+            or not (self.main.parent / "headers/").is_dir()
+            or not (self.main.parent / "exercises/").is_dir()
+        ):
+            self.main.parent.mkdir(parents=True, exist_ok=True)
+            (self.main.parent / "preambles/").mkdir(parents=True, exist_ok=True)
+            (self.main.parent / "headers/").mkdir(parents=True, exist_ok=True)
+            (self.main.parent / "exercises/").mkdir(parents=True, exist_ok=True)
+            print(
+                "[blue]==>[/blue] Created the templates folder at '%s' :sparkles:"
+                % self.main.parent
+            )
+
         self._validators = [
             PreambleValidator(),
             AllowEvalValidator(),

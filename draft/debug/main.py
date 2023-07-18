@@ -2,7 +2,7 @@ import typer
 from rich import print
 
 from draft.debug.Debugger import Debugger
-from tests.common.test_common_Configuration import Configuration
+from draft.configuration.Configuration import Configuration
 
 app = typer.Typer()
 

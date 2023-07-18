@@ -10,7 +10,7 @@ from draft.configuration.Configuration import Configuration
 from draft.configuration.VerboseValidator import VerboseValidator
 from draft.debug.Debugger import Debugger
 from draft.templates.TemplateManager import TemplateManager
-from tests.new.test_Compiler import Compiler
+from draft.new.Compiler import Compiler
 
 
 class Subcommands:

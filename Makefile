@@ -15,6 +15,7 @@ clean:
 	find . -name "*.pyc" | xargs rm -f
 	find . -name "__pycache__" | xargs rm -rf
 	find . -name "*.aux" -o -name "*.fdb_latexmk" -o -name "*.fls" -o -name "*.log" -o -name "*synctex.gz" | xargs rm -f
+	trash ~/.config/draft/
 release:
 	sed -i '' 's/tests.common.test_common_Configuration/draft.configuration.Configuration/' $(MAIN_FILES)
 	sed -i '' 's/tests.new.test_Compiler/draft.new.Compiler/' draft/new/Subcommands.py

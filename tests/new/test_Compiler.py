@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from rich import print
+from rich.columns import Columns
 from rich.panel import Panel
 
 from draft.configuration.Configuration import Configuration
@@ -87,8 +88,13 @@ class Compiler(LiveCompiler):
     """
 
     def work_jobs(self):
-        for path, contents in self.jobs.items():
-            print(Panel(contents, title="[bold red]" + path.name, title_align="left"))
+        panels = reversed(
+            [
+                Panel(contents, title="[bold red]" + path.name, title_align="left")
+                for path, contents in self.jobs.items()
+            ]
+        )
+        print(Columns(panels, width=82))
 
     def __init__(self, configuration: Configuration):
         """
