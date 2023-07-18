@@ -2,7 +2,6 @@ import re
 from abc import ABC
 from pathlib import Path
 
-from draft.common.helpers import create_list
 from draft.common.Template import Template
 from draft.configuration.Configuration import Configuration
 

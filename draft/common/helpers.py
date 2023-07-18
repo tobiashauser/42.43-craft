@@ -1,9 +1,7 @@
-import base64
 from typing import Any, Dict, List
 
 import requests
 from rich import print
-from typer import Abort
 
 
 def combine_dictionaries(

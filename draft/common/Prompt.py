@@ -3,7 +3,7 @@ from abc import ABC
 from enum import Enum
 
 # from typing import List as ListType
-from typing import Any, Callable, Dict, Tuple
+from typing import Any, Callable, Dict
 
 collections.Mapping = collections.abc.Mapping  # type: ignore
 from PyInquirer import Separator, Validator
