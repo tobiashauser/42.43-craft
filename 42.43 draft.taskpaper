@@ -9,7 +9,8 @@ Inbox:
 		- Using the live environment crashes because `~/.config/draft/` doesn't exists yet. @ticket(i7HQ1L)
 		- Possible box overflow in `chead` when using the worksheet-template
 		- Multiple exercises do not get disambiguated when live-testing in debug. @ticket(iUPqBb)
-		- Remove test subcommand.
+		- Remove test subcommand. 
+		- Create a debug subcommand that outputs the configuration with which the tool runs. @ticket(EBvvfU)
 Archive:
 Search Definitions:
 	Top Priority @search(@priority = 5 and not @done)
