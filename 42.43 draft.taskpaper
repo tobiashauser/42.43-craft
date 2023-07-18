@@ -13,7 +13,7 @@ Inbox:
 		- Remove test subcommand. @done(2023-07-18)
 		- Create a debug subcommand that outputs the configuration with which the tool runs. @ticket(EBvvfU) @done(2023-07-18)
 		- Remove `\usepackage{subfiles}` from the compiled document.
-		- Unexpected behaviour when setting `unique_exercise_placeholders` to `True`. @ticket(iEF6Qo)
+		- Unexpected behaviour when setting `unique_exercise_placeholders` to `False`. @ticket(iEF6Qo) @done(2023-07-18)
 			The first placeholder will still be set from a value in the configuration. However this should be cleared out first.
 Archive:
 Search Definitions:

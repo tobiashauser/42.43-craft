@@ -97,6 +97,10 @@ class Exercise(TexTemplate):
             prompter.ask(self.prompts)
             self.set_placeholders(self.unique_placeholder_values)
         else:
+            # unique placeholders should always be prompted for
+            for placeholder in self.unique_placeholders:
+                self.configuration.pop(placeholder, None)
+
             prompter = Prompter(self.configuration)
             prompter.ask(self.prompts)
             self.set_placeholders(self.configuration)

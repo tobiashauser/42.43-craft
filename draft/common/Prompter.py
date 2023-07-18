@@ -35,5 +35,13 @@ class Prompter:
         for question in questions:
             if question["name"] not in self.storage:
                 prompt(question, answers=self.storage)
+            else:
+                # Print to the console which value was used.
+                print(
+                    "[blue]:heavy_check_mark:[/blue] "
+                    + question["name"]
+                    + ": "
+                    + self.storage[question["name"]]
+                )
 
         self.storage.pop("NuoXZl", None)
