@@ -1,6 +1,7 @@
 Inbox:
 	- Create a pip package @ticket(a57hym) @done(2023-07-18)
 	- Write documentation
+	- Create a GitHub workflow that automatically deploys to Pypi
 42.43 draft:
 	Feature Requests:
 		- Make class Folder use the types File and Folder for its subfiles and subfolders.
