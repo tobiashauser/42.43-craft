@@ -31,13 +31,16 @@ author: E.A.P.
 class TemplateImplementation(Template):
     def __init__(
         self,
+        contents: str = contents,
         configuration: Configuration = Configuration(),
         path: Path = Path("jane.tex"),
     ):
+        self._contents = contents
         super().__init__(configuration=configuration, path=path)
 
     def load(self):
-        self._contents = contents
+        pass
+        # self._contents = contents
 
 
 def test_instantiation():
@@ -69,6 +72,17 @@ def test_yaml():
     }
 
     assert input.yaml == expectation
+
+
+# @ticket(iUPqBb)
+def test_yaml_on_first_line():
+    input = r"""\iffalse
+author: E.A.P.
+\fi
+"""
+    t = TemplateImplementation(contents=input)
+    expectation = {"author": "E.A.P."}
+    assert t.yaml == expectation
 
 
 def test_prompts():
@@ -131,7 +145,7 @@ def test_reference_semantics_of_configuration():
 
 
 def test_remove_comments():
-    t = TemplateImplementation(Configuration(remove_comments=True))
+    t = TemplateImplementation(configuration=Configuration(remove_comments=True))
     assert (
         t.contents
         == """

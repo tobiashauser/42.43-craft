@@ -10,7 +10,8 @@ ly = test_folder / "intervals.ly"
 
 exercise_contents = r"""
 \iffalse
-supplements: intervals.ly
+supplements: 
+    - intervals.ly
 \fi
 """
 
@@ -42,12 +43,12 @@ def test_instantiation():
     c = Configuration()
 
     e = LiveExercise(tex, c)
-    # assert e.path == tex
+    assert e.path == tex
     # assert e.contents == exercise_contents
-    # assert e.name == tex.stem
-    # assert e.extension == tex.suffix
-    # assert e.parent == test_folder
-    # assert len(e.supplements) == 1
-    # assert e.supplements[0].path == ly
+    assert e.name == tex.stem
+    assert e.extension == tex.suffix
+    assert e.parent == test_folder
+    assert len(e.supplements) == 1
+    assert e.supplements[0].path == ly
 
     teardown_test_folder()

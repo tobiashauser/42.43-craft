@@ -47,7 +47,7 @@ exercise_contents = r"""
 % TESTING %
 \iffalse
 supplements:
- - exercise.ly
+    - exercise.ly
 \fi
 
 \documentclass[../preambles/default.tex]{subfiles}
@@ -102,7 +102,7 @@ class Compiler(LiveCompiler):
         configuration["document-name"] = "test"
 
         # can be customized
-        configuration["remove_comments"] = True
+        configuration["remove_comments"] = False
         configuration["unique_exercise_placeholders"] = False
 
         # placeholders

@@ -129,7 +129,7 @@ class Template(File):
 
         # Extract all the block comments
         pattern = re.compile(
-            "\n%s(.*?)%s" % (self.block_comment_prefix, self.block_comment_suffix),
+            "%s(.*?)%s" % (self.block_comment_prefix, self.block_comment_suffix),
             re.DOTALL,
         )
         matches = pattern.findall(self.contents)
