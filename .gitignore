@@ -17,6 +17,7 @@ emoji.txt
 *.synctex.gz
 *.pdf
 *.synctex(busy)
+tmp-ly/
 
 # Test files
 tests/draftrc

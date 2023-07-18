@@ -31,7 +31,7 @@ Hello, world!
 
 header_contents = r"""
 % TESTING %
-\documentclass{scrreport}
+\documentclass[../preambles/default.tex]{subfiles}
 
 \input{../preambles/default}
 \newcommand{\header}[]{Defined in the header.}
@@ -50,7 +50,7 @@ supplements:
  - exercise.ly
 \fi
 
-\input{../preambles/default.tex}
+\documentclass[../preambles/default.tex]{subfiles}
 \newcommand{\lorem}[]{Defined in the exercise.}
 
 \begin{document}
