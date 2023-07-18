@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from rich import print
+
 from draft.configuration.Semantic import Semantic
 from draft.configuration.Validator import Validator
 
