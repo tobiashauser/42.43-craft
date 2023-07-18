@@ -1,5 +1,6 @@
 Inbox:
-	- Create a `template` subcommand to manage `~/.config/draft` @ticket(N0vvgW) @done(2023-07-18)
+	- Create a pip package
+	- Write documentation
 42.43 draft:
 	Feature Requests:
 		- Make class Folder use the types File and Folder for its subfiles and subfolders.
@@ -7,10 +8,11 @@ Inbox:
 		- Store the keys in the configuration-validators as a static property.
 	Ideas:
 	Bugs:
-		- Using the live environment crashes because `~/.config/draft/` doesn't exists yet. @ticket(i7HQ1L) @done(2023-07-18)
 		- Possible box overflow in `chead` when using the worksheet-template
 		- `draft templates fetch` outputs `No new templates on GitHub.` even if new templates were added.
 Archive:
+	- Create a `template` subcommand to manage `~/.config/draft` @ticket(N0vvgW) @done(2023-07-18)
+	- Using the live environment crashes because `~/.config/draft/` doesn't exists yet. @ticket(i7HQ1L) @done(2023-07-18)
 	- The templates do not compile on their own because they import the document body from the preamble @ticket(xYyX7j) @done(2023-07-18)
 	- Multiple exercises do not get disambiguated when live-testing in debug. @ticket(iUPqBb) @done(2023-07-18)
 	- Remove test subcommand. @done(2023-07-18)
