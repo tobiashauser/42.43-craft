@@ -11,6 +11,7 @@ Inbox:
 	Ideas:
 		craft templates:
 			- Should `craft templates fetch` be `craft fetch templates`?
+			- Should it be `craft new template` instead of `craft templates new`?
 			- Provide an option to diff when prompting whether or not to overwrite templates `craft templates`
 	Bugs:
 		- Possible box overflow in `chead` when using the worksheet-template
