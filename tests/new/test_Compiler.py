@@ -78,7 +78,6 @@ class Header(HeaderTest):
 class Exercise(ExerciseTest):
     def load(self):
         self._contents = exercise_contents
-        # TODO: control supplements
 
 
 class Compiler(LiveCompiler):
@@ -97,14 +96,14 @@ class Compiler(LiveCompiler):
         when live testing the debug version.
         """
 
-        # never uncomment...
+        # must be uncommented for testing...
         configuration["draft-exercises"] = {"intervals": 2}
         configuration.header = "exam.tex"
         configuration["document-name"] = "test"
 
         # can be customized
         configuration["remove_comments"] = True
-        # configuration["unique_exercise_placeholders"] = False
+        configuration["unique_exercise_placeholders"] = False
 
         # placeholders
         configuration["planet"] = "Pluto"
@@ -113,8 +112,8 @@ class Compiler(LiveCompiler):
         configuration["place"] = "Stuttgart"
         configuration["group"] = "Gruppe 1"
         configuration["course"] = "HE 2"
-        # configuration["interval-count"] = "3"
-        # configuration["points"] = "2"
+        configuration["interval-count"] = "3"
+        configuration["points"] = "2"
 
         configuration.validate()
         super().__init__(configuration)

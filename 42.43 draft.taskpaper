@@ -8,6 +8,7 @@ Inbox:
 		- The templates do not compile on their own because they import the document body from the preamble @ticket(xYyX7j) @done(2023-07-18)
 		- Using the live environment crashes because `~/.config/draft/` doesn't exists yet. @ticket(i7HQ1L)
 		- Possible box overflow in `chead` when using the worksheet-template
+		- Multiple exercises do not get disambiguated when live-testing in debug. @ticket(iUPqBb)
 Archive:
 Search Definitions:
 	Top Priority @search(@priority = 5 and not @done)
