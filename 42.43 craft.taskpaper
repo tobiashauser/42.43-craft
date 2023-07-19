@@ -3,6 +3,9 @@ Inbox:
 	- Create a GitHub workflow that automatically deploys to Pypi
 	- Add a way to query the current version of `craft`
 	- How can packages be updated with pip?
+	- Separate the logic from the command line interface
+	- Control PyInquirer
+	- Improve testing ergonomics @ticket(PoCxEG)
 42.43 craft:
 	Feature Requests:
 		- Make class Folder use the types File and Folder for its subfiles and subfolders.
@@ -12,6 +15,8 @@ Inbox:
 		craft templates:
 			- Should `craft templates fetch` be `craft fetch templates`?
 			- Provide an option to diff when prompting whether or not to overwrite templates `craft templates`
+		craft new:
+			- Indicate if/which `craftrc` files have been read
 	Bugs:
 		- Possible box overflow in `chead` when using the worksheet-template
 		- `craft templates fetch` outputs `No new templates on GitHub.` even if new templates were added.
