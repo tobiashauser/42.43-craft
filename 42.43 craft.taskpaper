@@ -11,6 +11,9 @@ Inbox:
 		- Make class Folder use the types File and Folder for its subfiles and subfolders.
 		- Gracefully fail cancelling prompts with `ctrl-C`
 		- Store the keys in the configuration-validators as a static property.
+	Prompter:
+		- Improve the documentation
+		- Missing the feature to print to the console if a value from the storage was chosen
 	Ideas:
 		craft templates:
 			- Should `craft templates fetch` be `craft fetch templates`?
