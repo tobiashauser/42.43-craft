@@ -1,7 +1,7 @@
 # Patch bug, caused by change in the collections package since python 3.10 (?)
 import collections.abc
 import sys
-from enum import Enum, IntEnum
+from enum import Enum
 from typing import Any
 
 from craft_documents.Prompter.Prompt import Answers, Prompt
@@ -39,7 +39,7 @@ class Prompter:
             self.__ask_io = self.__ask_test
 
     def ask(self, prompt: Prompt) -> Any:
-        # setup local references to flatten the Optional
+        # setup local reference to flatten the Optional
         storage = self.storage if self.storage is not None else {}
 
         # BUG: The answers will only be added if the storage is not empty
