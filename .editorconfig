@@ -9,5 +9,8 @@ indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+[tool.black]
+line-length = 119
+
 [Makefile]
 indent_style = tab
