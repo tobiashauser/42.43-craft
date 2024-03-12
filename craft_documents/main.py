@@ -11,6 +11,6 @@ app.add_typer(new, name="new", help="Create a new document.")
 app.add_typer(
     debug,
     name="debug",
-    help="Output the configuration in with which the tool would run.",
+    help="Output the configuration with which the tool would run.",
 )
 app.add_typer(templates, name="templates", help="Manage the templates directory.")

@@ -142,7 +142,7 @@ class Configuration(dict):
         precedence.
 
         Additionally there is one configuration file
-        at `~/.config/craft/craftrc` which stores
+        at `~/.config/craft/craftrc` which
         gets read last. It stores global configuration
         such as prefixes for single-line-comments for
         a specific file extension. Make sure to escape
