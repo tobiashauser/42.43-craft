@@ -18,6 +18,7 @@ publish:
 	poetry publish
 	make debug
 test:
+	make debug
 	$(PYTHON) -m doctest $(PYTHON_FILES)
 	$(POETRY) run $(TEST)
 clean:

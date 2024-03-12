@@ -21,7 +21,7 @@ craft-exercises: intervals
 
 def test_yaml_typing_list_str():
     input = """
-craft-exercises: 
+craft-exercises:
     - intervals
     - chords
 """
@@ -65,7 +65,7 @@ def test_yaml_typing_list_of_dict():
     input = """
 craft-exercises:
     - intervals: 1
-    - chords: 
+    - chords:
         count: 2
     - melody
 """
@@ -116,44 +116,42 @@ craft-exercises:
     assert y == {"craft-exercises": {"intervals": 1, "chords": {"count": 3}}}
 
 
-intervals = Path(
-    "/Users/tobiashauser/Binder/40-49 Projects/42 Programmieren/42.43 craft/config.craft/exercises/intervals.tex"
-)
+intervals = Path("config.craft/exercises/intervals.tex")
 
 
-def test_ExerciseConfiguration():
+def test_ExerciseConfiguration(request):
     c = Configuration()
     e = ExerciseConfiguration(c, "intervals")
-    assert e == {"count": 1, "path": intervals}
+    assert e == {"count": 1, "path": request.config.rootdir / intervals}
 
 
-def test_linter_str():
+def test_linter_str(request):
     v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
-    assert {"intervals": {"count": 1, "path": intervals}} == v.lint("intervals.tex")
+    assert {"intervals": {"count": 1, "path": request.config.rootdir / intervals}} == v.lint("intervals.tex")
 
 
-def test_linter_list_str():
+def test_linter_list_str(request):
     v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
-    assert {"intervals": {"count": 1, "path": intervals}} == v.lint(["intervals"])
+    assert {"intervals": {"count": 1, "path": request.config.rootdir / intervals}} == v.lint(["intervals"])
 
 
-def test_linter_list_dict_str_int():
+def test_linter_list_dict_str_int(request):
     v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
-    assert {"intervals": {"count": 2, "path": intervals}} == v.lint(
+    assert {"intervals": {"count": 2, "path": request.config.rootdir / intervals}} == v.lint(
         [{"intervals.tex": 2}]
     )
 
 
-def test_linter_list_dict_str_dict():
+def test_linter_list_dict_str_dict(request):
     v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
@@ -161,7 +159,7 @@ def test_linter_list_dict_str_dict():
     assert {
         "intervals": {
             "count": 2,
-            "path": intervals.parent / "blob.tex",
+            "path": request.config.rootdir / intervals.parent / "blob.tex",
             "blib": "blob",
         }
     } == v.lint(
@@ -177,22 +175,22 @@ def test_linter_list_dict_str_dict():
     )
 
 
-def test_linter_dict_int():
+def test_linter_dict_int(request):
     v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
-    assert {"intervals": {"count": 2, "path": intervals}} == v.lint(
+    assert {"intervals": {"count": 2, "path": request.config.rootdir / intervals}} == v.lint(
         {"intervals.tex": 2}
     )
 
 
-def test_linter_dict_dict():
+def test_linter_dict_dict(request):
     v = CraftExercisesValidator()
     c = Configuration()
     v._configuration = c
 
-    assert {"intervals": {"count": 3, "path": intervals, "blib": "blob"}} == v.lint(
+    assert {"intervals": {"count": 3, "path": request.config.rootdir / intervals, "blib": "blob"}} == v.lint(
         {"intervals.tex": {"count": 3, "blib": "blob"}}
     )
 
@@ -205,16 +203,16 @@ def test_run_no_input():
     assert c == {}
 
 
-def test_run_valid_input():
+def test_run_valid_input(request):
     v = CraftExercisesValidator()
     c = Configuration()
     c[v.key] = {"intervals": 2}
     v.run(c)
 
-    assert c == {"craft-exercises": {"intervals": {"count": 2, "path": intervals}}}
+    assert c == {"craft-exercises": {"intervals": {"count": 2, "path": request.config.rootdir / intervals}}}
 
 
-def test_run_multiple_valid_input():
+def test_run_multiple_valid_input(request):
     v = CraftExercisesValidator()
     c = Configuration()
     c[v.key] = {
@@ -223,7 +221,7 @@ def test_run_multiple_valid_input():
     }  # chords is removed because it doesn't exist yet
     v.run(c)
 
-    assert c == {"craft-exercises": {"intervals": {"count": 2, "path": intervals}}}
+    assert c == {"craft-exercises": {"intervals": {"count": 2, "path": request.config.rootdir / intervals}}}
 
 
 def test_run_invalid_input():
@@ -244,10 +242,10 @@ def test_run_invalid_path():
     assert c == {}
 
 
-def test_run_invalid_count():
+def test_run_invalid_count(request):
     v = CraftExercisesValidator()
     c = Configuration()
-    c[v.key] = {"intervals": {"count": -1, "path": intervals}}
+    c[v.key] = {"intervals": {"count": -1, "path": Path(request.config.rootdir / intervals)}}
     v.run(c)
 
     assert c == {}
