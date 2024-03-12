@@ -6,12 +6,12 @@ PYTHON_FILES = $(shell find . -name "*.py")
 MAIN_FILES = $(shell find . -name "main.py")
 
 install-pypi:
-	pip3 install craft-documents
+	pip3 install craft_documents
 install:
 	poetry build
 	pip install dist/craft_documents-0.1.?-py3-none-any.whl
 uninstall:
-	pip3 uninstall craft-documents
+	pip3 uninstall craft_documents
 publish:
 	make release
 	poetry build
