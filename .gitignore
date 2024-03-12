@@ -1,3 +1,6 @@
+# Project
+*.taskpaper
+
 # macOS
 .DS_Store
 .vscode/
