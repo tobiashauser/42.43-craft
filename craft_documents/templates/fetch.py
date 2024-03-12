@@ -22,8 +22,8 @@ def fetch_implementation(
     templates_are_uptodate = True
 
     owner = "tobiashauser"
-    repo = "42.43-craft"
-    path = "config.craft/"
+    repo = "craft-templates"
+    path = ""
 
     preambles = fetch_github_directory(owner, repo, path + "preambles/")
     headers = fetch_github_directory(owner, repo, path + "headers/")
