@@ -9,7 +9,7 @@ contents = r"""
 <<one>>
 
 """
-# the document body is beeing stripped -> test_live_loading
+# the document body is being stripped -> test_live_loading
 
 
 class Preamble(LivePreamble):
