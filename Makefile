@@ -9,7 +9,7 @@ install-pypi:
 	pip3 install craft-documents
 install:
 	poetry build
-	pip install dist/craft_documents-0.1.1-py3-none-any.whl
+	pip install dist/craft_documents-0.1.?-py3-none-any.whl
 uninstall:
 	pip3 uninstall craft-documents
 publish:
